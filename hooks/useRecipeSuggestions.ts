@@ -34,6 +34,7 @@ export function useRecipeSuggestions(ingredients: string[] | null) {
       // Optionally reset recipes on error?
       // setRecipes(null);
     } finally {
+      console.log("Recipe suggestion fetch completed");
       setLoading(false);
     }
   }, [ingredients]); // Depends only on ingredients now

@@ -2,76 +2,41 @@
 
 ## Purpose
 
-This directory contains molecule components, which are relatively simple combinations of atoms that form distinct UI elements.
-They represent tangible pieces of the interface like a search input field with a button, or a single item in a list.
+This directory contains "molecule" components, which are relatively simple combinations of "atom" components working together as a unit. They form distinct parts of the UI but are not complex enough to be full sections (organisms).
 
-## Key Components
+## Key Components / Files
 
-- **`DietaryOption.tsx`**: A toggleable pill button representing a single dietary restriction choice. Used within the `DietaryRestrictionPicker`.
-- **`RecipeCard.tsx`**: Displays a preview of a recipe (image, title, maybe tags). Used in `RecipeList`.
-- **`PhotoItem.tsx`**: Displays a photo thumbnail, potentially with selection state or actions. Used in image selection screens.
-- **`ScanImage.tsx`**: Wraps an `Image` component, adding an optional animated scanning bar overlay controlled by a `loading` prop. Useful for indicating processing on an image.
-- _Add other molecules here as they are created..._
+- `ExpandableText.tsx`: Displays text that can be collapsed or expanded.
+- `IconButton.tsx`: A button component that primarily displays an icon.
+- `IngredientsList.tsx`: Displays a formatted list of recipe ingredients.
+- `InstructionsList.tsx`: Displays a formatted list of recipe instructions (analyzed or raw).
+- `RecipeCard.tsx`: Represents a single recipe item in a list format, often used in `RecipeList`.
 
 ## Interactions
 
-- Molecules combine `atom` components.
-- They receive props (including data and event handlers) from parent components (usually `organisms`).
-- They should generally not contain complex internal state or logic beyond what's necessary for their immediate presentation based on props.
+- Molecules often combine `atoms` like `Button`, `Text`, and `Icon`.
+- They receive data and callbacks as props from parent components (usually `organisms` or screens).
+- They should generally be kept stateless or manage only simple UI state (like expansion state).
 
-## Configuration
+## Configuration Requirements
 
-No specific configuration is typically required for molecules themselves.
+- Ensure necessary `atom` components are available.
+- Pass required props (like data arrays, theme colors, event handlers) from parent components.
 
 ## Development Guidelines
 
-- Keep molecules focused on a single UI task.
-- Ensure they are reusable and configurable via props.
-- Use atoms for the base building blocks.
-- Style using `StyleSheet.create` or `nativewind`.
-- Import only from `atoms` or standard libraries.
+- Molecules should be reusable across different parts of the application.
+- Avoid complex logic or data fetching within molecules.
+- Focus on composing atoms to create a specific UI pattern.
+- Define clear props using TypeScript interfaces.
+- Use `nativewind` or `StyleSheet.create` for styling.
 
 ## Usage Examples
 
-```tsx
-import DietaryOption from "@/components/molecules/DietaryOption";
+See individual component `README.md` files for specific usage examples:
 
-const MyComponent = () => {
-  const [isSelected, setIsSelected] = useState(false);
-
-  return (
-    <DietaryOption
-      label="Vegan"
-      selected={isSelected}
-      onPress={() => setIsSelected(!isSelected)}
-    />
-  );
-};
-```
-
-### `ScanImage` Example
-
-```tsx
-import ScanImage from "@/components/molecules/ScanImage";
-import { useState } from "react";
-
-const MyImageProcessor = ({ imageUri }) => {
-  const [isProcessing, setIsProcessing] = useState(true);
-
-  // Simulate processing finish after 3 seconds
-  setTimeout(() => setIsProcessing(false), 3000);
-
-  return (
-    <ScanImage
-      source={{ uri: imageUri }}
-      containerStyle={{ width: 200, height: 200, borderRadius: 10 }}
-      resizeMode="cover"
-      loading={isProcessing}
-      scanColor="rgba(0, 255, 255, 0.6)"
-      scanHeight={5}
-      duration={800} // Time for scan down OR up
-      pauseDuration={600} // Pause time at the top
-    />
-  );
-};
-```
+- `ExpandableText.README.md`
+- `IconButton.README.md`
+- `IngredientsList.README.md`
+- `InstructionsList.README.md`
+- `RecipeCard.README.md`

@@ -18,7 +18,7 @@ export async function extractIngredients(
       {
         role: "system",
         content:
-          "You are an assistant that extracts raw ingredients from a food photo and returns them as a JSON object. The object should have a key 'ingredients' with a value of a JSON array of strings. For example: {\"ingredients\": [\"onion\", \"garlic\", \"chicken\", \"carrot\", \"potato\"]}. If you cannot find any ingredients, return an empty array for 'ingredients' along with a concise 'description' key explaining what you see in the image. For example: {\"ingredients\": [], \"description\": \"A picture of a cat\"}. Ensure the entire response is a single valid JSON object. Ensure you do not use any punctuation in the response.",
+          "You are an assistant that extracts raw ingredients from a food photo and returns them as a JSON object. The object should have a key 'ingredients' with a value of a JSON array of strings. For example: {\"ingredients\": [\"onion\", \"garlic\", \"chicken\", \"carrot\", \"potato\"]}. If you cannot find any ingredients, return an empty array for 'ingredients' along with a concise 'description' key explaining what you see in the image. For example: {\"ingredients\": [], \"description\": \"A picture of a cat\"}. Ensure the entire response is a single valid JSON object. Ensure you do not use any punctuation in the response. Do not respond with duplicate ingredients.",
       },
       {
         role: "user",

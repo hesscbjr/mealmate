@@ -1,9 +1,9 @@
 import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useMemo } from "react";
 import {
-  ActivityIndicator,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,15 +12,121 @@ import {
 
 import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
+import ExpandableText from "@/components/molecules/ExpandableText";
 import IconButton from "@/components/molecules/IconButton";
+import IngredientsList from "@/components/molecules/IngredientsList";
+import InstructionsList from "@/components/molecules/InstructionsList";
 import { useRecipeDetails } from "@/hooks/useRecipeDetails";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import {
-  RecipeInstructionStep,
-  SpoonacularRecipe,
-} from "@/services/spoonacular";
+import { SpoonacularRecipe } from "@/services/spoonacular";
 import { useRecipeStore } from "@/store/recipes";
 import { parseAndLinkSummary } from "@/utils/textUtils";
+
+// --- Skeleton Component ---
+const RecipeDetailSkeleton: React.FC<{
+  themeBackgroundColor: string;
+  placeholderColor: string;
+}> = ({ themeBackgroundColor, placeholderColor }) => {
+  return (
+    <View
+      style={[
+        styles.skeletonOuterContainer,
+        { backgroundColor: themeBackgroundColor },
+      ]}
+    >
+      {/* Image Placeholder */}
+      <View
+        style={[styles.skeletonImage, { backgroundColor: placeholderColor }]}
+      />
+      <View style={styles.skeletonContentPadding}>
+        {/* Title Placeholder */}
+        <View
+          style={[
+            styles.skeletonTitle,
+            { backgroundColor: placeholderColor, marginBottom: 12 },
+          ]}
+        />
+        {/* Meta Info Placeholder */}
+        <View style={styles.skeletonMetaRow}>
+          <View
+            style={[
+              styles.skeletonMetaItem,
+              { backgroundColor: placeholderColor },
+            ]}
+          />
+          <View
+            style={[
+              styles.skeletonMetaItem,
+              { backgroundColor: placeholderColor },
+            ]}
+          />
+        </View>
+        {/* Summary Placeholder */}
+        <View
+          style={[
+            styles.skeletonLine,
+            { width: "100%", backgroundColor: placeholderColor },
+          ]}
+        />
+        <View
+          style={[
+            styles.skeletonLine,
+            {
+              width: "85%",
+              backgroundColor: placeholderColor,
+              marginBottom: 20,
+            },
+          ]}
+        />
+        {/* Section Title Placeholder */}
+        <View
+          style={[
+            styles.skeletonSectionTitle,
+            { backgroundColor: placeholderColor, marginBottom: 12 },
+          ]}
+        />
+        {/* Item Placeholders */}
+        <View
+          style={[
+            styles.skeletonLine,
+            { width: "70%", backgroundColor: placeholderColor },
+          ]}
+        />
+        <View
+          style={[
+            styles.skeletonLine,
+            {
+              width: "60%",
+              backgroundColor: placeholderColor,
+              marginBottom: 20,
+            },
+          ]}
+        />
+        {/* Section Title Placeholder */}
+        <View
+          style={[
+            styles.skeletonSectionTitle,
+            { backgroundColor: placeholderColor, marginBottom: 12 },
+          ]}
+        />
+        {/* Item Placeholders */}
+        <View
+          style={[
+            styles.skeletonLine,
+            { width: "80%", backgroundColor: placeholderColor },
+          ]}
+        />
+        <View
+          style={[
+            styles.skeletonLine,
+            { width: "75%", backgroundColor: placeholderColor },
+          ]}
+        />
+      </View>
+    </View>
+  );
+};
+// --- End Skeleton Component ---
 
 export default function RecipeDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -31,8 +137,22 @@ export default function RecipeDetailScreen() {
   const themeSubtleTextColor = useThemeColor({}, "icon");
   const themeTintColor = useThemeColor({}, "tint");
   const themeBorderColor = useThemeColor({}, "icon");
+  const placeholderColor = "#E0E0E0"; // Use the same grey as RecipeCardSkeleton
 
   const { recipeDetails, loading, error } = useRecipeDetails(id);
+
+  const summaryData = useMemo(() => {
+    if (recipeDetails?.summary) {
+      const parsed = parseAndLinkSummary(recipeDetails.summary);
+      const fullSummary = parsed.summaryText;
+
+      return {
+        fullSummary,
+        relatedRecipes: parsed.relatedRecipes,
+      };
+    }
+    return null;
+  }, [recipeDetails?.summary]);
 
   // --- Zustand Recipe Store --- //
   const { toggleStar } = useRecipeStore();
@@ -42,20 +162,36 @@ export default function RecipeDetailScreen() {
 
   // Set header title and star button dynamically
   useLayoutEffect(() => {
-    if (recipeDetails) {
-      navigation.setOptions({
-        title: recipeDetails.title,
-        headerRight: () => (
-          <IconButton
-            onPress={() => toggleStar(recipeDetails as SpoonacularRecipe)}
-            name={currentlyStarred ? "star" : "staro"}
-            size={24}
-            color={themeTintColor}
-            iconSet="antdesign"
-          />
-        ),
-      });
-    }
+    navigation.setOptions({
+      title: "", // Keep title empty
+      headerRight: () => (
+        <IconButton
+          onPress={() => {
+            // Only allow starring if recipeDetails exist
+            if (recipeDetails) {
+              toggleStar(recipeDetails as SpoonacularRecipe);
+            }
+          }}
+          name={currentlyStarred ? "star" : "staro"}
+          size={24}
+          color={themeTintColor}
+          iconSet="antdesign"
+          style={{ marginRight: Platform.OS === "ios" ? 10 : 0 }}
+          // Disable button visually while loading? Optional enhancement.
+          // disabled={!recipeDetails}
+        />
+      ),
+      headerLeft: () => (
+        <IconButton
+          onPress={() => navigation.goBack()}
+          name="arrow-left"
+          size={24}
+          color={themeTintColor}
+          iconSet="fa5"
+          style={{ marginLeft: Platform.OS === "ios" ? 10 : 0 }}
+        />
+      ),
+    });
   }, [navigation, recipeDetails, currentlyStarred, toggleStar, themeTintColor]);
 
   const handleOpenSourceUrl = () => {
@@ -66,14 +202,10 @@ export default function RecipeDetailScreen() {
 
   if (loading) {
     return (
-      <View
-        style={[
-          styles.centeredContainer,
-          { backgroundColor: themeBackgroundColor },
-        ]}
-      >
-        <ActivityIndicator size="large" color={themeTintColor} />
-      </View>
+      <RecipeDetailSkeleton
+        themeBackgroundColor={themeBackgroundColor}
+        placeholderColor={placeholderColor}
+      />
     );
   }
 
@@ -92,25 +224,11 @@ export default function RecipeDetailScreen() {
     );
   }
 
-  // Helper to render instruction steps
-  const renderInstructionStep = (
-    item: RecipeInstructionStep,
-    index: number
-  ) => (
-    <View key={`step-${index}`} style={styles.instructionStep}>
-      <Text style={[styles.stepNumber, { color: themeTintColor }]}>
-        {item.number}
-      </Text>
-      <Text style={[styles.stepText, { color: themeTextColor }]}>
-        {item.step}
-      </Text>
-    </View>
-  );
-
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: themeBackgroundColor }]}
       contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
     >
       {/* Use Stack.Screen to configure header options if preferred over useLayoutEffect */}
       {/* <Stack.Screen options={{ title: recipeDetails.title }} /> */}
@@ -121,96 +239,57 @@ export default function RecipeDetailScreen() {
         <Text style={[styles.title, { color: themeTextColor }]}>
           {recipeDetails.title}
         </Text>
-        <View style={styles.summaryContainer}>
-          {parseAndLinkSummary(recipeDetails.summary).map((segment, index) => {
-            if (segment.type === "link") {
-              return (
-                <Link
-                  key={`sum-${index}`}
-                  href={`/recipe/${segment.recipeId}`}
-                  asChild
-                >
-                  <Text style={{ color: "#007AFF" }}>{segment.content}</Text>
-                </Link>
-              );
-            } else {
-              return (
-                <Text
-                  key={`sum-${index}`}
-                  style={[styles.summaryText, { color: themeSubtleTextColor }]}
-                >
-                  {segment.content}
-                </Text>
-              );
-            }
-          })}
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={[styles.infoText, { color: themeTextColor }]}>
+        {/* Info Row: Time and Servings */}
+        <View style={styles.metaInfoContainer}>
+          <Text
+            style={[
+              styles.infoText,
+              { color: themeTextColor, marginRight: 15 },
+            ]}
+          >
             ⏱️ {recipeDetails.readyInMinutes} mins
           </Text>
           <Text style={[styles.infoText, { color: themeTextColor }]}>
             🍽️ Serves {recipeDetails.servings}
           </Text>
         </View>
+        {/* Display the cleaned summary text */}
+        {summaryData?.fullSummary && (
+          <View style={styles.summaryContentContainer}>
+            <ExpandableText
+              text={summaryData.fullSummary}
+              initialLines={2}
+              textStyle={[styles.summaryText, { color: themeSubtleTextColor }]}
+              buttonTextStyle={styles.viewMoreText}
+              buttonColor={themeTintColor}
+            />
+          </View>
+        )}
         {/* Add dietary flags if needed */}
       </View>
 
-      {/* Ingredients */}
+      {/* Ingredients - Replaced with component */}
       {recipeDetails.extendedIngredients &&
         recipeDetails.extendedIngredients.length > 0 && (
-          <View style={[styles.section, { borderTopColor: themeBorderColor }]}>
-            <Text style={[styles.sectionTitle, { color: themeTextColor }]}>
-              Ingredients
-            </Text>
-            {recipeDetails.extendedIngredients.map((ing, index) => (
-              <Text
-                key={`ing-${index}`}
-                style={[styles.listItem, { color: themeTextColor }]}
-              >
-                • {ing.original}
-              </Text>
-            ))}
-          </View>
+          <IngredientsList
+            ingredients={recipeDetails.extendedIngredients}
+            titleColor={themeTextColor}
+            itemColor={themeTextColor}
+            borderColor={themeBorderColor}
+            // Pass other styles if needed, e.g., style={styles.customSectionStyle}
+          />
         )}
 
-      {/* Instructions */}
-      {recipeDetails.analyzedInstructions &&
-        recipeDetails.analyzedInstructions.length > 0 && (
-          <View style={[styles.section, { borderTopColor: themeBorderColor }]}>
-            <Text style={[styles.sectionTitle, { color: themeTextColor }]}>
-              Instructions
-            </Text>
-            {recipeDetails.analyzedInstructions.map((instructionSet, index) => (
-              <View key={`instruction-set-${index}`}>
-                {instructionSet.name && (
-                  <Text
-                    style={[
-                      styles.instructionSetName,
-                      { color: themeTextColor },
-                    ]}
-                  >
-                    {instructionSet.name}
-                  </Text>
-                )}
-                {instructionSet.steps.map(renderInstructionStep)}
-              </View>
-            ))}
-          </View>
-        )}
-
-      {/* Fallback for raw instructions string */}
-      {!recipeDetails.analyzedInstructions?.length &&
-        recipeDetails.instructions && (
-          <View style={[styles.section, { borderTopColor: themeBorderColor }]}>
-            <Text style={[styles.sectionTitle, { color: themeTextColor }]}>
-              Instructions
-            </Text>
-            <Text style={[styles.listItem, { color: themeTextColor }]}>
-              {recipeDetails.instructions}
-            </Text>
-          </View>
-        )}
+      {/* Instructions - Replaced with component */}
+      <InstructionsList
+        analyzedInstructions={recipeDetails.analyzedInstructions}
+        rawInstructions={recipeDetails.instructions}
+        titleColor={themeTextColor}
+        setNameColor={themeTextColor}
+        stepNumberColor={themeTintColor}
+        stepTextColor={themeTextColor}
+        borderColor={themeBorderColor}
+      />
 
       {/* Source Link Button */}
       {recipeDetails.sourceUrl && (
@@ -228,6 +307,32 @@ export default function RecipeDetailScreen() {
           style={styles.sourceButtonContainer}
           activeOpacity={0.7}
         />
+      )}
+
+      {/* Related Recipes Section */}
+      {summaryData && summaryData.relatedRecipes.length > 0 && (
+        <View style={[styles.section, { borderTopWidth: 0 }]}>
+          <Text style={[styles.sectionTitle, { color: themeTextColor }]}>
+            Related Recipes
+          </Text>
+          {summaryData.relatedRecipes.map((relatedRecipe) => (
+            <Link
+              key={relatedRecipe.id}
+              href={`/recipe/${relatedRecipe.id}`}
+              style={styles.relatedRecipeLinkContainer}
+              asChild
+            >
+              <Text
+                style={[
+                  styles.relatedRecipeLinkText,
+                  { color: themeTintColor },
+                ]}
+              >
+                • {relatedRecipe.title}
+              </Text>
+            </Link>
+          ))}
+        </View>
       )}
     </ScrollView>
   );
@@ -264,20 +369,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 8,
   },
-  summaryContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: 15,
-    lineHeight: 20,
+  summaryContentContainer: {
+    marginBottom: 5,
   },
   summaryText: {
-    fontSize: 14,
-    marginRight: 3,
+    // Base styles moved to ExpandableText, keep color style here
   },
-  infoRow: {
+  metaInfoContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 15,
   },
   infoText: {
     fontSize: 14,
@@ -287,36 +388,59 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  listItem: {
-    fontSize: 16,
-    lineHeight: 22,
-    marginBottom: 5,
-    marginLeft: 5,
-  },
-  instructionSetName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 5,
-  },
-  instructionStep: {
-    flexDirection: "row",
-    marginBottom: 12,
-    alignItems: "flex-start",
-  },
-  stepNumber: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 10,
-    minWidth: 20, // Ensure space for number
-    textAlign: "right",
-  },
-  stepText: {
-    flex: 1,
-    fontSize: 16,
-    lineHeight: 22,
-  },
   sourceButtonContainer: {
     margin: 20,
   },
+  relatedRecipeLinkContainer: {
+    marginBottom: 8,
+    marginLeft: 5,
+  },
+  relatedRecipeLinkText: {
+    fontSize: 16,
+    lineHeight: 22,
+    textDecorationLine: "underline",
+  },
+  viewMoreText: {
+    fontSize: 13,
+    fontWeight: "bold",
+    // Style now primarily controlled within ExpandableText,
+    // but can be overridden/augmented via buttonTextStyle prop
+  },
+  // --- Skeleton Styles ---
+  skeletonOuterContainer: {
+    flex: 1, // Take full screen space initially
+  },
+  skeletonContentPadding: {
+    padding: 15,
+  },
+  skeletonImage: {
+    width: "100%",
+    height: 250, // Match real image height
+  },
+  skeletonTitle: {
+    height: 24,
+    width: "70%",
+    borderRadius: 4,
+  },
+  skeletonMetaRow: {
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  skeletonMetaItem: {
+    height: 14,
+    width: "30%",
+    borderRadius: 4,
+    marginRight: 15,
+  },
+  skeletonLine: {
+    height: 14,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  skeletonSectionTitle: {
+    height: 20,
+    width: "40%",
+    borderRadius: 4,
+  },
+  // --- End Skeleton Styles ---
 });
