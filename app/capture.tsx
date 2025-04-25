@@ -70,8 +70,12 @@ export default function CaptureScreen() {
         });
         if (photo) {
           console.log("Photo taken:", photo.uri);
-          // TODO: Process image
-          router.back(); // Example: go back after taking photo
+          // await savePhoto(photo.uri); // Save photo first if needed, or maybe after preview?
+          router.push({
+            pathname: "/preview",
+            params: { imageUri: photo.uri },
+          });
+          // router.back(); // Example: go back after taking photo
         }
       } catch (error) {
         console.error("Failed to take picture:", error);
@@ -88,10 +92,12 @@ export default function CaptureScreen() {
         // base64: true, // Include if you need base64 data later
       });
 
-      if (!result.canceled) {
-        console.log("Image picked:", result.assets[0].uri);
-        // TODO: Process image
-        router.back(); // Example: go back after picking image
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri;
+        console.log("Image picked:", imageUri);
+        // await savePhoto(imageUri); // Save photo first if needed, or maybe after preview?
+        router.push({ pathname: "/preview", params: { imageUri: imageUri } });
+        // router.back(); // Example: go back after picking image
       }
     } catch (error) {
       console.error("Failed to pick image:", error);
