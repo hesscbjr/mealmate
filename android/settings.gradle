@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'mealmate'
+rootProject.name = 'Meal Mate'
 
 dependencyResolutionManagement {
   versionCatalogs {

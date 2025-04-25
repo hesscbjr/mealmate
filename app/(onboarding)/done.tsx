@@ -1,25 +1,41 @@
 import Button from "@/components/atoms/Button";
 import FadeInView from "@/components/atoms/FadeInView";
 import Text from "@/components/atoms/Text";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { Colors } from "@/constants/Colors";
 import { useUserStore } from "@/store/user";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Image, StyleSheet, View, useColorScheme } from "react-native";
 
 export default function DoneScreen() {
   const markComplete = useUserStore((state) => state.markOnboardingComplete);
-  const themeBackground = useThemeColor({}, "background");
+  const colorScheme = useColorScheme();
 
   const handleFinish = () => {
     markComplete();
     router.replace("/(tabs)"); // Replace removes onboarding from history
   };
 
+  const gradientColors =
+    colorScheme === "dark"
+      ? ([
+          Colors.dark.backgroundGradientStart,
+          Colors.dark.backgroundGradientEnd,
+        ] as const)
+      : ([
+          Colors.light.backgroundGradientStart,
+          Colors.light.backgroundGradientEnd,
+        ] as const);
+
+  const gradientLocations = [0, 0.6] as const;
+
+  // Render gradient for both light and dark modes
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: themeBackground }]}
+    <LinearGradient
+      colors={gradientColors}
+      locations={gradientLocations}
+      style={styles.container}
     >
       <View style={styles.content}>
         <FadeInView delay={0}>
@@ -45,7 +61,7 @@ export default function DoneScreen() {
           />
         </FadeInView>
       </View>
-    </SafeAreaView>
+    </LinearGradient>
   );
 }
 

@@ -1,5 +1,5 @@
 import Button from "@/components/atoms/Button";
-import Icon from "@/components/atoms/Icon";
+import IconButton from "@/components/molecules/IconButton";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -33,7 +33,11 @@ export default function CaptureScreen() {
         <Text style={styles.permissionText}>
           We need your permission to show the camera.
         </Text>
-        <Button onPress={requestCameraPermission} title="Grant Camera Access" />
+        <Button
+          onPress={requestCameraPermission}
+          title="Grant Camera Access"
+          variant="primary"
+        />
       </View>
     );
   }
@@ -48,6 +52,7 @@ export default function CaptureScreen() {
         <Button
           onPress={requestMediaPermission}
           title="Grant Photo Library Access"
+          variant="primary"
         />
       </View>
     );
@@ -110,31 +115,40 @@ export default function CaptureScreen() {
         <View
           style={[styles.buttonContainer, { paddingBottom: insets.bottom }]}
         >
-          <TouchableOpacity style={styles.iconButton} onPress={pickImage}>
-            <Icon name="images" size={30} color="white" />
-          </TouchableOpacity>
+          <IconButton
+            style={styles.iconButton}
+            onPress={pickImage}
+            name="images"
+            size={30}
+            color="white"
+            iconSet="fa5"
+          />
           <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
             {/* Simple circle for capture button */}
           </TouchableOpacity>
-          <TouchableOpacity
+          <IconButton
             style={styles.iconButton}
             onPress={toggleCameraFacing}
-          >
-            <Icon name="sync-alt" size={30} color="white" />
-          </TouchableOpacity>
+            name="sync-alt"
+            size={30}
+            color="white"
+            iconSet="fa5"
+          />
         </View>
       </CameraView>
 
-      <TouchableOpacity
+      <IconButton
         style={[
           styles.backButton,
           { top: Platform.OS === "ios" ? insets.top + 10 : insets.top + 20 },
         ]}
         onPress={handleGoBack}
+        name="arrow-left"
+        size={24}
+        color="white"
+        iconSet="fa5"
         activeOpacity={0.7}
-      >
-        <Icon name="arrow-left" size={24} color="white" />
-      </TouchableOpacity>
+      />
     </View>
   );
 }

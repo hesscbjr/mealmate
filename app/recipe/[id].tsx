@@ -7,12 +7,12 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
 import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
+import IconButton from "@/components/molecules/IconButton";
 import { useRecipeDetails } from "@/hooks/useRecipeDetails";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import {
@@ -46,18 +46,13 @@ export default function RecipeDetailScreen() {
       navigation.setOptions({
         title: recipeDetails.title,
         headerRight: () => (
-          <TouchableOpacity
+          <IconButton
             onPress={() => toggleStar(recipeDetails as SpoonacularRecipe)}
-            style={{ marginRight: 15 }}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Icon
-              name={currentlyStarred ? "star" : "staro"}
-              size={24}
-              color={themeTintColor}
-              iconSet="antdesign"
-            />
-          </TouchableOpacity>
+            name={currentlyStarred ? "star" : "staro"}
+            size={24}
+            color={themeTintColor}
+            iconSet="antdesign"
+          />
         ),
       });
     }

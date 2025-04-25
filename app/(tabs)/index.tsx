@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const themeBackgroundColor = useThemeColor({}, "background");
-  const buttonIconColor = useThemeColor({}, "background");
+  const buttonIconColor = useThemeColor({}, "buttonText");
   const borderBottomColor = useThemeColor({}, "icon");
 
   const firstName = useUserStore((state) => state.firstName);
@@ -49,7 +49,7 @@ export default function HomeScreen() {
           ) : (
             <View style={styles.emptyStateContainer}>
               <Text style={styles.emptyListText}>
-                No starred recipes yet! Hit 'What's in the kitchen' to get
+                No starred recipes yet. Hit 'What's in the kitchen' to get
                 started!
               </Text>
               <Image
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontSize: 16,
-    color: "#888", // Or use a theme color
+    paddingHorizontal: 40,
   },
   emptyStateContainer: {
     alignItems: "center",

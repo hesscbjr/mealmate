@@ -160,10 +160,40 @@ const MyScreen = () => {
 };
 ```
 
-## Development Guidelines
+### `Text.tsx`
 
-- Atoms should be pure UI components with no internal logic related to data fetching or complex state management.
-- They should accept props for customization (e.g., text, onPress handlers, style overrides).
-- Use `StyleSheet.create` or `nativewind` for styling.
-- Ensure components adapt to light/dark themes using the `useThemeColor` hook where appropriate.
-- Atoms must not import components from `molecules/` or `organisms/`.
+- **Purpose**: A fundamental text component that automatically applies the theme's text color.
+- **Props**:
+  - Extends all standard React Native `TextProps`.
+- **Theming**: Uses `useThemeColor` to set the `color` style based on the theme's `text` color.
+- **Usage**:
+
+```tsx
+import Text from "@/components/atoms/Text";
+
+// ...
+
+<Text>This text will use the theme color.</Text>
+<Text style={{ fontWeight: 'bold', fontSize: 18 }}>Styled themed text.</Text>
+```
+
+### `TypewriterText.tsx`
+
+- **Purpose**: Displays text with a typewriter effect, cycling through an array of messages.
+- **Props**:
+  - `messages`: (Required) An array of strings to display sequentially.
+  - `typingSpeed`: (Optional) The delay in milliseconds between typing each character. Defaults to `50`.
+  - `pauseDuration`: (Optional) The delay in milliseconds after a message is fully typed before starting the next one. Defaults to `1000`.
+  - `style`: (Optional) Custom `TextStyle` to apply to the `Text` component.
+  - ... other standard React Native `TextProps` (except `children`).
+- **Behavior**:
+  - Types out each message character by character.
+  - Triggers a light selection haptic feedback (`Haptics.selectionAsync()`) via `expo-haptics` for each character typed.
+  - Pauses after a message is complete.
+  - Clears the text and starts typing the next message in the array (loops).
+  - Displays a non-breaking space (`\u00A0`) when no text is visible to maintain layout height.
+- **Usage**:
+
+```
+
+```

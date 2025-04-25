@@ -1,9 +1,10 @@
 import Text from "@/components/atoms/Text"; // Import custom Text atom
+import TouchableOpacityHaptic from "@/components/atoms/TouchableOpacityHaptic";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular"; // Assuming the type is exported from here
 import { Link } from "expo-router";
 import React from "react";
-import { Dimensions, Image, Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
 
 // Helper function to strip basic HTML tags
 function stripHtml(html: string): string {
@@ -104,12 +105,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   // Render actual card content if not loading and recipe exists
   return (
     <Link href={`/recipe/${recipe.id}`} asChild>
-      <Pressable
+      <TouchableOpacityHaptic
         style={[
           styles.outerContainer,
           style,
           { borderBottomColor: themeBorderColor },
         ]}
+        activeOpacity={0.8} // Optional: adjust active opacity
       >
         <View style={styles.horizontalContainer}>
           {/* Left side - Image */}
@@ -131,17 +133,17 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             </Text>
             <Text
               style={styles.summary} // Removed direct color styling
-              numberOfLines={3}
+              numberOfLines={2}
             >
               {stripHtml(recipe.summary)}
             </Text>
             <Text style={styles.details}>
               ⏱️ {recipe.readyInMinutes} mins • 🍽️ Serves {recipe.servings}
             </Text>
-            <View style={{ height: 20 }} />
+            <View style={{ height: 36 }} />
           </View>
         </View>
-      </Pressable>
+      </TouchableOpacityHaptic>
     </Link>
   );
 };
@@ -162,6 +164,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginRight: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   image: {
     width: "100%",

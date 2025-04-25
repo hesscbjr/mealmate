@@ -1,6 +1,8 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
+import * as Haptics from "expo-haptics";
 import React, { ReactNode } from "react";
 import {
+  GestureResponderEvent,
   StyleProp,
   StyleSheet,
   Text,
@@ -17,6 +19,7 @@ interface ButtonProps extends TouchableOpacityProps {
   variant?: "default" | "primary" | "secondary";
   style?: StyleProp<ViewStyle>;
   activeOpacity?: number;
+  onPress?: (event: GestureResponderEvent) => void;
 }
 
 const Button = ({
@@ -26,10 +29,11 @@ const Button = ({
   style,
   variant = "default",
   activeOpacity = 0.7,
+  onPress,
   ...rest
 }: ButtonProps) => {
   const themeBackground = useThemeColor({}, "background");
-  const themeText = useThemeColor({}, "text");
+  const themeText = useThemeColor({}, "buttonText");
   const themeTint = useThemeColor({}, "tint");
 
   let buttonBackgroundColor: string;
@@ -38,7 +42,7 @@ const Button = ({
   switch (variant) {
     case "primary":
       buttonBackgroundColor = themeTint;
-      buttonTextColor = themeBackground;
+      buttonTextColor = themeText;
       break;
     case "secondary":
       buttonBackgroundColor = themeBackground;
@@ -51,10 +55,18 @@ const Button = ({
       break;
   }
 
+  const handlePress = (event: GestureResponderEvent) => {
+    Haptics.selectionAsync();
+    if (onPress) {
+      onPress(event);
+    }
+  };
+
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: buttonBackgroundColor }, style]}
       activeOpacity={activeOpacity}
+      onPress={handlePress}
       {...rest}
     >
       <View style={styles.contentContainer}>
