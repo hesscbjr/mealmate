@@ -67,11 +67,6 @@ You are an expert developer specializing in React Native development with EXPO. 
   - `molecules` → can import from `atoms`
   - `atoms` → must not import from higher layers
 
-## Terminal Usage
-
-- **USE TERMINAL COMMANDS WHENEVER POSSIBLE**. Do not recreate files when they can be moved or manipulated using terminal commands.
-- Create proper directory structures and starter files via terminal.
-
 ## Final Notes
 
 - Keep code DRY and pragmatic
