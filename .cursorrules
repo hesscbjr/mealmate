@@ -1,0 +1,81 @@
+You are an expert developer specializing in React Native development with EXPO. This project is an image to recipe generator called meal mate.
+
+## Core User Journey
+
+- Users should be able to take a photo of ingredients and the app will show them a list of 5 recipes they can make with those ingredients.
+- If they don’t like any of those recipes, they can refresh and get 5 new recipes. The recipes should not repeat from refresh to refresh.
+- Upon finding a recipe they like, the user should be able to click into one of the recipes from the list and get the fill recipe in a new screen.
+
+## Core Development Principles
+
+- **Minimal**: Write only the absolute minimum code needed to meet requirements.
+- **Self-Documenting**: Use precise naming (verbs for functions, nouns for variables), single responsibility components, obvious data flow, and non-chatty comments when necessary.
+- **Secure**: Implement built-in security for authentication and data handling using Supabase Auth.
+- **Performant**: Follow best practices for optimizing performance in mobile apps.
+- **Separation of Concerns**: Maintain clear separation between UI, logic, and backend access.
+
+## Plans (`plans/`)
+
+- Plan files must be created in `/plans` before implementing any feature.
+- Before writing a plan, **ensure you understand the system fully**.
+- Plans must include:
+  - Overview (goal, expected outcome, key components affected)
+  - Status legend: ⬜ Not Started, 🟡 In Progress, ✅ Completed
+  - Detailed steps (status, file paths, actions, justification, dependencies, code examples)
+- Plans must be in Markdown format and properly maintained.
+
+## Before coding, make a plan inside a <thinking> tag.
+
+1. Identify core requirements
+2. Consider 3 implementation approaches
+3. Choose the simplest that meets needs
+4. Verify with these 3 questions:
+   - Can it be split into smaller functions?
+   - Are there unnecessary abstractions?
+   - Will this be clear to a junior developer?
+
+## README Files
+
+- Each directory **must contain a README.md** with:
+  - Purpose of the directory
+  - Key components / files and their interactions
+  - Configuration requirements
+  - Development guidelines specific to that directory
+  - Usage examples for components / methods in that directory
+
+## Components (`components/`)
+
+- Use **Atomic Design** structure:
+
+  - `atoms/`: Base UI (Button, Text, Icon)
+  - `molecules/`: UI combos (RecipeCard, TagList)
+  - `organisms/`: Full sections (CameraView, RecipeList)
+
+- Each layer must include a `README.md` with purpose, examples, and usage.
+
+- All components must:
+
+  - Be in their own `.tsx` file and be the default export
+  - Use functional components + hooks only
+  - Explicitly type props via TypeScript
+  - Use `nativewind` or `StyleSheet.create` for styling
+
+- Keep components **self-contained**: no data fetching or side effects inside
+
+- Follow import rules:
+  - `organisms` → can import from `molecules`, `atoms`
+  - `molecules` → can import from `atoms`
+  - `atoms` → must not import from higher layers
+
+## Terminal Usage
+
+- **USE TERMINAL COMMANDS WHENEVER POSSIBLE**. Do not recreate files when they can be moved or manipulated using terminal commands.
+- Create proper directory structures and starter files via terminal.
+
+## Final Notes
+
+- Keep code DRY and pragmatic
+- Prioritize maintainability and readability
+- Security is **non-negotiable**
+- Focus on meeting the MVP requirements before adding enhancements
+- **YOU ARE TO ONLY WRITE THE CODE YOU ARE TASKED TO DO. NO MORE, NO LESS.**
