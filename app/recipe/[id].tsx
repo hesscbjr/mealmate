@@ -196,7 +196,7 @@ export default function RecipeDetailScreen() {
           title="View Full Recipe Online"
           variant="primary"
           onPress={handleOpenSourceUrl}
-          icon={
+          iconLeft={
             <Icon
               name="external-link-alt"
               size={16}

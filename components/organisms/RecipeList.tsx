@@ -3,8 +3,9 @@ import {
   ListRenderItemInfo as FlashListRenderItemInfo,
 } from "@shopify/flash-list";
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
+import Text from "@/components/atoms/Text";
 import RecipeCard from "@/components/molecules/RecipeCard";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular";
@@ -22,7 +23,6 @@ const RecipeList: React.FC<RecipeListProps> = ({
   error = null,
 }) => {
   const themeBackgroundColor = useThemeColor({}, "background");
-  const themeTextColor = useThemeColor({}, "text");
   const themeTintColor = useThemeColor({}, "tint");
 
   const renderItem = ({ item }: FlashListRenderItemInfo<SpoonacularRecipe>) => (
@@ -41,9 +41,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
         ]}
       >
         <ActivityIndicator size="large" color={themeTintColor} />
-        <Text
-          style={[styles.infoText, { color: themeTextColor, marginTop: 10 }]}
-        >
+        <Text style={[styles.infoText, { marginTop: 10 }]}>
           Fetching recipes...
         </Text>
       </View>
@@ -58,12 +56,8 @@ const RecipeList: React.FC<RecipeListProps> = ({
           { backgroundColor: themeBackgroundColor },
         ]}
       >
-        <Text style={[styles.errorText, { color: themeTextColor }]}>
-          {error}
-        </Text>
-        <Text
-          style={[styles.infoText, { color: themeTextColor, marginTop: 10 }]}
-        >
+        <Text style={styles.errorText}>{error}</Text>
+        <Text style={[styles.infoText, { marginTop: 10 }]}>
           Please check your connection or try again.
         </Text>
       </View>
@@ -78,7 +72,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
           { backgroundColor: themeBackgroundColor },
         ]}
       >
-        <Text style={[styles.infoText, { color: themeTextColor }]}>
+        <Text style={styles.infoText}>
           No recipes found for these ingredients.
         </Text>
       </View>

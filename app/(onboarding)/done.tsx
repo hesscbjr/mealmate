@@ -1,16 +1,16 @@
 import Button from "@/components/atoms/Button";
+import FadeInView from "@/components/atoms/FadeInView";
+import Text from "@/components/atoms/Text";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useUserStore } from "@/store/user";
 import { router } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DoneScreen() {
   const markComplete = useUserStore((state) => state.markOnboardingComplete);
-  const name = useUserStore((state) => state.name);
   const themeBackground = useThemeColor({}, "background");
-  const themeText = useThemeColor({}, "text");
 
   const handleFinish = () => {
     markComplete();
@@ -22,18 +22,28 @@ export default function DoneScreen() {
       style={[styles.container, { backgroundColor: themeBackground }]}
     >
       <View style={styles.content}>
-        <Text style={[styles.title, { color: themeText }]}>
-          You're all set!
-        </Text>
-        <Text style={[styles.subtitle, { color: themeText }]}>
-          Let's see what's cookin' in your kitchen
-        </Text>
-        <Button
-          title="Let's Go!"
-          onPress={handleFinish}
-          variant="primary"
-          style={styles.button}
-        />
+        <FadeInView delay={0}>
+          <Image
+            source={require("@/assets/images/done.png")}
+            style={styles.doneImage}
+          />
+        </FadeInView>
+        <FadeInView delay={300}>
+          <Text style={styles.title}>You're all set!</Text>
+        </FadeInView>
+        <FadeInView delay={300}>
+          <Text style={styles.subtitle}>
+            Let's see what's cookin' in your kitchen
+          </Text>
+        </FadeInView>
+        <FadeInView delay={900}>
+          <Button
+            title="Let's Go!"
+            onPress={handleFinish}
+            variant="primary"
+            style={styles.button}
+          />
+        </FadeInView>
       </View>
     </SafeAreaView>
   );
@@ -48,6 +58,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    paddingBottom: 140,
+  },
+  doneImage: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+    marginBottom: 30,
   },
   title: {
     fontSize: 28,

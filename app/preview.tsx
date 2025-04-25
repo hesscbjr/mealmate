@@ -1,10 +1,11 @@
+import Text from "@/components/atoms/Text";
 import RecipeList from "@/components/organisms/RecipeList";
 import { useIngredientExtraction } from "@/hooks/useIngredientExtraction";
 import { useRecipeSuggestions } from "@/hooks/useRecipeSuggestions";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Loading messages for ingredients
@@ -28,7 +29,6 @@ const recipeLoadingMessages = [
 export default function PreviewScreen() {
   const { imageUri } = useLocalSearchParams<{ imageUri: string }>();
   const themeBackgroundColor = useThemeColor({}, "background");
-  const themeTextColor = useThemeColor({}, "text");
   const themeTintColor = useThemeColor({}, "tint");
 
   // State for cycling loading messages
@@ -95,9 +95,7 @@ export default function PreviewScreen() {
         style={[styles.container, { backgroundColor: themeBackgroundColor }]}
       >
         <View style={styles.errorContainer}>
-          <Text style={[styles.errorText, { color: themeTextColor }]}>
-            No image URI provided.
-          </Text>
+          <Text style={styles.errorText}>No image URI provided.</Text>
         </View>
       </SafeAreaView>
     );
@@ -108,7 +106,7 @@ export default function PreviewScreen() {
       return (
         <View style={styles.centeredContent}>
           <ActivityIndicator size="large" color={themeTintColor} />
-          <Text style={[styles.loadingText, { color: themeTextColor }]}>
+          <Text style={styles.loadingText}>
             {currentLoadingMessages[loadingMessageIndex]}
           </Text>
         </View>
@@ -118,14 +116,9 @@ export default function PreviewScreen() {
     if (ingredientError) {
       return (
         <View style={styles.centeredContent}>
-          <Text style={[styles.errorText, { color: themeTextColor }]}>
-            {ingredientError}
-          </Text>
+          <Text style={styles.errorText}>{ingredientError}</Text>
           <Text
-            style={[
-              styles.errorText, // Use errorText style
-              { color: themeTextColor, marginTop: 10, fontWeight: "normal" },
-            ]}
+            style={[styles.errorText, { marginTop: 10, fontWeight: "normal" }]}
           >
             Please try another photo.
           </Text>
@@ -140,7 +133,7 @@ export default function PreviewScreen() {
       ) {
         return (
           <View style={styles.centeredContent}>
-            <Text style={[styles.infoText, { color: themeTextColor }]}>
+            <Text style={styles.infoText}>
               {`Hmm, a picture of ${ingredientData.description.toLowerCase()}? That might not make the best meal... 😉 Try ingredients!`}
             </Text>
           </View>
@@ -153,9 +146,7 @@ export default function PreviewScreen() {
           <View style={{ flex: 1 }}>
             {/* Display ingredients as comma-separated text */}
             <View style={styles.ingredientTextContainer}>
-              <Text
-                style={[styles.ingredientHeader, { color: themeTextColor }]}
-              >
+              <Text style={styles.ingredientHeader}>
                 Detected Ingredients:{" "}
                 <Text style={styles.ingredientValue}>
                   {ingredientData.ingredients
@@ -186,7 +177,7 @@ export default function PreviewScreen() {
       ) {
         return (
           <View style={styles.centeredContent}>
-            <Text style={[styles.infoText, { color: themeTextColor }]}>
+            <Text style={styles.infoText}>
               Couldn't find any ingredients. Try a clearer photo?
             </Text>
           </View>
@@ -201,9 +192,9 @@ export default function PreviewScreen() {
   const renderRecipeContent = () => {
     if (recipeLoading) {
       return (
-        <View style={styles.centeredContentSmallPadding}>
-          <ActivityIndicator size="small" color={themeTintColor} />
-          <Text style={[styles.loadingTextSmall, { color: themeTextColor }]}>
+        <View style={styles.centeredContentRecipe}>
+          <ActivityIndicator size="large" color={themeTintColor} />
+          <Text style={[styles.loadingText, { marginTop: 10 }]}>
             {currentLoadingMessages[loadingMessageIndex]}
           </Text>
         </View>
@@ -212,9 +203,12 @@ export default function PreviewScreen() {
 
     if (recipeError) {
       return (
-        <View style={styles.centeredContentSmallPadding}>
-          <Text style={[styles.errorText, { color: themeTextColor }]}>
-            {recipeError}
+        <View style={styles.centeredContentRecipe}>
+          <Text style={styles.errorText}>{recipeError}</Text>
+          <Text
+            style={[styles.errorText, { marginTop: 10, fontWeight: "normal" }]}
+          >
+            Please try again later.
           </Text>
         </View>
       );
@@ -261,13 +255,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    fontWeight: "bold", // Make error text bold
+    fontWeight: "bold",
     textAlign: "center",
   },
   infoText: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
-    paddingHorizontal: 20,
   },
   imageWrapper: {
     flex: 0.4, // Slightly less space for image
@@ -299,35 +292,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  centeredContentSmallPadding: {
-    // For recipe loading/error
+  centeredContentRecipe: {
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
   },
   loadingText: {
     marginTop: 10,
-    fontSize: 18,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  loadingTextSmall: {
-    // Smaller text for recipe loading
-    marginTop: 5,
     fontSize: 14,
     textAlign: "center",
   },
-  // New styles for single-line ingredients
   ingredientTextContainer: {
     paddingHorizontal: 15, // Consistent padding
     marginBottom: 10, // Space before recipe list
   },
   ingredientHeader: {
-    fontSize: 16, // Slightly smaller than old list header
+    fontSize: 16,
     fontWeight: "bold",
   },
   ingredientValue: {
-    fontWeight: "normal", // Normal weight for the actual ingredients
+    fontWeight: "normal",
   },
   recipeSectionContainer: {
     // Container for recipe loading/list

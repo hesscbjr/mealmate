@@ -1,13 +1,14 @@
 import Button from "@/components/atoms/Button";
+import FadeInView from "@/components/atoms/FadeInView";
+import Text from "@/components/atoms/Text";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { router } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function WelcomeScreen() {
   const themeBackground = useThemeColor({}, "background");
-  const themeText = useThemeColor({}, "text");
 
   const handleContinue = () => {
     router.push("/(onboarding)/user-info" as any);
@@ -18,18 +19,28 @@ export default function WelcomeScreen() {
       style={[styles.container, { backgroundColor: themeBackground }]}
     >
       <View style={styles.content}>
-        <Text style={[styles.title, { color: themeText }]}>
-          Welcome to MealMate!
-        </Text>
-        <Text style={[styles.subtitle, { color: themeText }]}>
-          Your friendly AI kitchen companion.
-        </Text>
-        <Button
-          title="Get Started"
-          onPress={handleContinue}
-          variant="primary"
-          style={styles.button}
-        />
+        <FadeInView delay={0}>
+          <Image
+            source={require("@/assets/images/welcome.png")}
+            style={styles.welcomeImage}
+          />
+        </FadeInView>
+        <FadeInView delay={300}>
+          <Text style={styles.title}>Welcome to MealMate!</Text>
+        </FadeInView>
+        <FadeInView delay={300}>
+          <Text style={styles.subtitle}>
+            Your friendly AI kitchen companion.
+          </Text>
+        </FadeInView>
+        <FadeInView delay={900}>
+          <Button
+            title="Get Started"
+            onPress={handleContinue}
+            variant="primary"
+            style={styles.button}
+          />
+        </FadeInView>
       </View>
     </SafeAreaView>
   );
@@ -44,6 +55,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    paddingBottom: 140,
+  },
+  welcomeImage: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
   },
   title: {
     fontSize: 28,

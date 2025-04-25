@@ -12,7 +12,8 @@ import {
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
-  icon?: ReactNode;
+  iconLeft?: ReactNode;
+  iconRight?: ReactNode;
   variant?: "default" | "primary" | "secondary";
   style?: StyleProp<ViewStyle>;
   activeOpacity?: number;
@@ -20,7 +21,8 @@ interface ButtonProps extends TouchableOpacityProps {
 
 const Button = ({
   title,
-  icon,
+  iconLeft,
+  iconRight,
   style,
   variant = "default",
   activeOpacity = 0.7,
@@ -56,8 +58,11 @@ const Button = ({
       {...rest}
     >
       <View style={styles.contentContainer}>
-        {icon && <View style={styles.iconContainer}>{icon}</View>}
+        {iconLeft && <View style={styles.iconContainerLeft}>{iconLeft}</View>}
         <Text style={[styles.text, { color: buttonTextColor }]}>{title}</Text>
+        {iconRight && (
+          <View style={styles.iconContainerRight}>{iconRight}</View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -78,8 +83,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  iconContainer: {
+  iconContainerLeft: {
     marginRight: 8,
+  },
+  iconContainerRight: {
+    marginLeft: 8,
   },
   text: {
     fontSize: 16,

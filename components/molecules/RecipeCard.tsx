@@ -1,15 +1,9 @@
+import Text from "@/components/atoms/Text"; // Import custom Text atom
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular"; // Assuming the type is exported from here
 import { Link } from "expo-router";
 import React from "react";
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, Image, Pressable, StyleSheet, View } from "react-native";
 
 // Helper function to strip basic HTML tags
 function stripHtml(html: string): string {
@@ -27,7 +21,7 @@ interface RecipeCardProps {
 const { width } = Dimensions.get("window");
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, style }) => {
-  const themeTextColor = useThemeColor({}, "text");
+  // const themeTextColor = useThemeColor({}, "text"); // Removed text color hook
   const themeBorderColor = useThemeColor({}, "icon"); // Use icon color for subtle border
 
   // Correctly link to the dynamic recipe route
@@ -53,18 +47,18 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, style }) => {
           {/* Right side - Text content */}
           <View style={styles.textContainer}>
             <Text
-              style={[styles.title, { color: themeTextColor }]}
+              style={styles.title} // Removed direct color styling
               numberOfLines={1}
             >
               {recipe.title}
             </Text>
             <Text
-              style={[styles.summary, { color: themeTextColor }]}
+              style={styles.summary} // Removed direct color styling
               numberOfLines={3}
             >
               {stripHtml(recipe.summary)}
             </Text>
-            <Text style={[styles.details, { color: themeTextColor }]}>
+            <Text style={styles.details}>
               ⏱️ {recipe.readyInMinutes} mins • 🍽️ Serves {recipe.servings}
             </Text>
             <View style={{ height: 20 }} />

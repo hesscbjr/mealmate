@@ -115,6 +115,51 @@ import PhotoThumbnail from "@/components/atoms/PhotoThumbnail";
 <PhotoThumbnail uri={imageUri} size={80} style={{ borderRadius: 10 }} />;
 ```
 
+### `BottomSheet.tsx`
+
+- **Purpose**: A reusable wrapper around the `@gorhom/bottom-sheet` library, providing a simplified interface for creating bottom sheets.
+- **Props**:
+  - `children`: (Required) The content to render inside the bottom sheet.
+  - `contentContainerStyle`: (Optional) Custom `ViewStyle` to apply to the `BottomSheetView` that wraps the children.
+  - `ref`: (Required) A ref object created using `useRef<BottomSheetMethods>(null)` to control the bottom sheet (e.g., `expand()`, `close()`).
+  - `snapPoints`: (Required) An array of numbers, percentages, or "POINT" constants defining the positions the sheet should snap to.
+  - `onChange`: (Optional) Callback function that is called when the sheet position changes.
+  - ... other props accepted by the `@gorhom/bottom-sheet` `BottomSheet` component.
+- **Usage**:
+
+```tsx
+import React, { useRef, useMemo } from "react";
+import { View, Button } from "react-native";
+import BottomSheet from "@/components/atoms/BottomSheet";
+import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"; // Or import directly from @gorhom/bottom-sheet if available
+
+const MyScreen = () => {
+  const bottomSheetRef = useRef<BottomSheetMethods>(null);
+  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const handleClosePress = () => bottomSheetRef.current?.close();
+
+  return (
+    <View style={{ flex: 1, padding: 24, backgroundColor: "grey" }}>
+      <Button title="Open Sheet" onPress={handleOpenPress} />
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1} // Start closed
+        snapPoints={snapPoints}
+        onChange={(index) => console.log("Sheet changed to index:", index)}
+        enablePanDownToClose={true}
+      >
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text>This is the content of the bottom sheet!</Text>
+          <Button title="Close Sheet" onPress={handleClosePress} />
+        </View>
+      </BottomSheet>
+    </View>
+  );
+};
+```
+
 ## Development Guidelines
 
 - Atoms should be pure UI components with no internal logic related to data fetching or complex state management.

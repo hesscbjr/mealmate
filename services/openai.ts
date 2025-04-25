@@ -1,8 +1,6 @@
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 const OPENAI_API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 
-console.log("OPENAI_API_KEY", OPENAI_API_KEY);
-
 // Define the expected response structure
 interface IngredientResponse {
   ingredients: string[];

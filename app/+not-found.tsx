@@ -1,6 +1,7 @@
+import Text from "@/components/atoms/Text";
 import { Link, Stack } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function NotFoundScreen() {
   return (
@@ -32,6 +33,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   linkText: {
-    color: "#0a7ea4",
+    // color: "#0a7ea4",
   },
 });

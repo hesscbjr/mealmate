@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
+    height: 48, // Add fixed height to prevent resizing
   },
 });
 

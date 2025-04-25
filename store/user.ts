@@ -3,10 +3,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface UserState {
-  name: string;
+  firstName: string;
+  lastName: string;
   dietaryRestrictions: string[];
   completedOnboarding: boolean;
-  setName: (name: string) => void;
+  setFirstName: (firstName: string) => void;
+  setLastName: (lastName: string) => void;
   setDietary: (diet: string[]) => void;
   markOnboardingComplete: () => void;
 }
@@ -14,10 +16,12 @@ interface UserState {
 export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
-      name: "",
+      firstName: "",
+      lastName: "",
       dietaryRestrictions: [],
       completedOnboarding: false,
-      setName: (name) => set({ name }),
+      setFirstName: (firstName) => set({ firstName }),
+      setLastName: (lastName) => set({ lastName }),
       setDietary: (diet) => set({ dietaryRestrictions: diet }),
       markOnboardingComplete: () => set({ completedOnboarding: true }),
     }),
