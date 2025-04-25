@@ -12,19 +12,96 @@ function stripHtml(html: string): string {
 }
 
 interface RecipeCardProps {
-  recipe: SpoonacularRecipe;
+  recipe?: SpoonacularRecipe; // Make recipe optional
   style?: any; // Add style prop for custom styling
+  loading?: boolean; // Add loading prop
   // Add onPress or other interaction props if needed later
 }
 
 // Get screen width for layout calculations
 const { width } = Dimensions.get("window");
+const textContainerWidth = width - 145; // Screen width minus image width, margins and padding
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, style }) => {
-  // const themeTextColor = useThemeColor({}, "text"); // Removed text color hook
+// Skeleton Component for loading state
+const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
+  const placeholderColor = "#E0E0E0"; // Use a standard light grey for placeholders
+
+  return (
+    <View
+      style={[
+        styles.outerContainer,
+        style,
+        { borderBottomColor: "transparent" },
+      ]}
+    >
+      <View style={styles.horizontalContainer}>
+        {/* Left side - Image Placeholder */}
+        <View style={styles.imageWrapper}>
+          <View
+            style={[
+              styles.skeletonImage,
+              { backgroundColor: placeholderColor },
+            ]}
+          />
+        </View>
+
+        {/* Right side - Text Placeholder */}
+        <View style={styles.textContainer}>
+          <View
+            style={[
+              styles.skeletonText,
+              { width: "80%", height: 16, backgroundColor: placeholderColor },
+            ]}
+          />
+          <View
+            style={[
+              styles.skeletonText,
+              { width: "100%", height: 14, backgroundColor: placeholderColor },
+            ]}
+          />
+          <View
+            style={[
+              styles.skeletonText,
+              { width: "90%", height: 14, backgroundColor: placeholderColor },
+            ]}
+          />
+          <View
+            style={[
+              styles.skeletonText,
+              {
+                width: "50%",
+                height: 12,
+                marginTop: 4,
+                backgroundColor: placeholderColor,
+              },
+            ]}
+          />
+          {/* Removed unnecessary empty View */}
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const RecipeCard: React.FC<RecipeCardProps> = ({
+  recipe,
+  style,
+  loading = false,
+}) => {
   const themeBorderColor = useThemeColor({}, "icon"); // Use icon color for subtle border
+  // const themePlaceholderColor = useThemeColor({}, "icon"); // Placeholder color handled in Skeleton component now
 
-  // Correctly link to the dynamic recipe route
+  // Render Skeleton if loading
+  if (loading) {
+    return <RecipeCardSkeleton style={style} />;
+  }
+
+  // If not loading, but no recipe, return null (or some error/empty state)
+  if (!recipe) {
+    return null; // Or handle appropriately
+  }
+
+  // Render actual card content if not loading and recipe exists
   return (
     <Link href={`/recipe/${recipe.id}`} asChild>
       <Pressable
@@ -108,6 +185,16 @@ const styles = StyleSheet.create({
   details: {
     fontSize: 12,
     // color: '#555', // Use theme color
+  },
+  // --- Skeleton Styles ---
+  skeletonImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+  },
+  skeletonText: {
+    borderRadius: 4, // Slight rounding for text placeholders
+    marginBottom: 8, // Spacing between skeleton lines
   },
 });
 

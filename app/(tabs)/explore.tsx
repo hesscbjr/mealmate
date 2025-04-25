@@ -33,6 +33,20 @@ export default function ExploreScreen() {
     }
   };
 
+  // --- New Handler to Clear Recipe Store ---
+  const handleClearRecipeState = async () => {
+    try {
+      await AsyncStorage.removeItem("mealmate:starred-recipes");
+      Alert.alert(
+        "Storage Cleared",
+        "Starred recipes state has been cleared. Please reload the app."
+      );
+    } catch (error) {
+      console.error("Failed to clear recipe state:", error);
+      Alert.alert("Error", "Failed to clear recipe state.");
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -48,6 +62,16 @@ export default function ExploreScreen() {
             onPress={handleClearUserState}
             variant="secondary"
             style={{ borderColor: "#FF6347", borderWidth: 1 }}
+          />
+        </View>
+
+        {/* --- New Button to Clear Recipe Store --- */}
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Clear Starred Recipes"
+            onPress={handleClearRecipeState}
+            variant="secondary"
+            style={{ borderColor: "#1E90FF", borderWidth: 1 }} // Different color for distinction
           />
         </View>
       </View>

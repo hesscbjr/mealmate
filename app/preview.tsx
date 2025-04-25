@@ -1,12 +1,21 @@
+import Button from "@/components/atoms/Button";
+import Icon from "@/components/atoms/Icon";
 import Text from "@/components/atoms/Text";
+import ScanImage from "@/components/molecules/ScanImage";
 import RecipeList from "@/components/organisms/RecipeList";
 import { useIngredientExtraction } from "@/hooks/useIngredientExtraction";
 import { useRecipeSuggestions } from "@/hooks/useRecipeSuggestions";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Loading messages for ingredients
 const ingredientLoadingMessages = [
@@ -30,6 +39,8 @@ export default function PreviewScreen() {
   const { imageUri } = useLocalSearchParams<{ imageUri: string }>();
   const themeBackgroundColor = useThemeColor({}, "background");
   const themeTintColor = useThemeColor({}, "tint");
+  const insets = useSafeAreaInsets();
+  const { width: screenWidth } = useWindowDimensions();
 
   // State for cycling loading messages
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
@@ -37,19 +48,25 @@ export default function PreviewScreen() {
     ingredientLoadingMessages
   );
 
+  // Calculate image container height based on screen width
+  // Assuming paddingHorizontal: 20 on imageWrapper
+  const wrapperPadding = 40; // 20 left + 20 right
+  const availableWidth = screenWidth - wrapperPadding;
+  // Width is 45% of availableWidth, height equals width due to aspectRatio: 1
+  const imageContainerSize = availableWidth * 0.45;
+
   // --- Hooks ---
-  // 1. Extract Ingredients
   const {
     data: ingredientData,
     loading: ingredientLoading,
     error: ingredientError,
   } = useIngredientExtraction(imageUri);
 
-  // 2. Fetch Recipes (only if ingredients are successfully extracted)
   const {
     recipes,
     loading: recipeLoading,
     error: recipeError,
+    refreshRecipes,
   } = useRecipeSuggestions(
     ingredientData && ingredientData.ingredients.length > 0
       ? ingredientData.ingredients
@@ -59,12 +76,15 @@ export default function PreviewScreen() {
   // Effect to cycle through loading messages
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
-    const isLoading = ingredientLoading || recipeLoading;
+    // Only show loading messages when ingredients *or* recipes are loading initially
+    // Recipe refresh loading is handled within RecipeList now
+    const isLoading = ingredientLoading || (recipeLoading && !recipes);
 
     // Set the correct message array based on which step is loading
     if (ingredientLoading) {
       setCurrentLoadingMessages(ingredientLoadingMessages);
-    } else if (recipeLoading) {
+    } else if (recipeLoading && !recipes) {
+      // Only show recipe messages on initial load
       setCurrentLoadingMessages(recipeLoadingMessages);
     }
 
@@ -85,19 +105,22 @@ export default function PreviewScreen() {
         clearInterval(intervalId);
       }
     };
-    // Depend on both loading states and the message array itself to restart interval if messages change
-  }, [ingredientLoading, recipeLoading, currentLoadingMessages]);
+    // Depend on loading states and recipes presence for initial load messages
+  }, [ingredientLoading, recipeLoading, recipes, currentLoadingMessages]);
 
   if (!imageUri) {
     // Handle the case where the URI is missing
     return (
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: themeBackgroundColor }]}
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: themeBackgroundColor, paddingTop: insets.top },
+        ]}
       >
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>No image URI provided.</Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -105,7 +128,6 @@ export default function PreviewScreen() {
     if (ingredientLoading) {
       return (
         <View style={styles.centeredContent}>
-          <ActivityIndicator size="large" color={themeTintColor} />
           <Text style={styles.loadingText}>
             {currentLoadingMessages[loadingMessageIndex]}
           </Text>
@@ -141,7 +163,7 @@ export default function PreviewScreen() {
       }
 
       if (ingredientData.ingredients.length > 0) {
-        // Render ingredients list AND recipe section
+        // Render ingredients, refresh button (conditionally disabled), and recipe section
         return (
           <View style={{ flex: 1 }}>
             {/* Display ingredients as comma-separated text */}
@@ -163,10 +185,25 @@ export default function PreviewScreen() {
               </Text>
             </View>
 
-            {/* Recipe Section - Rendered below ingredients */}
-            <View style={styles.recipeSectionContainer}>
-              {renderRecipeContent()}
+            {/* Refresh Button - Show immediately, disable while loading */}
+            <View style={styles.refreshButtonContainer}>
+              <Button
+                title="Don't like these? Get 5 More"
+                iconRight={
+                  <Icon
+                    name="sync-alt"
+                    size={16}
+                    color={themeBackgroundColor}
+                  />
+                }
+                onPress={refreshRecipes}
+                variant="primary"
+                disabled={recipeLoading} // Directly use recipeLoading state
+              />
             </View>
+
+            {/* Recipe Section - Rendered below ingredients */}
+            {renderRecipeContent()}
           </View>
         );
       }
@@ -190,62 +227,61 @@ export default function PreviewScreen() {
 
   // Separate function to render recipe part (loading/error/list)
   const renderRecipeContent = () => {
-    if (recipeLoading) {
-      return (
-        <View style={styles.centeredContentRecipe}>
-          <ActivityIndicator size="large" color={themeTintColor} />
-          <Text style={[styles.loadingText, { marginTop: 10 }]}>
-            {currentLoadingMessages[loadingMessageIndex]}
-          </Text>
-        </View>
-      );
-    }
-
-    if (recipeError) {
-      return (
-        <View style={styles.centeredContentRecipe}>
-          <Text style={styles.errorText}>{recipeError}</Text>
-          <Text
-            style={[styles.errorText, { marginTop: 10, fontWeight: "normal" }]}
-          >
-            Please try again later.
-          </Text>
-        </View>
-      );
-    }
-
-    // Pass recipes, loading, error state to the RecipeList organism
-    // Note: loading/error handled above, could pass directly if RecipeList handles them
-    if (recipes) {
-      return <RecipeList recipes={recipes} loading={false} error={null} />;
-    }
-
-    return null; // No recipes yet or finished loading but empty
+    // Always render RecipeList. It handles its own loading (skeleton) and error states.
+    // Pass loading and error states directly.
+    return (
+      <RecipeList
+        recipes={recipes}
+        loading={recipeLoading}
+        error={recipeError}
+      />
+    );
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: themeBackgroundColor }]}
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: themeBackgroundColor, paddingTop: insets.top },
+      ]}
     >
-      <View style={styles.imageWrapper}>
-        <View style={styles.imageContainer}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.imageWrapper}>
           <Image
+            source={require("@/assets/images/looking.png")}
+            style={styles.lookingImage}
+            resizeMode="contain"
+          />
+          <ScanImage
             source={{ uri: imageUri }}
-            style={styles.image}
+            style={styles.imageContainer}
+            height={imageContainerSize}
             resizeMode="cover"
+            loading={ingredientLoading}
+            scanColor="rgba(0, 255, 0, 0.5)"
+            scanHeight={3}
+            duration={1000}
+            pauseDuration={500}
           />
         </View>
-      </View>
 
-      {/* Render main content area */}
-      <View style={styles.contentContainer}>{renderIngredientContent()}</View>
-    </SafeAreaView>
+        <View style={styles.contentContainer}>{renderIngredientContent()}</View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContentContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
   errorContainer: {
     flex: 1,
@@ -263,14 +299,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   imageWrapper: {
-    flex: 0.4, // Slightly less space for image
-    justifyContent: "center",
+    flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  lookingImage: {
+    width: "45%",
+    aspectRatio: 1,
   },
   imageContainer: {
-    width: "100%",
+    width: "45%",
     aspectRatio: 1,
     borderRadius: 15,
     overflow: "hidden",
@@ -281,21 +322,16 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   contentContainer: {
-    flex: 0.6, // More space for content
-    paddingHorizontal: 5, // Reduce horizontal padding for more list width
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingHorizontal: 5,
+    paddingTop: 5,
+    flex: 1, // Ensure content container takes up remaining space
   },
   centeredContent: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-  },
-  centeredContentRecipe: {
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    minHeight: 150, // Keep some min height for ingredient loading/error
   },
   loadingText: {
     marginTop: 10,
@@ -303,8 +339,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   ingredientTextContainer: {
-    paddingHorizontal: 15, // Consistent padding
-    marginBottom: 10, // Space before recipe list
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    paddingTop: 10,
   },
   ingredientHeader: {
     fontSize: 16,
@@ -313,11 +350,8 @@ const styles = StyleSheet.create({
   ingredientValue: {
     fontWeight: "normal",
   },
-  recipeSectionContainer: {
-    // Container for recipe loading/list
-    flex: 1, // Allow recipe list to take remaining space
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: "#ccc", // Separator line
-    paddingTop: 10, // Space above recipe content
+  refreshButtonContainer: {
+    marginHorizontal: 15,
+    marginVertical: 10,
   },
 });

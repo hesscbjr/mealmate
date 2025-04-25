@@ -80,7 +80,8 @@ export interface RecipeDetails extends SpoonacularRecipe { // Extends base recip
  * @returns A promise that resolves to an array of SpoonacularRecipe objects.
  */
 export async function fetchRecipesByIngredients(
-  ingredients: string[]
+  ingredients: string[],
+  offset: number = 0
 ): Promise<SpoonacularRecipe[]> {
   if (!SPOONACULAR_API_KEY) {
     throw new Error("Spoonacular API Key is not configured.");
@@ -100,7 +101,7 @@ export async function fetchRecipesByIngredients(
   // Construct the request URL
   const url = `${API_URL}?includeIngredients=${encodeURIComponent(
     query
-  )}&number=5&addRecipeInformation=true&instructionsRequired=true&sort=max-used-ingredients&apiKey=${SPOONACULAR_API_KEY}`;
+  )}&number=5&offset=${offset}&addRecipeInformation=true&instructionsRequired=true&sort=max-used-ingredients&apiKey=${SPOONACULAR_API_KEY}`;
 
   console.log("Fetching Spoonacular recipes with URL:", url); // Log the URL for debugging
 

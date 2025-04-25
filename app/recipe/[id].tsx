@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -14,7 +15,11 @@ import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
 import { useRecipeDetails } from "@/hooks/useRecipeDetails";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { RecipeInstructionStep } from "@/services/spoonacular";
+import {
+  RecipeInstructionStep,
+  SpoonacularRecipe,
+} from "@/services/spoonacular";
+import { useRecipeStore } from "@/store/recipes";
 import { parseAndLinkSummary } from "@/utils/textUtils";
 
 export default function RecipeDetailScreen() {
@@ -29,12 +34,34 @@ export default function RecipeDetailScreen() {
 
   const { recipeDetails, loading, error } = useRecipeDetails(id);
 
-  // Set header title dynamically
+  // --- Zustand Recipe Store --- //
+  const { toggleStar } = useRecipeStore();
+  const currentlyStarred = useRecipeStore((state) =>
+    state.isStarred(recipeDetails?.id ?? -1)
+  );
+
+  // Set header title and star button dynamically
   useLayoutEffect(() => {
     if (recipeDetails) {
-      navigation.setOptions({ title: recipeDetails.title });
+      navigation.setOptions({
+        title: recipeDetails.title,
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => toggleStar(recipeDetails as SpoonacularRecipe)}
+            style={{ marginRight: 15 }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Icon
+              name={currentlyStarred ? "star" : "staro"}
+              size={24}
+              color={themeTintColor}
+              iconSet="antdesign"
+            />
+          </TouchableOpacity>
+        ),
+      });
     }
-  }, [navigation, recipeDetails]);
+  }, [navigation, recipeDetails, currentlyStarred, toggleStar, themeTintColor]);
 
   const handleOpenSourceUrl = () => {
     if (recipeDetails?.sourceUrl) {
