@@ -2,15 +2,19 @@ import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
 import PhotoList from "@/components/organisms/PhotoList";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useUserStore } from "@/store/user";
 import { router } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const themeBackgroundColor = useThemeColor({}, "background");
   const buttonIconColor = useThemeColor({}, "background");
   const borderBottomColor = useThemeColor({}, "icon");
+  const textColor = useThemeColor({}, "text");
+
+  const name = useUserStore((state) => state.name);
 
   const handleNavigateToCapture = () => {
     router.push("/capture");
@@ -21,6 +25,9 @@ export default function HomeScreen() {
       style={[styles.container, { backgroundColor: themeBackgroundColor }]}
     >
       <View style={styles.innerContainer}>
+        <Text style={[styles.greetingText, { color: textColor }]}>
+          {`What's in the pantry today, ${name || "buddy"}?`}
+        </Text>
         <View style={[styles.buttonContainer, { borderBottomColor }]}>
           <Button
             title="What's In The Kitchen?"
@@ -43,6 +50,13 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
+  },
+  greetingText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 10,
+    paddingHorizontal: 15,
   },
   buttonContainer: {
     padding: 15,

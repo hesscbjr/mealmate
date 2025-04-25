@@ -59,6 +59,62 @@ import Button from '@/components/atoms/Button';
 />
 ```
 
+### `Input.tsx`
+
+- **Purpose**: A themed text input component with an optional label.
+- **Props**:
+  - `label`: (Optional) Text to display above the input field.
+  - `style`: (Optional) Custom `TextStyle` to apply directly to the `TextInput` element.
+  - `containerStyle`: (Optional) Custom `ViewStyle` to apply to the outer container wrapping the label and input.
+  - `labelStyle`: (Optional) Custom `TextStyle` to apply to the label.
+  - ... other `TextInputProps` (like `value`, `onChangeText`, `placeholder`, `keyboardType`, etc.).
+- **Theming**: Uses `useThemeColor` to set the background, text, border, and placeholder text colors based on the current theme.
+- **Usage**:
+
+```tsx
+import Input from '@/components/atoms/Input';
+
+// ...
+
+const [name, setName] = useState('');
+
+// ...
+
+<Input
+  label="Your Name"
+  value={name}
+  onChangeText={setName}
+  placeholder="Enter your full name"
+  autoCapitalize="words"
+/>
+
+<Input
+  value={email} // Assuming email state exists
+  onChangeText={setEmail} // Assuming setEmail state setter exists
+  placeholder="Email Address"
+  keyboardType="email-address"
+  containerStyle={{ marginTop: 20 }} // Custom container style
+/>
+```
+
+### `PhotoThumbnail.tsx`
+
+- **Purpose**: Displays a small, square image thumbnail, typically used in grids or lists.
+- **Props**:
+  - `uri`: (Required) The URI of the image to display.
+  - `size`: (Optional) The width and height of the thumbnail. Defaults to `100`.
+  - `style`: (Optional) Custom `ImageStyle` to apply to the `Image` component.
+  - ... other `ImageProps`.
+- **Usage**:
+
+```tsx
+import PhotoThumbnail from "@/components/atoms/PhotoThumbnail";
+
+// ...
+
+<PhotoThumbnail uri={imageUri} size={80} style={{ borderRadius: 10 }} />;
+```
+
 ## Development Guidelines
 
 - Atoms should be pure UI components with no internal logic related to data fetching or complex state management.

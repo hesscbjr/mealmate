@@ -1,13 +1,21 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
 import Icon from "@/components/atoms/Icon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useUserStore } from "@/store/user";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const onboardingCompleted = useUserStore(
+    (state) => state.completedOnboarding
+  );
+
+  if (!onboardingCompleted) {
+    return <Redirect href="/(onboarding)/welcome" />;
+  }
 
   return (
     <Tabs
