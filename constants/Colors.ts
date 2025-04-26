@@ -11,7 +11,7 @@ export const Colors = {
     text: '#4D2C0A', // Brown from app icon outlines
     background: '#fff',
     tint: tintColorLight,
-    icon: '#6B4226', // Medium brown
+    icon: '#fff', // Medium brown
     tabIconDefault: "#6B4226",
     tabIconSelected: tintColorLight,
     secondary: "#F2D06B", // Gold from app icon
@@ -31,7 +31,7 @@ export const Colors = {
     text: "#FFFFFF", // Pure white for high contrast
     background: '#262626', // Dark slate grey base
     tint: tintColorDark, // Keep existing green accent
-    icon: '#FFFFFF', // White icons
+    icon: '#fff', // White icons
     tabIconDefault: "#A0A0A0", // Muted grey for inactive tabs
     tabIconSelected: tintColorDark, // Keep green accent for selected tab
     secondary: "#404040", // Slightly lighter grey for secondary elements

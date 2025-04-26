@@ -9,6 +9,8 @@ This directory contains organism-level components according to Atomic Design pri
 - `RecipeList`: Displays a list of recipe cards.
 - `CameraView`: (Assumed future component) Handles camera interaction.
 - `IngredientSection`: Displays extracted ingredients, handles related errors, and shows recipe suggestions with refresh functionality.
+- `RecipeDetailSkeleton`: Displays a skeleton loader for the recipe detail screen.
+- `RecipeHeader`: Displays the header for the recipe detail screen, including title, meta, and actions.
 
 ## Interactions
 

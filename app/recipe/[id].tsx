@@ -152,13 +152,7 @@ export default function RecipeDetailScreen() {
         </View>
         {summaryData?.fullSummary && (
           <View style={styles.summaryContentContainer}>
-            <ExpandableText
-              text={summaryData.fullSummary}
-              initialLines={2}
-              textStyle={{ color: themeSubtleTextColor }}
-              buttonTextStyle={styles.viewMoreText}
-              buttonColor={themeTintColor}
-            />
+            <ExpandableText text={summaryData.fullSummary} initialLines={2} />
           </View>
         )}
       </View>
@@ -189,13 +183,7 @@ export default function RecipeDetailScreen() {
             title="View Full Recipe Online"
             variant="primary"
             onPress={handleOpenSourceUrl}
-            iconLeft={
-              <Icon
-                name="external-link-alt"
-                size={16}
-                color={buttonTextColor}
-              />
-            }
+            iconLeft={<Icon name="external-link-alt" size={16} />}
             activeOpacity={0.7}
           />
         </View>
@@ -218,16 +206,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 40,
-  },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  errorText: {
-    fontSize: 16,
-    textAlign: "center",
   },
   image: {
     width: "100%",

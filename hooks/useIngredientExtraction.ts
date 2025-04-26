@@ -3,7 +3,7 @@ import { readFileAsBase64 } from "@/utils/fileSystem";
 import { useEffect, useState } from "react";
 
 // Define the structure returned by the hook
-interface ExtractionResult {
+export interface ExtractionResult {
   ingredients: string[];
   description?: string;
 }

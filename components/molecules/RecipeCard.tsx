@@ -22,7 +22,6 @@ interface RecipeCardProps {
 
 // Get screen width for layout calculations
 const { width } = Dimensions.get("window");
-const textContainerWidth = width - 145; // Screen width minus image width, margins and padding
 
 // Skeleton Component for loading state
 const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
