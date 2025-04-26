@@ -6,6 +6,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import Text from "@/components/atoms/Text";
+import NoRecipesFound from "@/components/molecules/NoRecipesFound";
 import RecipeCard from "@/components/molecules/RecipeCard";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular";
@@ -69,18 +70,7 @@ const RecipeList: React.FC<RecipeListProps> = ({
 
   // Empty state handling (when not loading and no recipes)
   if (!loading && (!recipes || recipes.length === 0)) {
-    return (
-      <View
-        style={[
-          styles.centeredContainer,
-          { backgroundColor: themeBackgroundColor },
-        ]}
-      >
-        <Text style={styles.infoText}>
-          No recipes found for these ingredients.
-        </Text>
-      </View>
-    );
+    return <NoRecipesFound />;
   }
 
   // Determine data source based on loading state

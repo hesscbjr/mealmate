@@ -1,5 +1,5 @@
-import Button from "@/components/atoms/Button";
 import Text from "@/components/atoms/Text";
+import RecipeSortPreferenceToggle from "@/components/molecules/RecipeSortPreferenceToggle";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { RecipeSortPreference, useUserStore } from "@/store/user";
 import React from "react";
@@ -26,34 +26,11 @@ export default function ProfileScreen() {
         <Text style={styles.nameText}>{`${firstName} ${lastName}`}</Text>
 
         <View style={styles.settingsSection}>
-          <Text style={styles.settingLabel}>Recipe Recommendation Sort</Text>
-          <View style={styles.toggleContainer}>
-            <Button
-              title="Maximize Used Ingredients"
-              onPress={() => handleSetPreference("max-used-ingredients")}
-              variant={
-                currentPreference === "max-used-ingredients"
-                  ? "primary"
-                  : "secondary"
-              }
-              style={styles.toggleButton}
-            />
-            <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>OR</Text>
-              <View style={styles.dividerLine} />
-            </View>
-            <Button
-              title="Minimize Missing Ingredients"
-              onPress={() => handleSetPreference("min-missing-ingredients")}
-              variant={
-                currentPreference === "min-missing-ingredients"
-                  ? "primary"
-                  : "secondary"
-              }
-              style={styles.toggleButton}
-            />
-          </View>
+          <Text style={styles.settingLabel}>Recipe Recommendation Sorting</Text>
+          <RecipeSortPreferenceToggle
+            currentPreference={currentPreference}
+            onSetPreference={handleSetPreference}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -82,29 +59,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 15,
-  },
-  toggleContainer: {
-    // Buttons stack vertically by default with the Button component's marginVertical
-  },
-  toggleButton: {
-    // Add any specific styles for toggle buttons if needed
-    // Example: make them full width
-    // width: '100%',
-  },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 15, // Adjust spacing as needed
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#ccc", // Or use a theme color
-  },
-  dividerText: {
-    marginHorizontal: 10,
-    color: "#888", // Or use a theme color
-    fontSize: 12,
-    fontWeight: "bold",
   },
 });

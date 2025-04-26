@@ -10,10 +10,8 @@ export type RecipeSortPreference =
 interface UserState {
   firstName: string;
   lastName: string;
-  dietaryRestrictions: string[];
   completedOnboarding: boolean;
   recipeSortPreference: RecipeSortPreference;
-  setDietary: (diet: string[]) => void;
   markOnboardingComplete: () => void;
   setRecipeSortPreference: (preference: RecipeSortPreference) => void;
   setFullName: (firstName: string, lastName: string) => void;
@@ -24,10 +22,8 @@ export const useUserStore = create<UserState>()(
     (set) => ({
       firstName: "",
       lastName: "",
-      dietaryRestrictions: [],
       completedOnboarding: false,
       recipeSortPreference: "max-used-ingredients",
-      setDietary: (diet) => set({ dietaryRestrictions: diet }),
       markOnboardingComplete: () => set({ completedOnboarding: true }),
       setRecipeSortPreference: (preference) =>
         set({ recipeSortPreference: preference }),

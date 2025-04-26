@@ -39,7 +39,7 @@ const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
     >
       <View style={styles.horizontalContainer}>
         {/* Left side - Image Placeholder */}
-        <View style={styles.imageWrapper}>
+        <View style={styles.skeletonImageWrapper}>
           <LinearGradient
             colors={gradientColors}
             start={{ x: 0, y: 0 }}
@@ -184,6 +184,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    borderRadius: 8,
+  },
+  skeletonImageWrapper: {
+    width: 100,
+    height: 100,
+    marginRight: 15,
     borderRadius: 8,
   },
   image: {

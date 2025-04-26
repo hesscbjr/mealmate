@@ -1,71 +1,47 @@
-# Organisms (`components/organisms/`)
+# Organisms
 
 ## Purpose
 
-This directory contains organism components, which are assemblies of molecules and/or atoms forming distinct sections of an interface.
-Organisms represent more complex, standalone parts of the UI, such as a header, a recipe list section, or a camera view with controls.
+This directory contains organism-level components according to Atomic Design principles. Organisms are complex UI components composed of molecules and atoms, representing distinct sections of an interface.
 
 ## Key Components
 
-- **`DietaryRestrictionPicker.tsx`**: Displays a grid of `DietaryOption` molecules, allowing users to select their dietary preferences. It interacts with the user store to manage state.
-- **`OnboardingContainer.tsx`**: Provides a consistent background gradient container for the onboarding flow screens.
-
-  - **Props**:
-    - `children`: `React.ReactNode` - The content to be rendered inside the container.
-    - `style?`: `ViewStyle` - Optional additional styles for the container.
-  - **Usage**:
-
-    ```tsx
-    import OnboardingContainer from "@/components/organisms/OnboardingContainer";
-
-    <OnboardingContainer>
-      <Text>Your onboarding screen content here</Text>
-    </OnboardingContainer>;
-    ```
-
-- **`RecipeList.tsx`**: Displays a list of `RecipeCard` molecules.
-- **`PhotoList.tsx`**: Displays a list of captured photos, likely used in the recipe generation flow.
-- **`StarredEmptyState.tsx`**: Displays a message and image when the user has no starred recipes.
+- `RecipeList`: Displays a list of recipe cards.
+- `CameraView`: (Assumed future component) Handles camera interaction.
+- `IngredientSection`: Displays extracted ingredients, handles related errors, and shows recipe suggestions with refresh functionality.
 
 ## Interactions
 
-- Organisms combine `molecules` and `atoms` to create functional UI sections.
-- They often manage some internal state or fetch data relevant to their section (though major data fetching might be delegated to screens or hooks).
-- They handle interactions within their section and pass necessary data and handlers down to molecules and atoms.
+- Organisms orchestrate the display and interaction of multiple smaller components.
+- They typically receive data and callbacks as props from screen-level components or state management.
 
 ## Configuration
 
-Organisms might require specific props to function, often including data arrays or callbacks for actions.
+- No specific configuration is typically required for organisms themselves, but they rely on props passed down.
 
 ## Development Guidelines
 
-- Organisms should represent a significant, self-contained piece of the UI.
-- Aim for composition over inheritance.
-- Keep data fetching and complex state management localized if possible, or receive data via props.
-- Style using `StyleSheet.create` or `nativewind`.
-- Import from `molecules`, `atoms`, hooks, stores, or standard libraries.
+- Organisms should encapsulate a significant piece of UI functionality.
+- Avoid putting business logic or direct data fetching inside organisms; pass data and handlers as props.
+- Import components primarily from `molecules/` and `atoms/`.
 
 ## Usage Examples
 
 ```tsx
-import DietaryRestrictionPicker from "@/components/organisms/DietaryRestrictionPicker";
-import RecipeList from "@/components/organisms/RecipeList";
-import StarredEmptyState from "@/components/organisms/StarredEmptyState";
+// Example usage within a screen component
+import IngredientSection from "@/components/organisms/IngredientSection";
 
-const UserProfileScreen = () => {
-  // User store handles the state internally in this example
+function MyScreen() {
+  // ... fetch data, get handlers ...
+
   return (
-    <View>
-      <Text>Your Profile</Text>
-      {/* ... other profile elements ... */}
-      <DietaryRestrictionPicker />
-      {/* ... other profile elements ... */}
-      {starredRecipes.length > 0 ? (
-        <RecipeList recipes={starredRecipes} loading={false} error={null} />
-      ) : (
-        <StarredEmptyState />
-      )}
-    </View>
+    <IngredientSection
+      ingredientData={data}
+      ingredientError={error}
+      onRetry={handleRetry}
+      recipes={recipeData}
+      // ... other props
+    />
   );
-};
+}
 ```

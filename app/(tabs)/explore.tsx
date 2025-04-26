@@ -33,7 +33,6 @@ export default function ExploreScreen() {
     }
   };
 
-  // --- New Handler to Clear Recipe Store ---
   const handleClearRecipeState = async () => {
     try {
       await AsyncStorage.removeItem("mealmate:starred-recipes");

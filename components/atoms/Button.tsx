@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import TouchableOpacityHaptic from "./TouchableOpacityHaptic";
 
-interface ButtonProps extends TouchableOpacityProps {
+export interface ButtonProps extends TouchableOpacityProps {
   title: string;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;

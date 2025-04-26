@@ -9,6 +9,12 @@ export interface RelatedRecipeLink {
   title: string;
 }
 
+// Define the structure for related recipe links found in the summary
+export interface RelatedRecipe {
+  id: string;
+  title: string;
+}
+
 // Define the return structure for the parsing function
 export interface ParsedSummary {
   summaryText: string;

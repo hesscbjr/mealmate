@@ -12,17 +12,14 @@ import React, { useCallback } from "react";
 import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Define style types for clarity
 type DynamicStyles = {
   container: ViewStyle;
   innerContainer: ViewStyle;
   buttonContainer: ViewStyle;
-  captureButton: ViewStyle; // Keep even if empty for consistency
   starredSection: ViewStyle;
   sectionHeader: TextStyle;
 };
 
-// Function to generate styles dynamically based on theme colors
 const getStyles = (
   themeBackgroundColor: string,
   borderBottomColor: string
@@ -30,7 +27,7 @@ const getStyles = (
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: themeBackgroundColor, // Dynamic background color
+      backgroundColor: themeBackgroundColor,
     },
     innerContainer: {
       flex: 1,
@@ -38,11 +35,8 @@ const getStyles = (
     },
     buttonContainer: {
       paddingBottom: 15,
-      borderBottomWidth: StyleSheet.hairlineWidth, // Ensure border is visible
-      borderBottomColor: borderBottomColor, // Dynamic border color
-    },
-    captureButton: {
-      // Add any specific styles for the button itself if needed later
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: borderBottomColor,
     },
     starredSection: {
       flex: 1,
@@ -56,14 +50,11 @@ const getStyles = (
     },
   });
 
-const DEFAULT_GREETING_NAME = "buddy";
-
 export default function HomeScreen() {
   const themeBackgroundColor = useThemeColor({}, "background");
   const buttonIconColor = useThemeColor({}, "buttonText");
   const borderBottomColor = useThemeColor({}, "icon");
 
-  // Generate styles using the theme colors
   const styles = getStyles(themeBackgroundColor, borderBottomColor);
 
   const firstName = useUserStore((state) => state.firstName);
@@ -71,35 +62,30 @@ export default function HomeScreen() {
 
   const handleNavigateToCapture = useCallback(() => {
     router.push({ pathname: "/(capture)/capture" });
-  }, []); // Empty dependency array
+  }, []);
 
   return (
-    // Use the dynamically generated styles
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         <Greeting name={firstName} />
-        {/* Use the dynamically generated styles */}
         <View style={styles.buttonContainer}>
           <Button
             title="What's In The Kitchen?"
             iconLeft={<Icon name="camera" size={18} color={buttonIconColor} />}
             onPress={handleNavigateToCapture}
             variant="primary"
-            style={styles.captureButton} // Apply consistent style object
           />
         </View>
 
-        {/* Starred Recipes Section - Header always visible */}
         <View style={styles.starredSection}>
           <Text style={styles.sectionHeader}>
             Starred Recipes
             {starredRecipes.length > 0 ? ` (${starredRecipes.length})` : ""}
           </Text>
-          {/* Conditionally render RecipeList or the new StarredEmptyState component */}
           {starredRecipes.length > 0 ? (
             <RecipeList recipes={starredRecipes} loading={false} error={null} />
           ) : (
-            <StarredEmptyState /> // Use the extracted component
+            <StarredEmptyState />
           )}
         </View>
       </View>

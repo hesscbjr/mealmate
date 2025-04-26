@@ -46,7 +46,7 @@ const StarredEmptyState: React.FC = () => {
         No starred recipes yet. Hit 'What's in the kitchen' to get started!
       </Text>
       <Image
-        source={require("@/assets/images/no-starred-recipes.png")} // Ensure this path is correct relative to the new component location
+        source={require("@/assets/images/sad.png")} // Ensure this path is correct relative to the new component location
         style={styles.emptyListImage}
         resizeMode="contain"
       />

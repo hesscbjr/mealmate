@@ -6,7 +6,9 @@
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-type ColorName = keyof typeof Colors.light & keyof typeof Colors.dark;
+// Dynamically generate the ColorName type from the Colors object keys
+// Ensures that any key added to Colors.light/dark is automatically included
+type ColorName = keyof (typeof Colors.light & typeof Colors.dark);
 
 // Overload signature for single color name (existing behavior)
 export function useThemeColor(
