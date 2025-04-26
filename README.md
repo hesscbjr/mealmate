@@ -52,7 +52,7 @@ MealMate is a smart recipe planner built with React Native and Expo. It allows u
 
     ```bash
     # Start the development server
-    npx expo start
+    npx expo start -c
 
     # Run on iOS simulator (requires Xcode)
     npx expo run:ios
@@ -60,16 +60,3 @@ MealMate is a smart recipe planner built with React Native and Expo. It allows u
     # Run on Android emulator/device (requires Android Studio setup)
     npx expo run:android
     ```
-
-## Development Principles
-
-- **Minimal:** Write only the absolute minimum code needed.
-- **Self-Documenting:** Use precise naming, SRP components, and clear data flow. Comment only when necessary.
-- **Secure:** Implement robust security, especially for data handling (using Supabase Auth).
-- **Performant:** Optimize for mobile performance.
-- **Separation of Concerns:** Maintain clear boundaries between UI, logic, and backend access.
-- **Planning:** Create plans in `/plans` before implementing features.
-- **READMEs:** Ensure every directory has a `README.md`.
-- **Atomic Design:** Structure components in `atoms/`, `molecules/`, `organisms/`.
-
-_(This project is being developed for Tenex.)_

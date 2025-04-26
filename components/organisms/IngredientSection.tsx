@@ -187,9 +187,8 @@ const IngredientSection: React.FC<IngredientSectionProps> = ({
             duration={FADE_IN_DURATION_MS}
             style={styles.recipeListContainer}
           >
-            {!recipeLoading &&
-              recipes &&
-              recipes.length > 0 &&
+            {recipes &&
+              (recipes.length > 0 || recipeLoading) &&
               !recipeError && (
                 <View style={styles.refreshButtonContainer}>
                   <Button
