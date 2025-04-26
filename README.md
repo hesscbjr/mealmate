@@ -47,7 +47,6 @@ MealMate is a smart recipe planner built with React Native and Expo. It allows u
     # .env
     EXPO_PUBLIC_OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
     EXPO_PUBLIC_SPOONACULAR_API_KEY=<YOUR_SPOONACULAR_API_KEY>
-    # Add other API keys as needed
     ```
 4.  **Run the app:**
 
