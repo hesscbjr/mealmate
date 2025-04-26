@@ -1,9 +1,8 @@
-// A simple approach to potentially get the API key.
-// It's better to use a dedicated library like react-native-dotenv if possible,
-// but process.env might work in some Expo setups, especially with web.
+
+import { RecipeSortPreference } from "@/store/user";
+
 const SPOONACULAR_API_KEY = process.env.EXPO_PUBLIC_SPOONACULAR_API_KEY;
 
-// Basic check if the key is loaded - provide a warning if not.
 if (!SPOONACULAR_API_KEY) {
   console.warn(
     "Spoonacular API Key not found. Please ensure SPOONACULAR_API_KEY is set in your environment variables (.env file)."
@@ -12,29 +11,23 @@ if (!SPOONACULAR_API_KEY) {
 
 const API_URL = "https://api.spoonacular.com/recipes/complexSearch";
 
-// Interface based on the user's provided example and the JSON structure
 export interface SpoonacularRecipe {
   id: number;
   title: string;
   image: string;
-  // Added fields from the example JSON that might be useful
   readyInMinutes: number;
   servings: number;
   sourceUrl: string;
   summary: string;
-  // Basic dietary flags
   vegetarian: boolean;
   vegan: boolean;
   glutenFree: boolean;
   dairyFree: boolean;
-  // Extra info from the example
-  usedIngredientCount?: number; // Made optional as they might not always be present
-  missedIngredientCount?: number; // Made optional
-  likes?: number; // Made optional
+  usedIngredientCount?: number;
+  missedIngredientCount?: number;
+  likes?: number;
 }
 
-// --- Interface for detailed recipe information ---
-// Based on Spoonacular /recipes/{id}/information endpoint
 export interface RecipeIngredient {
   id: number;
   aisle: string | null;
@@ -58,7 +51,7 @@ export interface RecipeInstructionStep {
   step: string;
   ingredients: { id: number; name: string; localizedName: string; image: string }[];
   equipment: { id: number; name: string; localizedName: string; image: string }[];
-  length?: { number: number; unit: string }; // Optional length for steps
+  length?: { number: number; unit: string };
 }
 
 export interface AnalyzedInstruction {
@@ -66,15 +59,12 @@ export interface AnalyzedInstruction {
   steps: RecipeInstructionStep[];
 }
 
-export interface RecipeDetails extends SpoonacularRecipe { // Extends base recipe info
+export interface RecipeDetails extends SpoonacularRecipe {
   extendedIngredients: RecipeIngredient[];
-  instructions: string | null; // Raw instructions string (might be null)
+  instructions: string | null;
   analyzedInstructions: AnalyzedInstruction[];
-  // Add other potentially useful fields from the endpoint if needed
-  // e.g., winePairing, taste, nutrition, etc.
 }
 
-import { RecipeSortPreference } from "@/store/user"; // Import the type
 
 /**
  * Fetches recipes from Spoonacular based on a list of ingredients.
@@ -92,19 +82,15 @@ export async function fetchRecipesByIngredients(
     throw new Error("Spoonacular API Key is not configured.");
   }
 
-  // Prepare the ingredients query string (lowercase, trim, join)
   const query = ingredients
     .map((i) => i.toLowerCase().trim())
-    .filter((i) => i) // Remove empty strings after trimming
+    .filter((i) => i)
     .join(",");
 
-  // const query = "jellybeans";
-
   if (!query) {
-    return []; // Return empty if no valid ingredients are passed
+    return [];
   }
 
-  // Construct the request URL
   const url = `${API_URL}?includeIngredients=${encodeURIComponent(
     query
   )}&number=5&offset=${offset}&addRecipeInformation=true&instructionsRequired=true&sort=${sortPreference}&ignorePantry=true&apiKey=${SPOONACULAR_API_KEY}`;
@@ -127,14 +113,11 @@ export async function fetchRecipesByIngredients(
 
     const data = await response.json();
 
-    // Ensure data.results exists and is an array before returning
     if (data && Array.isArray(data.results)) {
-      // You might want to add further validation here to ensure
-      // each item in data.results matches the SpoonacularRecipe interface
       return data.results as SpoonacularRecipe[];
     } else {
       console.warn("Spoonacular API response did not contain 'results' array:", data);
-      return []; // Return empty array if the structure is unexpected
+      return [];
     }
   } catch (error) {
     console.error("Network or parsing error fetching Spoonacular recipes:", error);
@@ -175,7 +158,6 @@ export async function fetchRecipeDetailsById(
 
     const data: RecipeDetails = await response.json();
 
-    // Basic validation
     if (data && typeof data === 'object' && data.id) {
       return data;
     } else {
@@ -187,6 +169,6 @@ export async function fetchRecipeDetailsById(
       "Network or parsing error fetching Spoonacular recipe details:",
       error
     );
-    throw error; // Re-throw
+    throw error;
   }
 } 
