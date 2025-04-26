@@ -53,7 +53,6 @@ export function usePreviewAnimation({
   const [initialLoadHasCompleted, setInitialLoadHasCompleted] = useState(false);
   const animationProgress = useSharedValue(0);
 
-  // --- Dimension Calculations ---
   const loadingImageSize = screenWidth * LOADING_IMAGE_SCALE_FACTOR;
   const finalImageWidth = screenWidth * FINAL_IMAGE_SCALE_FACTOR;
   const finalImageHeight = finalImageWidth;
@@ -68,7 +67,6 @@ export function usePreviewAnimation({
   const loadingTextY =
     initialImageY + loadingImageSize + LOADING_TEXT_VERTICAL_SPACING;
 
-  // --- Animation Trigger Effect ---
   useEffect(() => {
     if (initialLoadHasCompleted || !imageUri) {
       return;
@@ -95,7 +93,6 @@ export function usePreviewAnimation({
     animationProgress,
   ]);
 
-  // --- Animated Styles ---
   const loadingImageStyle = useAnimatedStyle(() => {
     const currentWidth = interpolate(
       animationProgress.value,
@@ -182,7 +179,7 @@ export function usePreviewAnimation({
     loadingImageStyle,
     finalImageStyle,
     loadingTextY,
-    finalImageHeight, // Also return this as it's needed in the component
-    finalImageWidth, // Also return this as it's needed in the component
+    finalImageHeight,
+    finalImageWidth,
   };
 } 

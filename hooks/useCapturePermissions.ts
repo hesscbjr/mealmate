@@ -44,19 +44,21 @@ export function useCapturePermissions(): UseCapturePermissionsReturn {
           cameraPermission?.status === PermissionStatus.UNDETERMINED && requestCameraPermission(),
           mediaPermission?.status === PermissionStatus.UNDETERMINED && requestMediaPermission(),
         ]);
-        // After requests, the hooks will update, triggering another effect run
-        return; // Exit early, wait for status update
+        return;
       }
 
-
-      // Determine combined status once both are determined
       const cameraGranted = cameraPermission?.granted ?? false;
       const mediaGranted = mediaPermission?.granted ?? false;
       const cameraDenied = cameraPermission?.status === PermissionStatus.DENIED && !cameraPermission?.canAskAgain;
-      const mediaDenied = mediaPermission?.status === PermissionStatus.DENIED && !mediaPermission?.canAskAgain;
-       const cameraRestricted = cameraPermission?.status === PermissionStatus.DENIED && cameraPermission?.canAskAgain === false; // Consider restricted as denied
-       const mediaRestricted = mediaPermission?.status === PermissionStatus.DENIED && mediaPermission?.canAskAgain === false; // Consider restricted as denied
-
+      const mediaDenied =
+        mediaPermission?.status === PermissionStatus.DENIED &&
+        !mediaPermission?.canAskAgain;
+      const cameraRestricted =
+        cameraPermission?.status === PermissionStatus.DENIED &&
+        cameraPermission?.canAskAgain === false;
+      const mediaRestricted =
+        mediaPermission?.status === PermissionStatus.DENIED &&
+        mediaPermission?.canAskAgain === false;
 
       if (cameraGranted && mediaGranted) {
         setGranted(true);
@@ -65,14 +67,12 @@ export function useCapturePermissions(): UseCapturePermissionsReturn {
         setGranted(false);
         setDenied(true);
       } else {
-        // Handles cases like granted but askable again, or still undetermined somehow
         setGranted(false);
-        setDenied(false); // Not fully granted, but not permanently denied either
+        setDenied(false);
       }
 
-      // Update loading state only after status is determined
       if (cameraPermission?.status && mediaPermission?.status) {
-          setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -83,7 +83,6 @@ export function useCapturePermissions(): UseCapturePermissionsReturn {
   const requestAllPermissions = useCallback(async () => {
     setLoading(true);
     await Promise.all([requestCameraPermission(), requestMediaPermission()]);
-    // Status will update via useEffect
   }, [requestCameraPermission, requestMediaPermission]);
 
   const openSettings = useCallback(() => {
