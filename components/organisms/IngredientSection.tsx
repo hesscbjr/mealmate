@@ -46,7 +46,14 @@ const IngredientSection: React.FC<IngredientSectionProps> = ({
     infoText: themeInfoTextColor,
     shadow: themeShadowColor, // Needed for styles
     imagePlaceholder: themeImagePlaceholderColor, // Needed for styles
-  } = useThemeColor({}, ["text", "infoText", "shadow", "imagePlaceholder"]);
+    buttonText: themeButtonTextColor, // Needed for styles
+  } = useThemeColor({}, [
+    "text",
+    "infoText",
+    "shadow",
+    "imagePlaceholder",
+    "buttonText",
+  ]);
 
   // Define necessary styles locally (copied & adapted from PreviewScreen)
   // Note: Ideally, styles would be shared or managed differently (e.g., nativewind)
@@ -191,7 +198,7 @@ const IngredientSection: React.FC<IngredientSectionProps> = ({
                       <Icon
                         name="sync-alt"
                         size={16}
-                        color={themeBackgroundColor} // Use passed theme color
+                        color={themeButtonTextColor} // Use passed theme color
                       />
                     }
                     onPress={refreshRecipes} // Use prop

@@ -39,7 +39,7 @@ export default function RecipeDetailScreen() {
   const themeSubtleTextColor = useThemeColor({}, "icon");
   const themeTintColor = useThemeColor({}, "tint");
   const themeBorderColor = useThemeColor({}, "icon");
-
+  const buttonTextColor = useThemeColor({}, "buttonText");
   const { recipeDetails, loading, error, notFound } = useRecipeDetails(id);
 
   const summaryData = useMemo(() => {
@@ -193,7 +193,7 @@ export default function RecipeDetailScreen() {
               <Icon
                 name="external-link-alt"
                 size={16}
-                color={themeBackgroundColor}
+                color={buttonTextColor}
               />
             }
             activeOpacity={0.7}
