@@ -13,11 +13,10 @@ interface UserState {
   dietaryRestrictions: string[];
   completedOnboarding: boolean;
   recipeSortPreference: RecipeSortPreference;
-  setFirstName: (firstName: string) => void;
-  setLastName: (lastName: string) => void;
   setDietary: (diet: string[]) => void;
   markOnboardingComplete: () => void;
   setRecipeSortPreference: (preference: RecipeSortPreference) => void;
+  setFullName: (firstName: string, lastName: string) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -28,12 +27,11 @@ export const useUserStore = create<UserState>()(
       dietaryRestrictions: [],
       completedOnboarding: false,
       recipeSortPreference: "max-used-ingredients",
-      setFirstName: (firstName) => set({ firstName }),
-      setLastName: (lastName) => set({ lastName }),
       setDietary: (diet) => set({ dietaryRestrictions: diet }),
       markOnboardingComplete: () => set({ completedOnboarding: true }),
       setRecipeSortPreference: (preference) =>
         set({ recipeSortPreference: preference }),
+      setFullName: (firstName, lastName) => set({ firstName, lastName }),
     }),
     {
       name: "mealmate:user",

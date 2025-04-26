@@ -26,7 +26,13 @@ const FadeInView: React.FC<FadeInViewProps> = ({
   }, [fadeAnim, delay, duration]);
 
   return (
-    <Animated.View style={[style, { opacity: fadeAnim }]}>
+    <Animated.View
+      style={[
+        { width: "100%", alignItems: "center" },
+        style,
+        { opacity: fadeAnim },
+      ]}
+    >
       {children}
     </Animated.View>
   );

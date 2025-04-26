@@ -6,16 +6,46 @@
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+type ColorName = keyof typeof Colors.light & keyof typeof Colors.dark;
+
+// Overload signature for single color name (existing behavior)
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
-) {
-  const theme = useColorScheme() ?? 'light';
-  const colorFromProps = props[theme];
+  colorName: ColorName
+): string;
 
-  if (colorFromProps) {
-    return colorFromProps;
+// Overload signature for multiple color names
+export function useThemeColor<
+T extends ColorName>(
+  props: Record<string, never>, // Props override not supported for multiple colors
+  colorNames: T[]
+): Record<T, string>;
+
+// Implementation signature
+export function useThemeColor<
+T extends ColorName>(
+  props: { light?: string; dark?: string } | Record<string, never>,
+  colorNameOrNames: T | T[]
+): string | Record<T, string> {
+  const theme = useColorScheme() ?? 'light';
+
+  if (typeof colorNameOrNames === 'string') {
+    // Handle single color name
+    const colorName = colorNameOrNames;
+    const colorFromProps = (props as { light?: string; dark?: string })[theme];
+
+    if (colorFromProps) {
+      return colorFromProps;
+    } else {
+      return Colors[theme][colorName];
+    }
   } else {
-    return Colors[theme][colorName];
+    // Handle array of color names
+    const colorNames = colorNameOrNames;
+    const result: Partial<Record<T, string>> = {}; // Use Partial initially
+    for (const name of colorNames) {
+      result[name] = Colors[theme][name];
+    }
+    return result as Record<T, string>; // Assert the final type
   }
 }

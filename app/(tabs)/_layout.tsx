@@ -14,7 +14,7 @@ export default function TabLayout() {
   );
 
   if (!onboardingCompleted) {
-    return <Redirect href="/(onboarding)/welcome" />;
+    return <Redirect href="/onboarding/welcome" />;
   }
 
   return (

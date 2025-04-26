@@ -1,84 +1,90 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
-import * as Haptics from "expo-haptics";
-import React, { ReactNode } from "react";
+import React, { ReactNode, forwardRef } from "react";
 import {
   GestureResponderEvent,
+  Pressable,
   StyleProp,
   StyleSheet,
   Text,
-  TouchableOpacity,
   TouchableOpacityProps,
   View,
   ViewStyle,
 } from "react-native";
+import TouchableOpacityHaptic from "./TouchableOpacityHaptic";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
   variant?: "default" | "primary" | "secondary";
-  style?: StyleProp<ViewStyle>;
-  activeOpacity?: number;
+  containerStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 }
 
-const Button = ({
-  title,
-  iconLeft,
-  iconRight,
-  style,
-  variant = "default",
-  activeOpacity = 0.7,
-  onPress,
-  ...rest
-}: ButtonProps) => {
-  const themeBackground = useThemeColor({}, "background");
-  const themeText = useThemeColor({}, "buttonText");
-  const themeTint = useThemeColor({}, "tint");
+const Button = forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
+  (
+    {
+      title,
+      iconLeft,
+      iconRight,
+      containerStyle,
+      variant = "default",
+      onPress: onPressProp,
+      disabled,
+      ...rest
+    },
+    ref
+  ) => {
+    const {
+      background: themeBackground,
+      buttonText: themeText,
+      tint: themeTint,
+    } = useThemeColor({}, ["background", "buttonText", "tint"]);
 
-  let buttonBackgroundColor: string;
-  let buttonTextColor: string;
-
-  switch (variant) {
-    case "primary":
-      buttonBackgroundColor = themeTint;
-      buttonTextColor = themeText;
-      break;
-    case "secondary":
-      buttonBackgroundColor = themeBackground;
-      buttonTextColor = themeTint;
-      break;
-    case "default":
-    default:
-      buttonBackgroundColor = themeBackground;
-      buttonTextColor = themeText;
-      break;
-  }
-
-  const handlePress = (event: GestureResponderEvent) => {
-    Haptics.selectionAsync();
-    if (onPress) {
-      onPress(event);
+    let buttonBackgroundColor: string;
+    let buttonTextColor: string;
+    switch (variant) {
+      case "primary":
+        buttonBackgroundColor = themeTint;
+        buttonTextColor = themeText;
+        break;
+      case "secondary":
+        buttonBackgroundColor = themeBackground;
+        buttonTextColor = themeTint;
+        break;
+      case "default":
+      default:
+        buttonBackgroundColor = themeBackground;
+        buttonTextColor = themeText;
+        break;
     }
-  };
 
-  return (
-    <TouchableOpacity
-      style={[styles.button, { backgroundColor: buttonBackgroundColor }, style]}
-      activeOpacity={activeOpacity}
-      onPress={handlePress}
-      {...rest}
-    >
-      <View style={styles.contentContainer}>
-        {iconLeft && <View style={styles.iconContainerLeft}>{iconLeft}</View>}
-        <Text style={[styles.text, { color: buttonTextColor }]}>{title}</Text>
-        {iconRight && (
-          <View style={styles.iconContainerRight}>{iconRight}</View>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-};
+    const finalButtonStyle = [
+      styles.button,
+      { backgroundColor: buttonBackgroundColor },
+      containerStyle,
+    ];
+
+    return (
+      <TouchableOpacityHaptic
+        {...rest}
+        ref={ref}
+        style={finalButtonStyle}
+        onPress={onPressProp}
+        disabled={disabled}
+        accessibilityLabel={rest.accessibilityLabel ?? title}
+      >
+        <View style={styles.contentContainer}>
+          {iconLeft && <View style={styles.iconContainerLeft}>{iconLeft}</View>}
+          <Text style={[styles.text, { color: buttonTextColor }]}>{title}</Text>
+          {iconRight && (
+            <View style={styles.iconContainerRight}>{iconRight}</View>
+          )}
+        </View>
+      </TouchableOpacityHaptic>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   button: {
@@ -106,5 +112,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+Button.displayName = "Button";
 
 export default Button;

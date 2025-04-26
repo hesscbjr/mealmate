@@ -62,7 +62,6 @@ export async function extractIngredients(
         result.ingredients.every((item) => typeof item === "string") &&
         (result.description === undefined || typeof result.description === "string")
       ) {
-        console.log("Parsed ingredients response:", result);
         return result;
       }
     }

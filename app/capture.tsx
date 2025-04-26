@@ -92,7 +92,6 @@ export default function CaptureScreen() {
           // base64: true, // Include if you need base64 data later
         });
         if (photo) {
-          console.log("Photo taken:", photo.uri);
           // await savePhoto(photo.uri); // Save photo first if needed, or maybe after preview?
           router.push({
             pathname: "/preview",
@@ -117,7 +116,6 @@ export default function CaptureScreen() {
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const imageUri = result.assets[0].uri;
-        console.log("Image picked:", imageUri);
         // await savePhoto(imageUri); // Save photo first if needed, or maybe after preview?
         router.push({ pathname: "/preview", params: { imageUri: imageUri } });
         // router.back(); // Example: go back after picking image

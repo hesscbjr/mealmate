@@ -334,7 +334,6 @@ export default function RecipeDetailScreen() {
             <Pressable
               key={relatedRecipe.id}
               onPress={() => {
-                console.log(`Pushing to /recipe/${relatedRecipe.id}`);
                 router.push({
                   pathname: "/recipe/[id]",
                   params: { id: relatedRecipe.id },

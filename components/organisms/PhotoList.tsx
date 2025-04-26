@@ -48,11 +48,9 @@ const PhotoList: React.FC<PhotoListProps> = ({
 
   // Function to load photos from storage
   const loadPhotos = useCallback(async () => {
-    console.log("PhotoList focusing, loading photos..."); // Debug log
     setLoading(true);
     try {
       const savedPhotos = await getSavedPhotos();
-      console.log("Loaded photos:", savedPhotos.length);
       setPhotos(savedPhotos);
     } catch (error) {
       console.error("PhotoList failed to load photos:", error);
@@ -67,12 +65,9 @@ const PhotoList: React.FC<PhotoListProps> = ({
       let isActive = true;
 
       const load = async () => {
-        console.log("PhotoList focusing, loading photos..."); // Debug log
-        // Don't setLoading(true) here, do it initially or before async call
         try {
           const savedPhotos = await getSavedPhotos();
           if (isActive) {
-            console.log("Loaded photos:", savedPhotos.length);
             setPhotos(savedPhotos);
             setLoading(false); // Set loading false after photos are set
           }
@@ -82,7 +77,6 @@ const PhotoList: React.FC<PhotoListProps> = ({
             setLoading(false); // Also stop loading on error
           }
         }
-        // Removed finally block, handle loading state within try/catch
       };
 
       // Set loading true before starting the async load
@@ -91,7 +85,6 @@ const PhotoList: React.FC<PhotoListProps> = ({
 
       return () => {
         isActive = false; // Prevent state updates after unmount/blur
-        console.log("PhotoList blurred/unmounted");
       };
     }, []) // Empty dependency array for useFocusEffect's callback
   );
@@ -99,12 +92,10 @@ const PhotoList: React.FC<PhotoListProps> = ({
   // Handle photo deletion within the component
   const handleDeletePhoto = useCallback(
     async (uriToDelete: string) => {
-      console.log("Deleting photo:", uriToDelete);
       try {
         const updatedPhotos = photos.filter((uri) => uri !== uriToDelete);
         await setPhotosInStorage(updatedPhotos); // Use the new storage function
         setPhotos(updatedPhotos); // Update state immediately
-        console.log("Photo deleted, remaining:", updatedPhotos.length);
       } catch (error) {
         console.error("PhotoList failed to delete photo:", error);
       }
@@ -114,7 +105,6 @@ const PhotoList: React.FC<PhotoListProps> = ({
 
   // Handle photo press within the component (optional)
   const handlePhotoPress = (uri: string) => {
-    console.log("PhotoItem pressed:", uri);
     // TODO: Implement navigation or other action if needed later
   };
 

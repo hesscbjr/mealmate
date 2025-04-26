@@ -8,6 +8,21 @@ Organisms represent more complex, standalone parts of the UI, such as a header, 
 ## Key Components
 
 - **`DietaryRestrictionPicker.tsx`**: Displays a grid of `DietaryOption` molecules, allowing users to select their dietary preferences. It interacts with the user store to manage state.
+- **`OnboardingContainer.tsx`**: Provides a consistent background gradient container for the onboarding flow screens.
+
+  - **Props**:
+    - `children`: `React.ReactNode` - The content to be rendered inside the container.
+    - `style?`: `ViewStyle` - Optional additional styles for the container.
+  - **Usage**:
+
+    ```tsx
+    import OnboardingContainer from "@/components/organisms/OnboardingContainer";
+
+    <OnboardingContainer>
+      <Text>Your onboarding screen content here</Text>
+    </OnboardingContainer>;
+    ```
+
 - _Add other organisms here as they are created..._
 
 ## Interactions

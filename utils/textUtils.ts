@@ -89,7 +89,6 @@ export function parseAndLinkSummary(summaryHtml: string | null): ParsedSummary {
       // result.summaryText = summaryHtml.replace(stripHtmlRegex, '').trim();
       // console.warn("Summary text became empty after splitting, consider fallback.");
   }
-  console.log("result", result);
   return result;
 }
 

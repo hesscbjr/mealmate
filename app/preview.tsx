@@ -268,7 +268,11 @@ export default function PreviewScreen() {
               </View>
             </FadeInView>
 
-            <FadeInView delay={500} duration={500} style={{ flex: 1 }}>
+            <FadeInView
+              delay={500}
+              duration={500}
+              style={styles.recipeListContainer}
+            >
               {(recipes || recipeError) && (
                 <View style={styles.refreshButtonContainer}>
                   <Button
@@ -462,5 +466,9 @@ const styles = StyleSheet.create({
   },
   finalImageWrapper: {
     alignItems: "center",
+  },
+  recipeListContainer: {
+    flex: 1,
+    paddingHorizontal: 15,
   },
 });

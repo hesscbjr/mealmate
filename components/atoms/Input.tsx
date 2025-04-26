@@ -1,5 +1,5 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -18,41 +18,51 @@ interface InputProps extends TextInputProps {
   inputStyle?: StyleProp<TextStyle>; // Allow overriding input style directly
 }
 
-const Input = ({
-  label,
-  style, // Rename to inputStyle for clarity if preferred, but 'style' is conventional for the main element
-  containerStyle,
-  labelStyle,
-  ...rest
-}: InputProps) => {
-  const themeBackground = useThemeColor({}, "background");
-  const themeText = useThemeColor({}, "text");
-  const themeBorder = useThemeColor({}, "icon"); // Using 'icon' for border/subtle elements seems consistent
-  const themePlaceholder = useThemeColor({}, "icon"); // Use 'icon' color for placeholder
+const Input = React.forwardRef<TextInput, InputProps>(
+  (
+    { label, inputStyle, containerStyle, labelStyle, ...rest },
+    ref // Receive the ref
+  ) => {
+    // Destructure style from rest and ignore it to prevent collision
+    const { style, ...restProps } = rest;
 
-  return (
-    <View style={[styles.container, containerStyle]}>
-      {label && (
-        <Text style={[styles.label, { color: themeText }, labelStyle]}>
-          {label}
-        </Text>
-      )}
-      <TextInput
-        style={[
-          styles.input,
-          {
-            backgroundColor: themeBackground, // Match background for subtlety or use a slightly different shade if needed
-            color: themeText,
-            borderColor: themeBorder,
-          },
-          style, // Apply passed styles last
-        ]}
-        placeholderTextColor={themePlaceholder}
-        {...rest} // Pass down other TextInput props
-      />
-    </View>
-  );
-};
+    const themeBackground = useThemeColor({}, "background");
+    const themeText = useThemeColor({}, "text");
+    const themeBorder = useThemeColor({}, "icon"); // Using 'icon' for border/subtle elements seems consistent
+    // Derive placeholder color from text color with opacity
+    const placeholderColor = themeText + "80"; // '80' hex suffix for ~50% opacity
+
+    // Memoize the TextInput style object
+    const textInputComputedStyle = useMemo(
+      () => [
+        styles.input,
+        {
+          backgroundColor: themeBackground,
+          color: themeText,
+          borderColor: themeBorder,
+        },
+        inputStyle, // Apply passed inputStyle last
+      ],
+      [themeBackground, themeText, themeBorder, inputStyle]
+    );
+
+    return (
+      <View style={[styles.container, containerStyle]}>
+        {label && (
+          <Text style={[styles.label, { color: themeText }, labelStyle]}>
+            {label}
+          </Text>
+        )}
+        <TextInput
+          ref={ref} // Pass the ref to the TextInput
+          style={textInputComputedStyle} // Use the memoized style
+          placeholderTextColor={placeholderColor} // Use derived placeholder color
+          {...restProps} // Pass down remaining TextInput props
+        />
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

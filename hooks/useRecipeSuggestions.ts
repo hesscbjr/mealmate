@@ -25,14 +25,12 @@ export function useRecipeSuggestions(ingredients: string[] | null) {
     setLoading(true);
     setError(null);
     try {
-      console.log(`Fetching recipes with offset: ${currentOffset}`); // Log the offset being used
       const result = await fetchRecipesByIngredients(
         ingredients,
         sortPreference,
         currentOffset
       );
       setRecipes(result);
-      console.log("Recipes fetched:", result);
       // Increment offset for the *next* potential fetch
       setOffset(currentOffset + 5);
     } catch (err: any) {
@@ -41,7 +39,6 @@ export function useRecipeSuggestions(ingredients: string[] | null) {
       // Optionally reset recipes on error?
       // setRecipes(null);
     } finally {
-      console.log("Recipe suggestion fetch completed");
       setLoading(false);
     }
   }, [ingredients, sortPreference]);

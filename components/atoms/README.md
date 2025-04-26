@@ -197,3 +197,24 @@ import Text from "@/components/atoms/Text";
 ```
 
 ```
+
+### `Stagger.tsx`
+
+- **Purpose**: Wraps multiple child components and applies a staggered `FadeInView` animation to each valid React element child.
+- **Props**:
+  - `children`: `React.ReactNode` - The child elements to animate.
+  - `parentDelay?`: `number` (default: 0) - Initial delay before the first child animates.
+  - `stagger?`: `number` (default: 150) - Delay (ms) between each subsequent child's animation.
+  - `duration?`: `number` (default: 500) - Duration (ms) of the fade-in animation for each child.
+  - `style?`: `ViewStyle` - Optional style applied to the container `View` wrapping children.
+- **Usage**:
+
+  ```tsx
+  import Stagger from '@/components/atoms/Stagger';
+
+  <Stagger parentDelay={100} stagger={200}>
+    <Text>First Item</Text>
+    <Image source={...} />
+    <Button title="Action" />
+  </Stagger>
+  ```

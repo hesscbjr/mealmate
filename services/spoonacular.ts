@@ -99,7 +99,6 @@ export async function fetchRecipesByIngredients(
     .join(",");
 
   if (!query) {
-    console.log("No valid ingredients provided to fetchRecipesByIngredients.");
     return []; // Return empty if no valid ingredients are passed
   }
 
@@ -107,8 +106,6 @@ export async function fetchRecipesByIngredients(
   const url = `${API_URL}?includeIngredients=${encodeURIComponent(
     query
   )}&number=5&offset=${offset}&addRecipeInformation=true&instructionsRequired=true&sort=${sortPreference}&ignorePantry=true&apiKey=${SPOONACULAR_API_KEY}`;
-
-  console.log("Fetching Spoonacular recipes with URL:", url); // Log the URL for debugging
 
   try {
     const response = await fetch(url);
@@ -156,8 +153,6 @@ export async function fetchRecipeDetailsById(
 
   const detailsUrl = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${SPOONACULAR_API_KEY}`;
 
-  console.log("Fetching Spoonacular recipe details with URL:", detailsUrl);
-
   try {
     const response = await fetch(detailsUrl);
 
@@ -176,7 +171,6 @@ export async function fetchRecipeDetailsById(
 
     // Basic validation
     if (data && typeof data === 'object' && data.id) {
-      console.log("Spoonacular recipe details:", data);
       return data;
     } else {
       console.warn("Spoonacular details API response was not a valid object:", data);
