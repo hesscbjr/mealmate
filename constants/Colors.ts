@@ -1,53 +1,67 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 const tintColorLight = '#2A5C33'; // Darker mint green from app icon
 const tintColorDark = '#5A9E64'; // Darker green for dark mode tint
 
+// Common Colors
+const white = '#fff';
+const black = '#000';
+const coralRed = '#FF6B61';
+const brown = '#4D2C0A';
+const mediumBrown = '#6B4226';
+const pureWhite = '#FFFFFF';
+const lightGrey = '#D3D3D3';
+const mediumGrey = '#888';
+const darkGrey = '#333';
+const darkerGrey = '#555555';
+const placeholderGrey = '#E0E0E0';
+const darkPlaceholderGrey = '#383838';
+const inactiveTabGrey = '#A0A0A0';
+const darkSlateGrey = '#262626';
+const darkerSlateGrey = '#1C1C1C';
+const secondaryGrey = '#404040';
+
+
 export const Colors = {
   light: {
-    text: '#4D2C0A', // Brown from app icon outlines
-    background: '#fff',
+    text: brown, // Brown from app icon outlines
+    background: white,
     tint: tintColorLight,
-    icon: '#fff', // Medium brown
-    tabIconDefault: "#6B4226",
+    icon: white, // White icons
+    tabIconDefault: mediumBrown,
     tabIconSelected: tintColorLight,
-    secondary: "#F2D06B", // Gold from app icon
-    accent: "#FF6B61", // Coral red from heart
-    backgroundGradientStart: "#5A9E64",
-    backgroundGradientEnd: "#fff",
-    buttonText: "#fff",
-    captureBackground: '#000', // Black for capture screen background
-    captureButtonBackground: '#fff', // White button on black bg
-    captureButtonBorder: '#bbb', // Light grey border for button
-    shadow: '#000', // Standard shadow color
-    imagePlaceholder: '#E0E0E0', // Light grey placeholder
-    loadingText: '#4D2C0A', // Use main text color
-    infoText: '#6B4226', // Medium brown for info text
-    divider: '#D3D3D3', // Light grey for dividers
+    secondary: "#F2D06B", // Gold from app icon - Unique
+    accent: coralRed, // Coral red from heart
+    backgroundGradientStart: tintColorDark, // Re-using dark tint for consistency
+    backgroundGradientEnd: white,
+    buttonText: white,
+    captureBackground: black, // Black for capture screen background
+    captureButtonBackground: white, // White button on black bg
+    captureButtonBorder: "#bbb", // Light grey border for button - Unique
+    shadow: black, // Standard shadow color
+    imagePlaceholder: placeholderGrey, // Light grey placeholder
+    loadingText: brown, // Use main text color
+    infoText: mediumBrown, // Medium brown for info text
+    divider: lightGrey, // Light grey for dividers
   },
   dark: {
-    text: "#FFFFFF", // Pure white for high contrast
-    background: '#262626', // Dark slate grey base
+    text: pureWhite, // Pure white for high contrast
+    background: darkSlateGrey, // Dark slate grey base
     tint: tintColorDark, // Keep existing green accent
-    icon: '#fff', // White icons
-    tabIconDefault: "#A0A0A0", // Muted grey for inactive tabs
+    icon: white, // White icons
+    tabIconDefault: inactiveTabGrey, // Muted grey for inactive tabs
     tabIconSelected: tintColorDark, // Keep green accent for selected tab
-    secondary: "#404040", // Slightly lighter grey for secondary elements
-    accent: "#FF6B61", // Keep coral red accent for now
-    backgroundGradientStart: "#1C1C1C", // Darker slate for gradient start
-    backgroundGradientEnd: "#262626", // Base slate for gradient end
-    buttonText: "#fff", // Keep white
-    captureBackground: '#000', // Keep black
-    captureButtonBackground: '#333', // Keep dark grey
-    captureButtonBorder: '#888', // Keep medium grey
-    shadow: '#000', // Keep black
-    imagePlaceholder: '#383838', // Slightly different dark grey
-    loadingText: '#FFFFFF', // White text
-    infoText: '#B0B0B0', // Lighter grey for info text
-    divider: '#555555', // Darker grey for dividers in dark mode
+    secondary: secondaryGrey, // Slightly lighter grey for secondary elements
+    accent: coralRed, // Keep coral red accent
+    backgroundGradientStart: darkerSlateGrey, // Darker slate for gradient start
+    backgroundGradientEnd: darkSlateGrey, // Base slate for gradient end
+    buttonText: white, // Keep white
+    captureBackground: black, // Keep black
+    captureButtonBackground: darkGrey, // Keep dark grey
+    captureButtonBorder: mediumGrey, // Keep medium grey
+    shadow: black, // Keep black
+    imagePlaceholder: darkPlaceholderGrey, // Slightly different dark grey
+    loadingText: pureWhite, // White text
+    infoText: "#B0B0B0", // Lighter grey for info text - Unique
+    divider: darkerGrey, // Darker grey for dividers in dark mode
     link: tintColorDark, // Added link color using tint
   },
 };
