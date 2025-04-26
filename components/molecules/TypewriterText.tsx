@@ -24,66 +24,58 @@ const TypewriterText = ({
   const [messageIndex, setMessageIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [charIndex, setCharIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const clearTimers = () => {
-      if (typingIntervalRef.current) {
-        clearInterval(typingIntervalRef.current);
-        typingIntervalRef.current = null;
-      }
-      if (pauseTimeoutRef.current) {
-        clearTimeout(pauseTimeoutRef.current);
-        pauseTimeoutRef.current = null;
-      }
+    const clearAllTimeouts = () => {
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
+      typingTimeoutRef.current = null;
+      pauseTimeoutRef.current = null;
     };
 
-    if (
-      messages &&
-      messages.length > 0 &&
-      charIndex < messages[messageIndex].length
-    ) {
-      clearTimers();
-
-      typingIntervalRef.current = setInterval(() => {
-        if (charIndex < messages[messageIndex]?.length) {
-          setDisplayText((prev) => prev + messages[messageIndex][charIndex]);
-          Haptics.selectionAsync();
-          setCharIndex((prev) => prev + 1);
-        } else {
-          clearTimers();
-        }
-      }, typingSpeed);
-    } else if (
-      messages &&
-      messages.length > 0 &&
-      charIndex >= messages[messageIndex].length
-    ) {
-      clearTimers();
-
-      if (!pauseTimeoutRef.current) {
-        pauseTimeoutRef.current = setTimeout(() => {
-          setMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
-          setCharIndex(0);
-          setDisplayText("");
-          pauseTimeoutRef.current = null;
-        }, pauseDuration);
-      }
-    } else {
-      clearTimers();
+    if (!messages || messages.length === 0 || !messages[messageIndex]) {
+      clearAllTimeouts();
       setDisplayText("");
       setCharIndex(0);
       setMessageIndex(0);
+      setIsPaused(false);
+      return;
     }
 
-    return clearTimers;
-  }, [messages, messageIndex, charIndex, typingSpeed, pauseDuration]);
+    const currentMessage = messages[messageIndex];
+
+    if (!isPaused && charIndex < currentMessage.length) {
+      clearAllTimeouts();
+
+      typingTimeoutRef.current = setTimeout(() => {
+        setDisplayText((prev) => prev + currentMessage[charIndex]);
+        Haptics.selectionAsync();
+        setCharIndex((prev) => prev + 1);
+        typingTimeoutRef.current = null;
+      }, typingSpeed);
+    } else if (!isPaused && charIndex >= currentMessage.length) {
+      setIsPaused(true);
+      clearAllTimeouts();
+
+      pauseTimeoutRef.current = setTimeout(() => {
+        setMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
+        setCharIndex(0);
+        setDisplayText("");
+        setIsPaused(false);
+        pauseTimeoutRef.current = null;
+      }, pauseDuration);
+    }
+
+    return clearAllTimeouts;
+  }, [messages, messageIndex, charIndex, typingSpeed, pauseDuration, isPaused]);
 
   return (
     <Text style={style} {...rest}>
-      {displayText || "\u00A0"}
+      {displayText || " "}
     </Text>
   );
 };

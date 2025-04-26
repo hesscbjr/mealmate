@@ -19,7 +19,6 @@ const SHADOW_OFFSET_Y_FINAL = 1;
 const SHADOW_RADIUS_FINAL = 3.84;
 const ELEVATION_FINAL = 5;
 
-// Static styles defined outside the component
 const staticStyles = StyleSheet.create({
   scrollContentContainer: {
     flexGrow: 1,
@@ -41,7 +40,6 @@ const staticStyles = StyleSheet.create({
     textAlign: "center",
   },
   imageContainerBase: {
-    // Renamed from imageContainer, dynamic styles added inline
     aspectRatio: 1,
     borderRadius: IMAGE_BORDER_RADIUS_FINAL,
     shadowOffset: { width: 0, height: SHADOW_OFFSET_Y_FINAL },
@@ -84,7 +82,6 @@ const staticStyles = StyleSheet.create({
     marginVertical: 10,
   },
   loadingIngredientHeaderBase: {
-    // Renamed, dynamic style added inline
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
@@ -173,6 +170,7 @@ export default function PreviewScreen() {
           iconSet="fa5"
           style={{
             marginLeft: Platform.OS === "ios" ? 10 : 0,
+            marginRight: Platform.OS === "ios" ? 0 : 10,
           }}
         />
       ),
