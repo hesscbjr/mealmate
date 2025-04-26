@@ -18,6 +18,7 @@ import ExpandableText from "@/components/molecules/ExpandableText";
 import IconButton from "@/components/molecules/IconButton";
 import IngredientsList from "@/components/molecules/IngredientsList";
 import InstructionsList from "@/components/molecules/InstructionsList";
+import RecipeNotFound from "@/components/molecules/RecipeNotFound";
 import { useRecipeDetails } from "@/hooks/useRecipeDetails";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular";
@@ -141,7 +142,7 @@ export default function RecipeDetailScreen() {
   const themeTintColor = useThemeColor({}, "tint");
   const themeBorderColor = useThemeColor({}, "icon");
 
-  const { recipeDetails, loading, error } = useRecipeDetails(id);
+  const { recipeDetails, loading, error, notFound } = useRecipeDetails(id);
 
   const summaryData = useMemo(() => {
     if (recipeDetails?.summary) {
@@ -213,6 +214,10 @@ export default function RecipeDetailScreen() {
     return <RecipeDetailSkeleton themeBackgroundColor={themeBackgroundColor} />;
   }
 
+  if (notFound) {
+    return <RecipeNotFound />;
+  }
+
   if (error || !recipeDetails) {
     return (
       <View
@@ -222,7 +227,7 @@ export default function RecipeDetailScreen() {
         ]}
       >
         <Text style={[styles.errorText, { color: themeTextColor }]}>
-          {error || "Recipe not found."}
+          {error || "Could not load recipe details."}
         </Text>
       </View>
     );
@@ -308,20 +313,21 @@ export default function RecipeDetailScreen() {
 
       {/* Source Link Button */}
       {recipeDetails.sourceUrl && (
-        <Button
-          title="View Full Recipe Online"
-          variant="primary"
-          onPress={handleOpenSourceUrl}
-          iconLeft={
-            <Icon
-              name="external-link-alt"
-              size={16}
-              color={themeBackgroundColor}
-            />
-          }
-          style={styles.sourceButtonContainer}
-          activeOpacity={0.7}
-        />
+        <View style={styles.sourceButtonContainer}>
+          <Button
+            title="View Full Recipe Online"
+            variant="primary"
+            onPress={handleOpenSourceUrl}
+            iconLeft={
+              <Icon
+                name="external-link-alt"
+                size={16}
+                color={themeBackgroundColor}
+              />
+            }
+            activeOpacity={0.7}
+          />
+        </View>
       )}
 
       {/* Related Recipes Section */}

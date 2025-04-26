@@ -13,7 +13,6 @@ interface TouchableOpacityHapticProps extends PressableProps {
   children: ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
   // activeOpacity is simulated via style prop in Pressable
-  activeOpacity?: number;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -26,7 +25,6 @@ const TouchableOpacityHaptic = forwardRef<
       children,
       onPress: onPressProp, // Rename to avoid conflict
       hitSlop = { top: 8, bottom: 8, left: 8, right: 8 },
-      activeOpacity = 0.7,
       style,
       disabled,
       accessibilityRole = "button", // Default accessibility role
@@ -57,21 +55,21 @@ const TouchableOpacityHaptic = forwardRef<
     const computeStyle = useCallback(
       ({ pressed }: { pressed: boolean }): StyleProp<ViewStyle> => [
         style,
-        pressed && { opacity: activeOpacity },
+        pressed && { opacity: 0.7 }, // Applying default opacity directly
         disabled && { opacity: 0.5 }, // Standard disabled opacity
       ],
-      [style, activeOpacity, disabled]
+      [style, disabled] // Removed activeOpacity from dependencies
     ); // Memoize the style computation
 
     return (
       <Pressable
+        {...rest} // Spread remaining props first
         ref={ref}
         onPress={handlePress}
         hitSlop={hitSlop}
         style={computeStyle}
         disabled={disabled}
         accessibilityRole={accessibilityRole}
-        {...rest} // Spread remaining props first
       >
         {children}
       </Pressable>

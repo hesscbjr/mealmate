@@ -35,10 +35,9 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
-          <Stack.Screen name="capture" options={{ headerShown: false }} />
-          <Stack.Screen name="preview" options={{ headerShown: true }} />
+          <Stack.Screen name="(capture)" options={{ headerShown: false }} />
           <Stack.Screen name="recipe" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />

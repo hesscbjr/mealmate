@@ -432,7 +432,6 @@ const styles = StyleSheet.create({
     minHeight: 150,
   },
   ingredientTextContainer: {
-    paddingHorizontal: 15,
     paddingTop: 10,
     minHeight: 40,
   },

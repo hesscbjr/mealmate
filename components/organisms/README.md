@@ -23,7 +23,9 @@ Organisms represent more complex, standalone parts of the UI, such as a header, 
     </OnboardingContainer>;
     ```
 
-- _Add other organisms here as they are created..._
+- **`RecipeList.tsx`**: Displays a list of `RecipeCard` molecules.
+- **`PhotoList.tsx`**: Displays a list of captured photos, likely used in the recipe generation flow.
+- **`StarredEmptyState.tsx`**: Displays a message and image when the user has no starred recipes.
 
 ## Interactions
 
@@ -47,6 +49,8 @@ Organisms might require specific props to function, often including data arrays 
 
 ```tsx
 import DietaryRestrictionPicker from "@/components/organisms/DietaryRestrictionPicker";
+import RecipeList from "@/components/organisms/RecipeList";
+import StarredEmptyState from "@/components/organisms/StarredEmptyState";
 
 const UserProfileScreen = () => {
   // User store handles the state internally in this example
@@ -56,6 +60,11 @@ const UserProfileScreen = () => {
       {/* ... other profile elements ... */}
       <DietaryRestrictionPicker />
       {/* ... other profile elements ... */}
+      {starredRecipes.length > 0 ? (
+        <RecipeList recipes={starredRecipes} loading={false} error={null} />
+      ) : (
+        <StarredEmptyState />
+      )}
     </View>
   );
 };

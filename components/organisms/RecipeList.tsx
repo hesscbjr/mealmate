@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   },
   listWrapper: {
     flex: 1, // Make sure the wrapper fills available space
+    width: "100%",
   },
 });
 

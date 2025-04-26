@@ -3,11 +3,16 @@ import Text from "@/components/atoms/Text";
 import OnboardingContainer from "@/components/organisms/OnboardingContainer";
 import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet } from "react-native";
+import { Dimensions, Image, StyleSheet } from "react-native";
+
+// Get screen width
+const screenWidth = Dimensions.get("window").width;
+// Calculate image size (e.g., 80% of screen width)
+const imageSize = screenWidth * 0.8;
 
 export default function WelcomeScreen() {
   const handleContinue = () => {
-    router.push({ pathname: "/onboarding/user-info" });
+    router.push({ pathname: "/(onboarding)/user-info" });
   };
 
   return (
@@ -30,8 +35,8 @@ export default function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   welcomeImage: {
-    width: 300,
-    height: 300,
+    width: imageSize,
+    height: imageSize,
     resizeMode: "contain",
     marginBottom: 20,
   },

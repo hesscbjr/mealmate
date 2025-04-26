@@ -21,7 +21,7 @@ export default function UserInfoScreen() {
   const handleContinue = () => {
     if (canProceed) {
       setFullName(firstName.trim(), lastName.trim());
-      router.push({ pathname: "/onboarding/done" });
+      router.push({ pathname: "/(onboarding)/done" });
     }
   };
 

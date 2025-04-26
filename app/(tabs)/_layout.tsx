@@ -3,24 +3,23 @@ import React from "react";
 import { Platform } from "react-native";
 
 import Icon from "@/components/atoms/Icon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useUserStore } from "@/store/user";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const tintColor = useThemeColor({}, "tint");
   const onboardingCompleted = useUserStore(
     (state) => state.completedOnboarding
   );
 
   if (!onboardingCompleted) {
-    return <Redirect href="/onboarding/welcome" />;
+    return <Redirect href="/(onboarding)/welcome" />;
   }
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: tintColor,
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {

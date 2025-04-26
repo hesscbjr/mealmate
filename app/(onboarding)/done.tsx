@@ -4,7 +4,12 @@ import OnboardingContainer from "@/components/organisms/OnboardingContainer";
 import { useUserStore } from "@/store/user";
 import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet } from "react-native";
+import { Dimensions, Image, StyleSheet } from "react-native";
+
+// Get screen width
+const screenWidth = Dimensions.get("window").width;
+// Calculate image size (e.g., 80% of screen width)
+const imageSize = screenWidth * 0.8;
 
 export default function DoneScreen() {
   const markOnboardingComplete = useUserStore(
@@ -38,8 +43,8 @@ export default function DoneScreen() {
 
 const styles = StyleSheet.create({
   doneImage: {
-    width: 300,
-    height: 300,
+    width: imageSize,
+    height: imageSize,
     resizeMode: "contain",
     marginBottom: 30,
   },

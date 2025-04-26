@@ -125,7 +125,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           style,
           { borderBottomColor: themeBorderColor },
         ]}
-        activeOpacity={0.8} // Optional: adjust active opacity
       >
         <View style={styles.horizontalContainer}>
           {/* Left side - Image */}
