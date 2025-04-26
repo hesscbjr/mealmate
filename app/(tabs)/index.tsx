@@ -27,7 +27,7 @@ export default function HomeScreen() {
       <View style={styles.innerContainer}>
         <Greeting />
         <Button
-          title="What's In The Kitchen?"
+          title="Show me what you've got"
           iconLeft={<Icon name="camera" size={18} color={buttonIconColor} />}
           onPress={handleNavigateToCapture}
           variant="primary"

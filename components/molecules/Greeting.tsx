@@ -12,7 +12,7 @@ const Greeting = ({}: GreetingProps) => {
 
   return (
     <Text style={styles.greetingText}>
-      {`What's in the pantry today, ${firstName || DEFAULT_GREETING_NAME}?`}
+      {`What are you making today, ${firstName || DEFAULT_GREETING_NAME}?`}
     </Text>
   );
 };
