@@ -43,10 +43,10 @@ MealMate is a smart recipe planner built with React Native and Expo. It allows u
     ```
 3.  **Set up environment variables:**
     Create a `.env` file in the root directory and add any necessary environment variables (e.g., API keys for Supabase or recipe service).
-    ```
+    ```dotenv
     # .env
-    SUPABASE_URL=YOUR_SUPABASE_URL
-    SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+    EXPO_PUBLIC_OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
+    EXPO_PUBLIC_SPOONACULAR_API_KEY=<YOUR_SPOONACULAR_API_KEY>
     # Add other API keys as needed
     ```
 4.  **Run the app:**
