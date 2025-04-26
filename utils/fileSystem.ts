@@ -1,9 +1,10 @@
 import * as FileSystem from 'expo-file-system';
 
 /**
- * Reads a file from the given URI and returns its contents as a base64-encoded string.
- * @param uri - The URI of the file to read.
- * @returns A promise that resolves to the base64-encoded string of the file contents.
+ * Reads an image file from the given URI and returns its contents as a base64-encoded string.
+ * This is used in the ingredient extraction process to prepare the image data for analysis by the backend service (e.g., OpenAI).
+ * @param uri - The URI of the image file (e.g., from the camera or gallery).
+ * @returns A promise that resolves to the base64-encoded string of the image file contents.
  */
 export async function readFileAsBase64(uri: string): Promise<string> {
   try {

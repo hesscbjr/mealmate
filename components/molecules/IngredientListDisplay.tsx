@@ -1,3 +1,4 @@
+import Icon from "@/components/atoms/Icon";
 import Text from "@/components/atoms/Text";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { formatIngredientList } from "@/utils/formatters";
@@ -14,7 +15,13 @@ const IngredientListDisplay = ({ ingredients }: IngredientListDisplayProps) => {
   return (
     <View style={styles.ingredientTextContainer}>
       <Text style={[styles.ingredientHeader, { color: themeTextColor }]}>
-        🛒 Ingredients:{" "}
+        <Icon
+          name="shopping-cart"
+          size={16}
+          style={styles.iconStyle}
+          color={themeTextColor}
+        />{" "}
+        Ingredients:{" "}
         <Text style={[styles.ingredientValue, { color: themeTextColor }]}>
           {formatIngredientList(ingredients)}
         </Text>
@@ -37,5 +44,8 @@ const styles = StyleSheet.create({
   },
   ingredientValue: {
     fontWeight: "normal",
+  },
+  iconStyle: {
+    marginRight: 5,
   },
 });

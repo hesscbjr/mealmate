@@ -110,7 +110,9 @@ export async function fetchRecipesByIngredients(
   )}&number=5&offset=${offset}&addRecipeInformation=true&instructionsRequired=true&sort=${sortPreference}&ignorePantry=true&apiKey=${SPOONACULAR_API_KEY}`;
 
   try {
+    console.log("fetching recipes for", query);
     const response = await fetch(url);
+    console.log("got recipes for", query);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -156,7 +158,9 @@ export async function fetchRecipeDetailsById(
   const detailsUrl = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${SPOONACULAR_API_KEY}`;
 
   try {
+    console.log("fetching details for", id);
     const response = await fetch(detailsUrl);
+    console.log("got details for", id);
 
     if (!response.ok) {
       const errorText = await response.text();

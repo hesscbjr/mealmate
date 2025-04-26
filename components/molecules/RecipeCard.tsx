@@ -1,3 +1,4 @@
+import Icon from "@/components/atoms/Icon"; // Added Icon import
 import Text from "@/components/atoms/Text"; // Import custom Text atom
 import TouchableOpacityHaptic from "@/components/atoms/TouchableOpacityHaptic";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -157,10 +158,36 @@ const RecipeCard = ({ recipe, style, loading = false }: RecipeCardProps) => {
               {stripHtml(recipe.summary)}
             </Text>
             <Text style={[styles.details, { color: themeTextColor }]}>
-              ⏱️ {recipe.readyInMinutes} mins • 🍽️ Serves {recipe.servings}
-              {recipe.missedIngredientCount && recipe.missedIngredientCount > 0
-                ? ` • 🛒 ${recipe.missedIngredientCount} missing`
-                : ""}
+              <Icon
+                name="clockcircle"
+                iconSet="antdesign"
+                size={12}
+                style={styles.iconStyle}
+                color={themeTextColor}
+              />{" "}
+              {recipe.readyInMinutes} mins •{" "}
+              <Icon
+                name="utensils"
+                size={12}
+                style={styles.iconStyle}
+                color={themeTextColor}
+              />{" "}
+              Serves {recipe.servings}
+              {recipe.missedIngredientCount &&
+              recipe.missedIngredientCount > 0 ? (
+                <>
+                  {" • "}
+                  <Icon
+                    name="shopping-cart"
+                    size={12}
+                    style={styles.iconStyle}
+                    color={themeTextColor}
+                  />{" "}
+                  {recipe.missedIngredientCount} missing
+                </>
+              ) : (
+                ""
+              )}
             </Text>
             <View style={{ height: 36 }} />
           </View>
@@ -221,16 +248,21 @@ const styles = StyleSheet.create({
   },
   details: {
     fontSize: 12,
+    alignItems: "center", // Align icon and text vertically
   },
   skeletonImage: {
     width: "100%",
-    height: "100%",
+    height: 14,
+    overflow: "hidden",
   },
   skeletonText: {
     borderRadius: 4,
     marginBottom: 8,
     height: 14,
     overflow: "hidden",
+  },
+  iconStyle: {
+    marginRight: 4, // Add some space between icon and text
   },
 });
 

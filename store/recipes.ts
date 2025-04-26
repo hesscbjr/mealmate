@@ -1,4 +1,4 @@
-import { SpoonacularRecipe } from "@/services/spoonacular"; // Use existing type
+import { SpoonacularRecipe } from "@/services/spoonacular";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -19,11 +19,8 @@ export const useRecipeStore = create<RecipeStore>()(
 
         let updatedStarred: SpoonacularRecipe[];
         if (isCurrentlyStarred) {
-          // Remove the recipe
           updatedStarred = currentStarred.filter((r) => r.id !== recipe.id);
         } else {
-          // Add the recipe (ensure no duplicates, though some() check helps)
-          // Add to the beginning for most recent stars first, or end as preferred
           updatedStarred = [recipe, ...currentStarred.filter(r => r.id !== recipe.id)];
         }
         set({ starred: updatedStarred });
@@ -33,8 +30,8 @@ export const useRecipeStore = create<RecipeStore>()(
       },
     }),
     {
-      name: "mealmate:starred-recipes", // Unique AsyncStorage key
-      storage: createJSONStorage(() => AsyncStorage), // Use AsyncStorage
+      name: "mealmate:starred-recipes",
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 ); 

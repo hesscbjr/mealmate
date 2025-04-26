@@ -10,7 +10,11 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hesscbjunior.mealmate"
+      "bundleIdentifier": "com.hesscbjunior.mealmate",
+      "icon": {
+        "dark": "./assets/images/icon-dark.png",
+        "light": "./assets/images/icon.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -35,10 +39,13 @@
       [
         "expo-splash-screen",
         {
+          "backgroundColor": "#5A9E64",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#5A9E64"
+          "dark": {
+            "image": "./assets/images/splash-icon.png",
+            "backgroundColor": "#2A5C33"
+          },
+          "imageWidth": 200
         }
       ],
       [

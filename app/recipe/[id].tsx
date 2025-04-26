@@ -137,12 +137,7 @@ export default function RecipeDetailScreen() {
 
       {recipeDetails.extendedIngredients &&
         recipeDetails.extendedIngredients.length > 0 && (
-          <IngredientsList
-            ingredients={recipeDetails.extendedIngredients}
-            titleColor={themeTextColor}
-            itemColor={themeTextColor}
-            borderColor={themeBorderColor}
-          />
+          <IngredientsList ingredients={recipeDetails.extendedIngredients} />
         )}
 
       {recipeDetails.extendedIngredients &&
@@ -155,11 +150,6 @@ export default function RecipeDetailScreen() {
       <InstructionsList
         analyzedInstructions={recipeDetails.analyzedInstructions}
         rawInstructions={recipeDetails.instructions}
-        titleColor={themeTextColor}
-        setNameColor={themeTextColor}
-        stepNumberColor={themeTintColor}
-        stepTextColor={themeTextColor}
-        borderColor={themeBorderColor}
       />
 
       {recipeDetails.sourceUrl && (
@@ -175,11 +165,7 @@ export default function RecipeDetailScreen() {
       )}
 
       {summaryData && summaryData.relatedRecipes.length > 0 && (
-        <RelatedRecipesList
-          relatedRecipes={summaryData.relatedRecipes}
-          titleColor={themeTextColor}
-          linkColor={themeTintColor}
-        />
+        <RelatedRecipesList relatedRecipes={summaryData.relatedRecipes} />
       )}
     </ScrollView>
   );

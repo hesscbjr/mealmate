@@ -1,15 +1,20 @@
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 const OPENAI_API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 
-// Define the expected response structure
+if (!OPENAI_API_KEY) {
+  console.warn(
+    "OpenAI API Key not found. Please ensure EXPO_PUBLIC_OPENAI_API_KEY is set in your environment variables (.env file)."
+  );
+}
+
 interface IngredientResponse {
   ingredients: string[];
-  description?: string; // Description is optional
+  description?: string;
 }
 
 export async function extractIngredients(
   base64Image: string
-): Promise<IngredientResponse> { // Update return type
+): Promise<IngredientResponse> {
   const dataUri = `data:image/jpeg;base64,${base64Image}`;
 
   const payload = {
@@ -51,13 +56,11 @@ export async function extractIngredients(
   try {
     const result: IngredientResponse = JSON.parse(content);
 
-    // Validate the structure
     if (
       typeof result === "object" &&
       result !== null &&
       Array.isArray(result.ingredients)
     ) {
-      // Ensure all ingredients are strings (optional check, good practice)
       if (
         result.ingredients.every((item) => typeof item === "string") &&
         (result.description === undefined || typeof result.description === "string")
@@ -65,14 +68,12 @@ export async function extractIngredients(
         return result;
       }
     }
-    // If structure is invalid
     throw new Error(
       "Invalid response format: Expected {ingredients: string[], description?: string}."
     );
   } catch (error) {
     console.error("Failed to parse ingredients from OpenAI response:", error);
     console.error("Raw content:", content);
-    // Rethrow or handle specific parsing errors
     throw new Error("Failed to parse ingredients from OpenAI response.");
   }
 }

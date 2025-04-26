@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-// Define the possible sort preference values
+// Define the possible sort preference values, these are used to tell spoonacular what to sort the recipes by
 export type RecipeSortPreference =
   | "max-used-ingredients"
   | "min-missing-ingredients";
@@ -15,10 +15,10 @@ interface UserState {
   lastName: string;
   completedOnboarding: boolean;
   recipeSortPreference: RecipeSortPreference;
-  themePreference: ThemePreference; // Add state variable
+  themePreference: ThemePreference; 
   markOnboardingComplete: () => void;
   setRecipeSortPreference: (preference: RecipeSortPreference) => void;
-  setThemePreference: (preference: ThemePreference) => void; // Add setter action type
+  setThemePreference: (preference: ThemePreference) => void; 
   setFullName: (firstName: string, lastName: string) => void;
 }
 
@@ -29,27 +29,16 @@ export const useUserStore = create<UserState>()(
       lastName: "",
       completedOnboarding: false,
       recipeSortPreference: "max-used-ingredients",
-      themePreference: "system", // Default to system preference
+      themePreference: "system",
       markOnboardingComplete: () => set({ completedOnboarding: true }),
       setRecipeSortPreference: (preference) =>
         set({ recipeSortPreference: preference }),
-      setThemePreference: (preference) => set({ themePreference: preference }), // Add setter implementation
+      setThemePreference: (preference) => set({ themePreference: preference }),
       setFullName: (firstName, lastName) => set({ firstName, lastName }),
     }),
     {
       name: "mealmate:user",
-      storage: {
-        getItem: async (name) => {
-          const value = await AsyncStorage.getItem(name);
-          return value ? JSON.parse(value) : null;
-        },
-        setItem: async (name, value) => {
-          await AsyncStorage.setItem(name, JSON.stringify(value));
-        },
-        removeItem: async (name) => {
-          await AsyncStorage.removeItem(name);
-        },
-      },
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 ); 

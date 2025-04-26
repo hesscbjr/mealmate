@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+import Icon from "@/components/atoms/Icon";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 type RecipeTitleProps = {
@@ -28,16 +29,35 @@ const RecipeTitle = ({
         <Text
           style={[styles.infoText, { color: themeTextColor, marginRight: 15 }]}
         >
-          ⏱️ {readyInMinutes} mins
+          <Icon
+            name="clockcircle"
+            iconSet="antdesign"
+            size={14}
+            style={styles.iconStyle}
+            color={themeTextColor}
+          />{" "}
+          {readyInMinutes} mins
         </Text>
         <Text
           style={[styles.infoText, { color: themeTextColor, marginRight: 15 }]}
         >
-          🍽️ Serves {servings}
+          <Icon
+            name="utensils"
+            size={14}
+            style={styles.iconStyle}
+            color={themeTextColor}
+          />{" "}
+          Serves {servings}
         </Text>
         {showMissedCount && (
           <Text style={[styles.infoText, { color: themeTextColor }]}>
-            🛒 {parsedMissedCount} missing
+            <Icon
+              name="shopping-cart"
+              size={14}
+              style={styles.iconStyle}
+              color={themeTextColor}
+            />{" "}
+            {parsedMissedCount} missing
           </Text>
         )}
       </View>
@@ -62,6 +82,10 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 14,
+    alignItems: "center",
+  },
+  iconStyle: {
+    marginRight: 5,
   },
 });
 

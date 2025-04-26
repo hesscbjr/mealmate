@@ -138,7 +138,6 @@ export default function CaptureScreen() {
           size={ICON_SIZE_SMALL}
           color="white"
           iconSet="fa5"
-          activeOpacity={0.7}
         />
       </View>
     </PermissionGate>
