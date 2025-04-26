@@ -74,13 +74,18 @@ export interface RecipeDetails extends SpoonacularRecipe { // Extends base recip
   // e.g., winePairing, taste, nutrition, etc.
 }
 
+import { RecipeSortPreference } from "@/store/user"; // Import the type
+
 /**
  * Fetches recipes from Spoonacular based on a list of ingredients.
  * @param ingredients - An array of ingredient strings.
+ * @param sortPreference - The sorting preference from the user store.
+ * @param offset - The offset for pagination.
  * @returns A promise that resolves to an array of SpoonacularRecipe objects.
  */
 export async function fetchRecipesByIngredients(
   ingredients: string[],
+  sortPreference: RecipeSortPreference,
   offset: number = 0
 ): Promise<SpoonacularRecipe[]> {
   if (!SPOONACULAR_API_KEY) {
@@ -101,7 +106,7 @@ export async function fetchRecipesByIngredients(
   // Construct the request URL
   const url = `${API_URL}?includeIngredients=${encodeURIComponent(
     query
-  )}&number=5&offset=${offset}&addRecipeInformation=true&instructionsRequired=true&sort=max-used-ingredients&apiKey=${SPOONACULAR_API_KEY}`;
+  )}&number=5&offset=${offset}&addRecipeInformation=true&instructionsRequired=true&sort=${sortPreference}&ignorePantry=true&apiKey=${SPOONACULAR_API_KEY}`;
 
   console.log("Fetching Spoonacular recipes with URL:", url); // Log the URL for debugging
 

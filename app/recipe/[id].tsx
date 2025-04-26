@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useLayoutEffect, useMemo } from "react";
@@ -25,8 +26,10 @@ import { parseAndLinkSummary } from "@/utils/textUtils";
 // --- Skeleton Component ---
 const RecipeDetailSkeleton: React.FC<{
   themeBackgroundColor: string;
-  placeholderColor: string;
-}> = ({ themeBackgroundColor, placeholderColor }) => {
+}> = ({ themeBackgroundColor }) => {
+  // Define gradient colors (same as RecipeCardSkeleton)
+  const gradientColors = ["#EAEAEA", "#CDCDCD"] as const;
+
   return (
     <View
       style={[
@@ -35,92 +38,87 @@ const RecipeDetailSkeleton: React.FC<{
       ]}
     >
       {/* Image Placeholder */}
-      <View
-        style={[styles.skeletonImage, { backgroundColor: placeholderColor }]}
+      <LinearGradient
+        colors={gradientColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.skeletonImage}
       />
       <View style={styles.skeletonContentPadding}>
         {/* Title Placeholder */}
-        <View
-          style={[
-            styles.skeletonTitle,
-            { backgroundColor: placeholderColor, marginBottom: 12 },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonTitle, { marginBottom: 12 }]}
         />
         {/* Meta Info Placeholder */}
         <View style={styles.skeletonMetaRow}>
-          <View
-            style={[
-              styles.skeletonMetaItem,
-              { backgroundColor: placeholderColor },
-            ]}
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.skeletonMetaItem}
           />
-          <View
-            style={[
-              styles.skeletonMetaItem,
-              { backgroundColor: placeholderColor },
-            ]}
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.skeletonMetaItem}
           />
         </View>
         {/* Summary Placeholder */}
-        <View
-          style={[
-            styles.skeletonLine,
-            { width: "100%", backgroundColor: placeholderColor },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonLine, { width: "100%" }]}
         />
-        <View
-          style={[
-            styles.skeletonLine,
-            {
-              width: "85%",
-              backgroundColor: placeholderColor,
-              marginBottom: 20,
-            },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonLine, { width: "85%", marginBottom: 20 }]}
         />
         {/* Section Title Placeholder */}
-        <View
-          style={[
-            styles.skeletonSectionTitle,
-            { backgroundColor: placeholderColor, marginBottom: 12 },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonSectionTitle, { marginBottom: 12 }]}
         />
         {/* Item Placeholders */}
-        <View
-          style={[
-            styles.skeletonLine,
-            { width: "70%", backgroundColor: placeholderColor },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonLine, { width: "70%" }]}
         />
-        <View
-          style={[
-            styles.skeletonLine,
-            {
-              width: "60%",
-              backgroundColor: placeholderColor,
-              marginBottom: 20,
-            },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonLine, { width: "60%", marginBottom: 20 }]}
         />
         {/* Section Title Placeholder */}
-        <View
-          style={[
-            styles.skeletonSectionTitle,
-            { backgroundColor: placeholderColor, marginBottom: 12 },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonSectionTitle, { marginBottom: 12 }]}
         />
         {/* Item Placeholders */}
-        <View
-          style={[
-            styles.skeletonLine,
-            { width: "80%", backgroundColor: placeholderColor },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonLine, { width: "80%" }]}
         />
-        <View
-          style={[
-            styles.skeletonLine,
-            { width: "75%", backgroundColor: placeholderColor },
-          ]}
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.skeletonLine, { width: "75%" }]}
         />
       </View>
     </View>
@@ -129,7 +127,10 @@ const RecipeDetailSkeleton: React.FC<{
 // --- End Skeleton Component ---
 
 export default function RecipeDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, missedCount } = useLocalSearchParams<{
+    id: string;
+    missedCount?: string;
+  }>();
   const navigation = useNavigation();
 
   const themeBackgroundColor = useThemeColor({}, "background");
@@ -137,7 +138,6 @@ export default function RecipeDetailScreen() {
   const themeSubtleTextColor = useThemeColor({}, "icon");
   const themeTintColor = useThemeColor({}, "tint");
   const themeBorderColor = useThemeColor({}, "icon");
-  const placeholderColor = "#E0E0E0"; // Use the same grey as RecipeCardSkeleton
 
   const { recipeDetails, loading, error } = useRecipeDetails(id);
 
@@ -201,12 +201,7 @@ export default function RecipeDetailScreen() {
   };
 
   if (loading) {
-    return (
-      <RecipeDetailSkeleton
-        themeBackgroundColor={themeBackgroundColor}
-        placeholderColor={placeholderColor}
-      />
-    );
+    return <RecipeDetailSkeleton themeBackgroundColor={themeBackgroundColor} />;
   }
 
   if (error || !recipeDetails) {
@@ -249,9 +244,20 @@ export default function RecipeDetailScreen() {
           >
             ⏱️ {recipeDetails.readyInMinutes} mins
           </Text>
-          <Text style={[styles.infoText, { color: themeTextColor }]}>
+          <Text
+            style={[
+              styles.infoText,
+              { color: themeTextColor, marginRight: 15 },
+            ]}
+          >
             🍽️ Serves {recipeDetails.servings}
           </Text>
+          {/* Conditionally display missed ingredient count */}
+          {missedCount && parseInt(missedCount, 10) > 0 && (
+            <Text style={[styles.infoText, { color: themeTextColor }]}>
+              🛒 {missedCount} missing
+            </Text>
+          )}
         </View>
         {/* Display the cleaned summary text */}
         {summaryData?.fullSummary && (

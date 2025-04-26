@@ -2,15 +2,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// Define the possible sort preference values
+export type RecipeSortPreference =
+  | "max-used-ingredients"
+  | "min-missing-ingredients";
+
 interface UserState {
   firstName: string;
   lastName: string;
   dietaryRestrictions: string[];
   completedOnboarding: boolean;
+  recipeSortPreference: RecipeSortPreference;
   setFirstName: (firstName: string) => void;
   setLastName: (lastName: string) => void;
   setDietary: (diet: string[]) => void;
   markOnboardingComplete: () => void;
+  setRecipeSortPreference: (preference: RecipeSortPreference) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -20,10 +27,13 @@ export const useUserStore = create<UserState>()(
       lastName: "",
       dietaryRestrictions: [],
       completedOnboarding: false,
+      recipeSortPreference: "max-used-ingredients",
       setFirstName: (firstName) => set({ firstName }),
       setLastName: (lastName) => set({ lastName }),
       setDietary: (diet) => set({ dietaryRestrictions: diet }),
       markOnboardingComplete: () => set({ completedOnboarding: true }),
+      setRecipeSortPreference: (preference) =>
+        set({ recipeSortPreference: preference }),
     }),
     {
       name: "mealmate:user",

@@ -2,6 +2,7 @@ import Text from "@/components/atoms/Text"; // Import custom Text atom
 import TouchableOpacityHaptic from "@/components/atoms/TouchableOpacityHaptic";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular"; // Assuming the type is exported from here
+import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import React from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
@@ -25,7 +26,8 @@ const textContainerWidth = width - 145; // Screen width minus image width, margi
 
 // Skeleton Component for loading state
 const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
-  const placeholderColor = "#E0E0E0"; // Use a standard light grey for placeholders
+  // Define gradient colors using const assertion for correct type
+  const gradientColors = ["#EAEAEA", "#CDCDCD"] as const;
 
   return (
     <View
@@ -38,46 +40,47 @@ const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
       <View style={styles.horizontalContainer}>
         {/* Left side - Image Placeholder */}
         <View style={styles.imageWrapper}>
-          <View
-            style={[
-              styles.skeletonImage,
-              { backgroundColor: placeholderColor },
-            ]}
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.skeletonImage}
           />
         </View>
 
         {/* Right side - Text Placeholder */}
         <View style={styles.textContainer}>
-          <View
-            style={[
-              styles.skeletonText,
-              { width: "80%", height: 16, backgroundColor: placeholderColor },
-            ]}
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.skeletonText, { width: "80%", height: 16 }]}
           />
-          <View
-            style={[
-              styles.skeletonText,
-              { width: "100%", height: 14, backgroundColor: placeholderColor },
-            ]}
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.skeletonText, { width: "100%", height: 14 }]}
           />
-          <View
-            style={[
-              styles.skeletonText,
-              { width: "90%", height: 14, backgroundColor: placeholderColor },
-            ]}
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.skeletonText, { width: "90%", height: 14 }]}
           />
-          <View
+          <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={[
               styles.skeletonText,
               {
                 width: "50%",
                 height: 12,
                 marginTop: 4,
-                backgroundColor: placeholderColor,
               },
             ]}
           />
-          {/* Removed unnecessary empty View */}
         </View>
       </View>
     </View>
@@ -102,9 +105,20 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     return null; // Or handle appropriately
   }
 
+  // Construct the href object with typed pathname and params
+  const hrefObject = {
+    pathname: "/recipe/[id]" as const, // Use the typed route string
+    params: {
+      id: recipe.id.toString(), // Ensure id is always present
+      ...(recipe.missedIngredientCount && recipe.missedIngredientCount > 0
+        ? { missedCount: recipe.missedIngredientCount.toString() }
+        : {}),
+    },
+  };
+
   // Render actual card content if not loading and recipe exists
   return (
-    <Link href={`/recipe/${recipe.id}`} asChild>
+    <Link href={hrefObject} asChild>
       <TouchableOpacityHaptic
         style={[
           styles.outerContainer,
@@ -139,6 +153,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             </Text>
             <Text style={styles.details}>
               ⏱️ {recipe.readyInMinutes} mins • 🍽️ Serves {recipe.servings}
+              {recipe.missedIngredientCount && recipe.missedIngredientCount > 0
+                ? ` • 🛒 ${recipe.missedIngredientCount} missing`
+                : ""}
             </Text>
             <View style={{ height: 36 }} />
           </View>
@@ -151,7 +168,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 const styles = StyleSheet.create({
   outerContainer: {
     width: "100%",
-    padding: 10,
     marginBottom: 24,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
@@ -169,6 +185,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    borderRadius: 8,
   },
   image: {
     width: "100%",

@@ -221,7 +221,7 @@ export default function PreviewScreen() {
             <FadeInView delay={400} duration={500}>
               <View style={styles.ingredientTextContainer}>
                 <Text style={styles.ingredientHeader}>
-                  Detected Ingredients:{" "}
+                  🛒 Ingredients:{" "}
                   <Text style={styles.ingredientValue}>
                     {ingredientData.ingredients
                       .map((ingredient) =>
