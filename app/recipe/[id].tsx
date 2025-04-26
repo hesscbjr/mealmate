@@ -99,7 +99,7 @@ export default function RecipeDetailScreen() {
   };
 
   if (loading) {
-    return <RecipeDetailSkeleton themeBackgroundColor={themeBackgroundColor} />;
+    return <RecipeDetailSkeleton />;
   }
 
   if (notFound) {

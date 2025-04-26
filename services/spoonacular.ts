@@ -121,7 +121,6 @@ export async function fetchRecipesByIngredients(
     }
   } catch (error) {
     console.error("Network or parsing error fetching Spoonacular recipes:", error);
-    // Re-throw the error or return an empty array/handle differently
     throw error;
   }
 }

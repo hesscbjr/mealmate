@@ -5,8 +5,16 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular"; // Assuming the type is exported from here
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
-import React from "react";
-import { Dimensions, Image, StyleSheet, View, ViewStyle } from "react-native";
+import React, { useEffect, useRef } from "react"; // Added useRef, useEffect
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  Image,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 
 // Helper function to strip basic HTML tags
 function stripHtml(html: string): string {
@@ -26,74 +34,101 @@ interface RecipeCardSkeletonProps {
 }
 
 // Get screen width for layout calculations
-const { width } = Dimensions.get("window");
+const { width: screenWidth } = Dimensions.get("window"); // Renamed to avoid conflict
 
 // Skeleton Component for loading state
 const RecipeCardSkeleton = ({ style }: RecipeCardSkeletonProps) => {
-  const { text: skeletonColor, background: skeletonBackground } = useThemeColor(
-    {},
-    ["text", "background"]
-  );
-  // Create slightly different shades for the gradient
-  const gradientColor1 = skeletonBackground; // Use background as the base
-  const gradientColor2 = skeletonColor + "1A"; // Use text color with low alpha for the shimmer
+  const { text: skeletonHighlight, background: skeletonBackground } =
+    useThemeColor({}, ["text", "background"]);
 
-  const gradientColors = [
-    gradientColor1,
-    gradientColor2,
-    gradientColor1,
+  // Use a slightly transparent version of text for the highlight
+  const shimmerColor = skeletonHighlight + "1A";
+  const shimmerWidth = 200; // Width of the shimmer gradient
+
+  // Animated value for the translateX transform
+  const translateXAnim = useRef(new Animated.Value(-shimmerWidth)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.timing(translateXAnim, {
+        toValue: screenWidth, // Animate across the screen width
+        duration: 1200, // Adjust duration as needed
+        easing: Easing.linear,
+        useNativeDriver: true, // Use native driver for performance
+      })
+    );
+    animation.start();
+
+    return () => {
+      // Stop the animation when the component unmounts
+      animation.stop();
+    };
+  }, [translateXAnim]);
+
+  const animatedStyle = {
+    transform: [{ translateX: translateXAnim }],
+  };
+
+  // Define the shimmer gradient colors
+  const shimmerGradientColors = [
+    "transparent", // Start transparent
+    shimmerColor, // The highlight color
+    "transparent", // End transparent
   ] as const;
 
   const finalOuterContainerStyle = [
     styles.outerContainer,
-    { borderBottomColor: "transparent" }, // Skeleton doesn't need a bottom border from theme
-    style, // Apply external styles last
+    { borderBottomColor: "transparent" },
+    style,
   ];
+
+  // Reusable component for skeleton shapes
+  const SkeletonShape = ({
+    shapeStyle,
+  }: {
+    shapeStyle: ViewStyle | ViewStyle[];
+  }) => (
+    <View
+      style={[
+        shapeStyle,
+        { backgroundColor: skeletonBackground, overflow: "hidden" },
+      ]}
+    >
+      <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
+        <LinearGradient
+          colors={shimmerGradientColors}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={{ flex: 1, width: shimmerWidth }} // Gradient covers the animated view
+        />
+      </Animated.View>
+    </View>
+  );
 
   return (
     <View style={finalOuterContainerStyle}>
       <View style={styles.horizontalContainer}>
         {/* Left side - Image Placeholder */}
-        <View style={styles.skeletonImageWrapper}>
-          <LinearGradient
-            colors={gradientColors}
-            start={{ x: 0, y: 0.5 }} // Horizontal gradient
-            end={{ x: 1, y: 0.5 }}
-            style={styles.skeletonImage}
-          />
-        </View>
+        <SkeletonShape shapeStyle={styles.skeletonImageWrapper} />
 
         {/* Right side - Text Placeholder */}
         <View style={styles.textContainer}>
-          <LinearGradient
-            colors={gradientColors}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={[styles.skeletonText, { width: "80%", height: 16 }]}
+          <SkeletonShape
+            shapeStyle={[styles.skeletonTextBase, { width: "80%", height: 16 }]}
           />
-          <LinearGradient
-            colors={gradientColors}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={[styles.skeletonText, { width: "100%", height: 14 }]}
+          <SkeletonShape
+            shapeStyle={[
+              styles.skeletonTextBase,
+              { width: "100%", height: 14 },
+            ]}
           />
-          <LinearGradient
-            colors={gradientColors}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={[styles.skeletonText, { width: "90%", height: 14 }]}
+          <SkeletonShape
+            shapeStyle={[styles.skeletonTextBase, { width: "90%", height: 14 }]}
           />
-          <LinearGradient
-            colors={gradientColors}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={[
-              styles.skeletonText,
-              {
-                width: "50%",
-                height: 12,
-                marginTop: 4,
-              },
+          <SkeletonShape
+            shapeStyle={[
+              styles.skeletonTextBase,
+              { width: "50%", height: 12, marginTop: 4 },
             ]}
           />
         </View>
@@ -225,7 +260,7 @@ const styles = StyleSheet.create({
     height: 100,
     marginRight: 15,
     borderRadius: 8,
-    overflow: "hidden",
+    // overflow: 'hidden', // Moved to SkeletonShape
   },
   image: {
     width: "100%",
@@ -233,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   textContainer: {
-    width: width - 145,
+    width: screenWidth - 145,
     flex: 0,
   },
   title: {
@@ -251,15 +286,19 @@ const styles = StyleSheet.create({
     alignItems: "center", // Align icon and text vertically
   },
   skeletonImage: {
-    width: "100%",
-    height: 14,
-    overflow: "hidden",
+    // This style is no longer directly used for the gradient container
+    // Kept for reference or potential future use, but effectively replaced by SkeletonShape
   },
-  skeletonText: {
+  skeletonTextBase: {
+    // Renamed from skeletonText and simplified
     borderRadius: 4,
     marginBottom: 8,
-    height: 14,
-    overflow: "hidden",
+    // height and width are applied dynamically
+    // overflow: 'hidden', // Moved to SkeletonShape
+  },
+  skeletonText: {
+    // Removed as it's replaced by skeletonTextBase + dynamic styles
+    // ... removed previous content ...
   },
   iconStyle: {
     marginRight: 4, // Add some space between icon and text
