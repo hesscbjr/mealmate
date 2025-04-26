@@ -1,10 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useLayoutEffect, useMemo } from "react";
 import {
   Image,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -132,6 +133,7 @@ export default function RecipeDetailScreen() {
     missedCount?: string;
   }>();
   const navigation = useNavigation();
+  const router = useRouter();
 
   const themeBackgroundColor = useThemeColor({}, "background");
   const themeTextColor = useThemeColor({}, "text");
@@ -183,7 +185,7 @@ export default function RecipeDetailScreen() {
       ),
       headerLeft: () => (
         <IconButton
-          onPress={() => navigation.goBack()}
+          onPress={() => router.back()}
           name="arrow-left"
           size={24}
           color={themeTintColor}
@@ -192,7 +194,14 @@ export default function RecipeDetailScreen() {
         />
       ),
     });
-  }, [navigation, recipeDetails, currentlyStarred, toggleStar, themeTintColor]);
+  }, [
+    navigation,
+    recipeDetails,
+    currentlyStarred,
+    toggleStar,
+    themeTintColor,
+    router,
+  ]);
 
   const handleOpenSourceUrl = () => {
     if (recipeDetails?.sourceUrl) {
@@ -322,11 +331,16 @@ export default function RecipeDetailScreen() {
             Related Recipes
           </Text>
           {summaryData.relatedRecipes.map((relatedRecipe) => (
-            <Link
+            <Pressable
               key={relatedRecipe.id}
-              href={`/recipe/${relatedRecipe.id}`}
+              onPress={() => {
+                console.log(`Pushing to /recipe/${relatedRecipe.id}`);
+                router.push({
+                  pathname: "/recipe/[id]",
+                  params: { id: relatedRecipe.id },
+                });
+              }}
               style={styles.relatedRecipeLinkContainer}
-              asChild
             >
               <Text
                 style={[
@@ -336,7 +350,7 @@ export default function RecipeDetailScreen() {
               >
                 • {relatedRecipe.title}
               </Text>
-            </Link>
+            </Pressable>
           ))}
         </View>
       )}

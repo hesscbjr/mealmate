@@ -2,9 +2,11 @@ import Button from "@/components/atoms/Button";
 import IconButton from "@/components/molecules/IconButton";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
+import { PermissionStatus } from "expo-modules-core";
 import { router } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Platform,
   StyleSheet,
   Text,
@@ -21,46 +23,62 @@ export default function CaptureScreen() {
   const cameraRef = useRef<CameraView>(null);
   const insets = useSafeAreaInsets();
 
-  if (!cameraPermission || !mediaPermission) {
-    // Permissions are still loading
-    return <View />;
-  }
-
-  if (!cameraPermission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={[styles.permissionContainer, { paddingTop: insets.top }]}>
-        <Text style={styles.permissionText}>
-          We need your permission to show the camera.
-        </Text>
-        <Button
-          onPress={requestCameraPermission}
-          title="Grant Camera Access"
-          variant="primary"
-        />
-      </View>
-    );
-  }
-
-  if (!mediaPermission.granted) {
-    // Media library permissions are not granted yet
-    return (
-      <View style={[styles.permissionContainer, { paddingTop: insets.top }]}>
-        <Text style={styles.permissionText}>
-          We need your permission to access photos.
-        </Text>
-        <Button
-          onPress={requestMediaPermission}
-          title="Grant Photo Library Access"
-          variant="primary"
-        />
-      </View>
-    );
-  }
-
+  // Define handleGoBack early
   const handleGoBack = () => {
     router.back();
   };
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      if (cameraPermission?.status === PermissionStatus.UNDETERMINED) {
+        await requestCameraPermission();
+      }
+      // Request media permission only after camera permission is handled or was already determined
+      if (
+        cameraPermission?.status !== PermissionStatus.UNDETERMINED &&
+        mediaPermission?.status === PermissionStatus.UNDETERMINED
+      ) {
+        await requestMediaPermission();
+      }
+    };
+
+    // Only run request logic if permissions objects are loaded
+    if (cameraPermission && mediaPermission) {
+      requestPermissions();
+    }
+    // Depend on the status fields to re-run if they change from null/undefined or undetermined
+  }, [
+    cameraPermission,
+    mediaPermission,
+    requestCameraPermission,
+    requestMediaPermission,
+  ]);
+
+  if (!cameraPermission || !mediaPermission) {
+    // Permissions are still loading initial status
+    return (
+      <View style={styles.permissionContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  // If either permission is explicitly denied or still undetermined after trying to ask
+  if (!cameraPermission.granted || !mediaPermission.granted) {
+    return (
+      <View style={[styles.permissionContainer, { paddingTop: insets.top }]}>
+        <Text style={styles.permissionText}>
+          Please, we really want to see your pantry! Grant permissions in your
+          phone settings.
+        </Text>
+        {/* Optionally add a button to open settings */}
+        {/* <Button title="Open Settings" onPress={openSettings} /> */}
+        <Button onPress={handleGoBack} title="Go Back" variant="secondary" />
+      </View>
+    );
+  }
+
+  // If we reach here, both permissions are granted
 
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
@@ -91,7 +109,7 @@ export default function CaptureScreen() {
   async function pickImage() {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: "images",
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, // Use enum for clarity
         allowsEditing: false, // Disable editing
         quality: 0.7, // Adjust quality as needed
         // base64: true, // Include if you need base64 data later

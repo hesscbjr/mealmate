@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
   },
   listContentContainer: {
     paddingVertical: 10, // Add vertical padding for the list
-    paddingHorizontal: 15, // Add horizontal padding slightly
   },
   listWrapper: {
     flex: 1, // Make sure the wrapper fills available space

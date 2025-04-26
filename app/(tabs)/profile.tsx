@@ -38,6 +38,11 @@ export default function ProfileScreen() {
               }
               style={styles.toggleButton}
             />
+            <View style={styles.dividerContainer}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>OR</Text>
+              <View style={styles.dividerLine} />
+            </View>
             <Button
               title="Minimize Missing Ingredients"
               onPress={() => handleSetPreference("min-missing-ingredients")}
@@ -85,5 +90,21 @@ const styles = StyleSheet.create({
     // Add any specific styles for toggle buttons if needed
     // Example: make them full width
     // width: '100%',
+  },
+  dividerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 15, // Adjust spacing as needed
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#ccc", // Or use a theme color
+  },
+  dividerText: {
+    marginHorizontal: 10,
+    color: "#888", // Or use a theme color
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });

@@ -3,15 +3,17 @@ import FadeInView from "@/components/atoms/FadeInView";
 import Icon from "@/components/atoms/Icon";
 import Text from "@/components/atoms/Text";
 import TypewriterText from "@/components/atoms/TypewriterText";
+import IconButton from "@/components/molecules/IconButton";
 import RecipeList from "@/components/organisms/RecipeList";
 import { INGREDIENT_LOADING_MESSAGES } from "@/constants/LoadingMessages";
 import { useIngredientExtraction } from "@/hooks/useIngredientExtraction";
 import { useRecipeSuggestions } from "@/hooks/useRecipeSuggestions";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { shuffleArray } from "@/utils/shuffleArray";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -25,13 +27,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function PreviewScreen() {
   const { imageUri } = useLocalSearchParams<{ imageUri: string }>();
   const themeBackgroundColor = useThemeColor({}, "background");
-  const insets = useSafeAreaInsets();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const navigation = useNavigation();
+  const themeTintColor = useThemeColor({}, "tint");
 
   const [shuffledMessages, setShuffledMessages] = useState<string[]>([]);
   const [initialLoadHasCompleted, setInitialLoadHasCompleted] = useState(false);
@@ -45,11 +47,10 @@ export default function PreviewScreen() {
   const finalImagePaddingBottom = 10;
 
   const initialImageX = (screenWidth - loadingImageSize) / 2;
-  const initialImageY =
-    (screenHeight - insets.top - insets.bottom - loadingImageSize) / 2;
+  const initialImageY = (screenHeight - loadingImageSize) / 2 - 120;
 
   const finalImageX = screenWidth * 0.2;
-  const finalImageY = finalImagePaddingTop + insets.top;
+  const finalImageY = finalImagePaddingTop;
 
   const loadingTextInitialY = initialImageY + loadingImageSize + 15;
 
@@ -99,6 +100,22 @@ export default function PreviewScreen() {
     ingredientError,
     animationProgress,
   ]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Recipes",
+      headerLeft: () => (
+        <IconButton
+          onPress={() => navigation.goBack()}
+          name="arrow-left"
+          size={24}
+          color={themeTintColor}
+          iconSet="fa5"
+          style={{ marginLeft: Platform.OS === "ios" ? 10 : 0 }}
+        />
+      ),
+    });
+  }, [navigation, themeTintColor]);
 
   const animatedImageStyle = useAnimatedStyle(() => {
     const currentWidth = interpolate(
@@ -175,10 +192,7 @@ export default function PreviewScreen() {
   if (!imageUri) {
     return (
       <View
-        style={[
-          styles.container,
-          { backgroundColor: themeBackgroundColor, paddingTop: insets.top },
-        ]}
+        style={[styles.container, { backgroundColor: themeBackgroundColor }]}
       >
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>No image URI provided.</Text>
@@ -207,10 +221,25 @@ export default function PreviewScreen() {
         ingredientData.description
       ) {
         return (
-          <FadeInView delay={400} duration={500} style={styles.centeredContent}>
-            <Text style={styles.infoText}>
-              {`Hmm, a picture of ${ingredientData.description.toLowerCase()}? That might not make the best meal... 😉 Try ingredients!`}
-            </Text>
+          <FadeInView delay={400} duration={500}>
+            <View style={styles.noIngredientTextContainer}>
+              <Text
+                style={[
+                  styles.ingredientHeader,
+                  { fontWeight: "normal", fontSize: 18, marginTop: 20 },
+                ]}
+              >
+                {`Hmm, a picture of ${ingredientData.description.toLowerCase()}? That might not make the best meal... 😉 Try ingredients!`}
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Button
+                title="Try Again"
+                onPress={() => navigation.goBack()}
+                variant="primary"
+                style={{ marginTop: 30, width: "40%" }}
+              />
+            </View>
           </FadeInView>
         );
       }
@@ -289,12 +318,7 @@ export default function PreviewScreen() {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: themeBackgroundColor, paddingTop: insets.top },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: themeBackgroundColor }]}>
       <Animated.Image
         source={{ uri: imageUri }}
         style={animatedImageStyle}
@@ -405,7 +429,6 @@ const styles = StyleSheet.create({
   },
   ingredientTextContainer: {
     paddingHorizontal: 15,
-    marginBottom: 10,
     paddingTop: 10,
     minHeight: 40,
   },
@@ -415,6 +438,16 @@ const styles = StyleSheet.create({
   },
   ingredientValue: {
     fontWeight: "normal",
+  },
+  noIngredientHeader: {
+    fontSize: 24,
+    fontWeight: "normal",
+    marginTop: 20,
+  },
+  noIngredientTextContainer: {
+    paddingHorizontal: 40,
+    paddingTop: 10,
+    minHeight: 40,
   },
   refreshButtonContainer: {
     marginHorizontal: 15,
