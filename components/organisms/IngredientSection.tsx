@@ -6,6 +6,7 @@ import Stagger from "@/components/molecules/Stagger";
 import RecipeList from "@/components/organisms/RecipeList";
 import { ExtractionResult } from "@/hooks/useIngredientExtraction";
 import { SpoonacularRecipe } from "@/services/spoonacular";
+import { router } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -97,6 +98,15 @@ const IngredientSection = ({
               recipes={recipes}
               loading={recipeLoading}
               error={recipeError}
+            />
+
+            <Button
+              title="Go to Home"
+              onPress={() => {
+                router.navigate("/");
+              }}
+              variant="primary"
+              iconLeft={<Icon name="home" size={16} />}
             />
           </View>
         </Stagger>
