@@ -4,7 +4,8 @@
  */
 
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+// import { useColorScheme } from '@/hooks/useColorScheme'; // Remove old import
+import { useAppColorScheme } from '@/hooks/useAppColorScheme'; // Import the new hook
 
 // Dynamically generate the ColorName type from the Colors object keys
 // Ensures that any key added to Colors.light/dark is automatically included
@@ -29,7 +30,10 @@ T extends ColorName>(
   props: { light?: string; dark?: string } | Record<string, never>,
   colorNameOrNames: T | T[]
 ): string | Record<T, string> {
-  const theme = useColorScheme() ?? 'light';
+  // const theme = useColorScheme() ?? 'light'; // Remove old logic
+  const appColorScheme = useAppColorScheme(); // Use the new hook
+  // Explicitly cast as the hook guarantees 'light' or 'dark' by this point.
+  const theme = appColorScheme as Extract<typeof appColorScheme, 'light' | 'dark'>;
 
   if (typeof colorNameOrNames === 'string') {
     // Handle single color name

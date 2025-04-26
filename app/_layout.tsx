@@ -1,4 +1,4 @@
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAppColorScheme } from "@/hooks/useAppColorScheme";
 import {
   DarkTheme,
   DefaultTheme,
@@ -15,10 +15,11 @@ SplashScreen.preventAutoHideAsync();
 // Configure splash screen fade-out
 SplashScreen.setOptions({
   fade: true,
+  duration: 300,
 });
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const appColorScheme = useAppColorScheme();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,7 +31,9 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <ThemeProvider
+        value={appColorScheme === "dark" ? DarkTheme : DefaultTheme}
+      >
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
