@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# MealMate 🍳📸
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MealMate is a smart recipe planner built with React Native and Expo. It allows users to take a photo of ingredients and receive recipe suggestions.
 
-## Get started
+## Core User Journey
 
-1. Install dependencies
+1.  **Capture Ingredients:** Users take a photo of ingredients using the in-app camera or select an image from their library.
+2.  **Get Recipes:** The app analyzes the image and suggests 5 recipes based on the detected ingredients.
+3.  **Refresh Suggestions:** If the initial suggestions aren't suitable, users can refresh to get 5 new, unique recipes.
+4.  **View Recipe:** Users can select a recipe from the list to view the full details on a dedicated screen.
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
 
-2. Start the app
+- **Framework:** React Native / Expo SDK 52
+- **Routing:** Expo Router v4
+- **Styling:** NativeWind v4
+- **State Management:** Zustand v5
+- **Language:** TypeScript
+- **Camera/Image:** Expo Camera, Expo Image Picker
+- _(Planned) Backend/Auth:_ Supabase
 
-   ```bash
+## Project Structure
+
+- `app/`: Contains all screens and routing logic (using Expo Router file-based routing).
+- `assets/`: Static assets like fonts and images.
+- `components/`: Reusable UI components following Atomic Design (`atoms/`, `molecules/`, `organisms/`).
+- `constants/`: Shared constant values (e.g., colors, API keys).
+- `hooks/`: Custom React hooks for reusable logic.
+- `services/`: Modules for interacting with external APIs or backend services (e.g., image analysis, recipe fetching).
+- `store/`: State management logic using Zustand.
+- `utils/`: Utility functions.
+
+## Getting Started
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd mealmate
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # Or if you use yarn
+    # yarn install
+    ```
+3.  **Set up environment variables:**
+    Create a `.env` file in the root directory and add any necessary environment variables (e.g., API keys for Supabase or recipe service).
+    ```
+    # .env
+    SUPABASE_URL=YOUR_SUPABASE_URL
+    SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+    # Add other API keys as needed
+    ```
+4.  **Run the app:**
+
+    ```bash
+    # Start the development server
     npx expo start
-   ```
 
-In the output, you'll find options to open the app in a
+    # Run on iOS simulator (requires Xcode)
+    npx expo run:ios
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+    # Run on Android emulator/device (requires Android Studio setup)
+    npx expo run:android
+    ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Development Principles
 
-## Get a fresh project
+- **Minimal:** Write only the absolute minimum code needed.
+- **Self-Documenting:** Use precise naming, SRP components, and clear data flow. Comment only when necessary.
+- **Secure:** Implement robust security, especially for data handling (using Supabase Auth).
+- **Performant:** Optimize for mobile performance.
+- **Separation of Concerns:** Maintain clear boundaries between UI, logic, and backend access.
+- **Planning:** Create plans in `/plans` before implementing features.
+- **READMEs:** Ensure every directory has a `README.md`.
+- **Atomic Design:** Structure components in `atoms/`, `molecules/`, `organisms/`.
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+_(This project is being developed for Tenex.)_
