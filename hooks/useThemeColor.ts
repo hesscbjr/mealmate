@@ -1,57 +1,45 @@
-/**
- * Learn more about light and dark modes:
- * https://docs.expo.dev/guides/color-schemes/
- */
-
 import { Colors } from '@/constants/Colors';
-// import { useColorScheme } from '@/hooks/useColorScheme'; // Remove old import
-import { useAppColorScheme } from '@/hooks/useAppColorScheme'; // Import the new hook
+import { useAppColorScheme } from '@/hooks/useAppColorScheme';
 
-// Dynamically generate the ColorName type from the Colors object keys
-// Ensures that any key added to Colors.light/dark is automatically included
-type ColorName = keyof (typeof Colors.light & typeof Colors.dark);
+type ColorName = keyof typeof Colors.light;
 
-// Overload signature for single color name (existing behavior)
 export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: ColorName
 ): string;
 
-// Overload signature for multiple color names
 export function useThemeColor<
 T extends ColorName>(
-  props: Record<string, never>, // Props override not supported for multiple colors
+  props: Record<string, never>,
   colorNames: T[]
 ): Record<T, string>;
 
-// Implementation signature
 export function useThemeColor<
-T extends ColorName>(
+  T extends ColorName
+>(
   props: { light?: string; dark?: string } | Record<string, never>,
   colorNameOrNames: T | T[]
 ): string | Record<T, string> {
-  // const theme = useColorScheme() ?? 'light'; // Remove old logic
-  const appColorScheme = useAppColorScheme(); // Use the new hook
-  // Explicitly cast as the hook guarantees 'light' or 'dark' by this point.
+  const appColorScheme = useAppColorScheme();
   const theme = appColorScheme as Extract<typeof appColorScheme, 'light' | 'dark'>;
 
   if (typeof colorNameOrNames === 'string') {
-    // Handle single color name
     const colorName = colorNameOrNames;
     const colorFromProps = (props as { light?: string; dark?: string })[theme];
 
     if (colorFromProps) {
       return colorFromProps;
     } else {
-      return Colors[theme][colorName];
+      const themeColors = theme === 'light' ? Colors.light : Colors.dark;
+      return themeColors[colorName];
     }
   } else {
-    // Handle array of color names
     const colorNames = colorNameOrNames;
-    const result: Partial<Record<T, string>> = {}; // Use Partial initially
+    const themeColors = theme === 'light' ? Colors.light : Colors.dark;
+    const result: Partial<Record<T, string>> = {};
     for (const name of colorNames) {
-      result[name] = Colors[theme][name];
+      result[name] = themeColors[name];
     }
-    return result as Record<T, string>; // Assert the final type
+    return result as Record<T, string>;
   }
 }
