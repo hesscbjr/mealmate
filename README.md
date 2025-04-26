@@ -39,9 +39,7 @@ MealMate is a smart recipe planner built with React Native and Expo. It allows u
     ```
 2.  **Install dependencies:**
     ```bash
-    npm install
-    # Or if you use yarn
-    # yarn install
+    npx expo install
     ```
 3.  **Set up environment variables:**
     Create a `.env` file in the root directory and add any necessary environment variables (e.g., API keys for Supabase or recipe service).
