@@ -5,21 +5,21 @@ import React from "react";
 import {
   GestureResponderEvent,
   StyleProp,
+  StyleSheet,
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
 
-// --- IconButton Prop Types ---
-// Base props including TouchableOpacityProps (excluding conflicting ones)
-interface BaseIconButtonProps
-  extends Omit<TouchableOpacityProps, "onPress" | "children" | "style"> {
+type BaseIconButtonProps = Omit<
+  TouchableOpacityProps,
+  "onPress" | "children" | "style" | "activeOpacity"
+> & {
   onPress: (event: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
   size?: number;
   color?: string;
-}
+};
 
-// Conditional type for IconButton props based on iconSet
 type IconButtonProps =
   | (BaseIconButtonProps & {
       iconSet?: "fa5";
@@ -30,35 +30,29 @@ type IconButtonProps =
       name: React.ComponentProps<typeof AntDesign>["name"];
     });
 
-const IconButton: React.FC<IconButtonProps> = ({
+const IconButton = ({
   onPress,
-  // Icon props
   name,
   size,
   color,
-  iconSet = "fa5", // Default to fa5 if not provided
-  // TouchableOpacity props
-  style,
-  activeOpacity,
-  ...rest // Capture any other TouchableOpacityProps
-}) => {
+  iconSet = "fa5",
+  style: externalStyle,
+  ...rest
+}: IconButtonProps) => {
+  const finalStyle = [styles.base, externalStyle];
+
   return (
-    <TouchableOpacityHaptic
-      onPress={onPress}
-      style={style} // Pass style to the touchable wrapper
-      activeOpacity={activeOpacity} // Pass activeOpacity
-      {...rest} // Pass remaining props
-    >
-      {/* Render Icon using the correctly typed props */}
-      <Icon name={name as any} size={size} color={color} iconSet={iconSet} />
-      {/*
-         Casting 'name' to 'any' is still a pragmatic workaround here.
-         While IconButtonProps is correctly typed, destructured props within
-         the component don't automatically narrow the union type for the Icon component.
-         The Icon component itself handles the validation.
-       */}
+    <TouchableOpacityHaptic onPress={onPress} style={finalStyle} {...rest}>
+      <Icon name={name} size={size} color={color} iconSet={iconSet} />
     </TouchableOpacityHaptic>
   );
 };
 
 export default IconButton;
+
+const styles = StyleSheet.create({
+  base: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

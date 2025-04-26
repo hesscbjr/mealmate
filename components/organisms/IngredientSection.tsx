@@ -1,20 +1,20 @@
 import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
-import Stagger from "@/components/atoms/Stagger";
 import FullScreenMessage from "@/components/molecules/FullScreenMessage";
 import IngredientListDisplay from "@/components/molecules/IngredientListDisplay";
+import Stagger from "@/components/molecules/Stagger";
 import RecipeList from "@/components/organisms/RecipeList";
-import { ExtractionResult } from "@/hooks/useIngredientExtraction"; // Import the type
-import { SpoonacularRecipe } from "@/services/spoonacular"; // Assuming Recipe type is SpoonacularRecipe
+import { ExtractionResult } from "@/hooks/useIngredientExtraction";
+import { SpoonacularRecipe } from "@/services/spoonacular";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-// Animation constants (copied for FadeInView timings)
+// Animation constants
 const FADE_IN_DELAY_MS = 400;
 const FADE_IN_DURATION_MS = 500;
-const STAGGER_DELAY_MS = 100; // Delay between items
+const STAGGER_DELAY_MS = 100;
 
-interface IngredientSectionProps {
+type IngredientSectionProps = {
   ingredientData: ExtractionResult | null;
   ingredientError: string | null;
   onRetry: () => void;
@@ -22,9 +22,9 @@ interface IngredientSectionProps {
   recipeError: string | null;
   recipeLoading: boolean;
   refreshRecipes: () => void;
-}
+};
 
-const IngredientSection: React.FC<IngredientSectionProps> = ({
+const IngredientSection = ({
   ingredientData,
   ingredientError,
   onRetry,
@@ -32,7 +32,7 @@ const IngredientSection: React.FC<IngredientSectionProps> = ({
   recipeError,
   recipeLoading,
   refreshRecipes,
-}) => {
+}: IngredientSectionProps) => {
   const renderFullScreenMessage = ({
     title,
     subtitle,

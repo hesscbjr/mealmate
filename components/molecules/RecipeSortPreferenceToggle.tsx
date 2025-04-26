@@ -1,18 +1,24 @@
 import Button from "@/components/atoms/Button";
 import Text from "@/components/atoms/Text";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { RecipeSortPreference } from "@/store/user";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-interface RecipeSortPreferenceToggleProps {
+type RecipeSortPreferenceToggleProps = {
   currentPreference: RecipeSortPreference;
   onSetPreference: (preference: RecipeSortPreference) => void;
-}
+};
 
-const RecipeSortPreferenceToggle: React.FC<RecipeSortPreferenceToggleProps> = ({
+const RecipeSortPreferenceToggle = ({
   currentPreference,
   onSetPreference,
-}) => {
+}: RecipeSortPreferenceToggleProps) => {
+  const { secondary: themeSecondary, text: themeText } = useThemeColor({}, [
+    "secondary",
+    "text",
+  ]);
+
   return (
     <View style={styles.toggleContainer}>
       <Button
@@ -24,9 +30,13 @@ const RecipeSortPreferenceToggle: React.FC<RecipeSortPreferenceToggleProps> = ({
         style={styles.toggleButton}
       />
       <View style={styles.dividerContainer}>
-        <View style={styles.dividerLine} />
-        <Text style={styles.dividerText}>OR</Text>
-        <View style={styles.dividerLine} />
+        <View
+          style={[styles.dividerLine, { backgroundColor: themeSecondary }]}
+        />
+        <Text style={[styles.dividerText, { color: themeText }]}>OR</Text>
+        <View
+          style={[styles.dividerLine, { backgroundColor: themeSecondary }]}
+        />
       </View>
       <Button
         title="Minimize Missing Ingredients"
@@ -44,28 +54,25 @@ const RecipeSortPreferenceToggle: React.FC<RecipeSortPreferenceToggleProps> = ({
 
 const styles = StyleSheet.create({
   toggleContainer: {
-    // Buttons stack vertically by default with the Button component's marginVertical
+    // Container styles if needed, otherwise rely on parent layout
   },
   toggleButton: {
-    // Add any specific styles for toggle buttons if needed
-    // Example: make them full width
-    // width: '100%',
+    // Static button adjustments if needed
   },
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 15, // Adjust spacing as needed
+    marginVertical: 15,
   },
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: "#ccc", // Or use a theme color
   },
   dividerText: {
     marginHorizontal: 10,
-    color: "#888", // Or use a theme color
     fontSize: 12,
     fontWeight: "bold",
+    opacity: 0.6,
   },
 });
 

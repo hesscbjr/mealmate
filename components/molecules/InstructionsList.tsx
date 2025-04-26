@@ -8,12 +8,13 @@ import {
   ViewStyle,
 } from "react-native";
 
+import { useThemeColor } from "@/hooks/useThemeColor";
 import {
   AnalyzedInstruction,
   RecipeInstructionStep,
 } from "@/services/spoonacular";
 
-interface InstructionsListProps {
+type InstructionsListProps = {
   analyzedInstructions?: AnalyzedInstruction[] | null;
   rawInstructions?: string | null;
   style?: StyleProp<ViewStyle>;
@@ -21,14 +22,9 @@ interface InstructionsListProps {
   instructionSetNameStyle?: StyleProp<TextStyle>;
   stepNumberStyle?: StyleProp<TextStyle>;
   stepTextStyle?: StyleProp<TextStyle>;
-  titleColor?: string;
-  setNameColor?: string;
-  stepNumberColor?: string;
-  stepTextColor?: string;
-  borderColor?: string;
-}
+};
 
-const InstructionsList: React.FC<InstructionsListProps> = ({
+const InstructionsList = ({
   analyzedInstructions,
   rawInstructions,
   style,
@@ -36,46 +32,41 @@ const InstructionsList: React.FC<InstructionsListProps> = ({
   instructionSetNameStyle,
   stepNumberStyle,
   stepTextStyle,
-  titleColor = "#000",
-  setNameColor = "#000",
-  stepNumberColor = "#007AFF", // Default to tint color
-  stepTextColor = "#000",
-  borderColor = "#ccc",
-}) => {
+}: InstructionsListProps) => {
+  const { text: themeText, tint: themeTint } = useThemeColor({}, [
+    "text",
+    "tint",
+  ]);
+
   const hasAnalyzedInstructions =
     analyzedInstructions && analyzedInstructions.length > 0;
   const hasRawInstructions =
     rawInstructions && rawInstructions.trim().length > 0;
 
-  // Don't render if neither type of instruction is available
   if (!hasAnalyzedInstructions && !hasRawInstructions) {
     return null;
   }
 
-  // Helper to render a single step
   const renderInstructionStep = (
     item: RecipeInstructionStep,
     index: number
   ) => (
     <View key={`step-${index}`} style={styles.instructionStep}>
-      <Text
-        style={[styles.stepNumber, { color: stepNumberColor }, stepNumberStyle]}
-      >
+      <Text style={[styles.stepNumber, { color: themeTint }, stepNumberStyle]}>
         {item.number}
       </Text>
-      <Text style={[styles.stepText, { color: stepTextColor }, stepTextStyle]}>
+      <Text style={[styles.stepText, { color: themeText }, stepTextStyle]}>
         {item.step}
       </Text>
     </View>
   );
 
   return (
-    <View style={[styles.section, { borderTopColor: borderColor }, style]}>
-      <Text style={[styles.sectionTitle, { color: titleColor }, titleStyle]}>
+    <View style={[styles.section, style]}>
+      <Text style={[styles.sectionTitle, { color: themeText }, titleStyle]}>
         Instructions
       </Text>
 
-      {/* Render Analyzed Instructions if available */}
       {hasAnalyzedInstructions &&
         analyzedInstructions.map((instructionSet, index) => (
           <View key={`instruction-set-${index}`}>
@@ -83,7 +74,7 @@ const InstructionsList: React.FC<InstructionsListProps> = ({
               <Text
                 style={[
                   styles.instructionSetName,
-                  { color: setNameColor },
+                  { color: themeText },
                   instructionSetNameStyle,
                 ]}
               >
@@ -94,11 +85,8 @@ const InstructionsList: React.FC<InstructionsListProps> = ({
           </View>
         ))}
 
-      {/* Fallback for raw instructions string if no analyzed instructions */}
       {!hasAnalyzedInstructions && hasRawInstructions && (
-        <Text
-          style={[styles.stepText, { color: stepTextColor }, stepTextStyle]}
-        >
+        <Text style={[styles.stepText, { color: themeText }, stepTextStyle]}>
           {rawInstructions}
         </Text>
       )}
@@ -109,7 +97,6 @@ const InstructionsList: React.FC<InstructionsListProps> = ({
 const styles = StyleSheet.create({
   section: {
     padding: 15,
-    borderTopWidth: StyleSheet.hairlineWidth,
   },
   sectionTitle: {
     fontSize: 20,
@@ -139,8 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     lineHeight: 22,
-    // Add marginLeft for raw instructions fallback if needed
-    // marginLeft: 5, // Consider if needed for raw text alignment
+    // Consider if needed for raw text alignment
   },
 });
 

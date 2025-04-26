@@ -1,12 +1,15 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
 import { StyleSheet, View } from "react-native";
 
-const RecipeDetailSkeleton: React.FC<{
+type RecipeDetailSkeletonProps = {
   themeBackgroundColor: string;
-}> = ({ themeBackgroundColor }) => {
-  const gradientColors = ["#EAEAEA", "#CDCDCD"] as const;
+};
 
+const gradientColors = ["#EAEAEA", "#CDCDCD"] as const;
+
+const RecipeDetailSkeleton = ({
+  themeBackgroundColor,
+}: RecipeDetailSkeletonProps) => {
   return (
     <View
       style={[
@@ -98,14 +101,14 @@ export default RecipeDetailSkeleton;
 
 const styles = StyleSheet.create({
   skeletonOuterContainer: {
-    flex: 1, // Take full screen space initially
+    flex: 1,
   },
   skeletonContentPadding: {
     padding: 15,
   },
   skeletonImage: {
     width: "100%",
-    height: 250, // Match real image height
+    height: 250,
   },
   skeletonTitle: {
     height: 24,

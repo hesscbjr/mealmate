@@ -11,47 +11,40 @@ import RecipeCard from "@/components/molecules/RecipeCard";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SpoonacularRecipe } from "@/services/spoonacular";
 
-interface RecipeListProps {
+type RecipeListProps = {
   recipes: SpoonacularRecipe[] | null;
   loading?: boolean;
   error?: string | null;
-  // Add refresh/pagination handlers if needed later
-}
+};
 
-// Dummy data for skeleton loading state (5 items)
 const skeletonData = Array.from({ length: 5 }, (_, i) => ({
   id: `skeleton-${i}`,
 }));
 
 type ListItem = SpoonacularRecipe | { id: string };
 
-const RecipeList: React.FC<RecipeListProps> = ({
+const RecipeList = ({
   recipes,
   loading = false,
   error = null,
-}) => {
+}: RecipeListProps) => {
   const themeBackgroundColor = useThemeColor({}, "background");
-  // const themeTintColor = useThemeColor({}, "tint"); // Tint color no longer needed here
 
   const renderItem = ({ item }: FlashListRenderItemInfo<ListItem>) => {
     if (loading) {
-      // Render skeleton card if loading
-      return <RecipeCard loading={true} style={{ marginBottom: 24 }} />;
+      return <RecipeCard loading={true} style={styles.recipeCardMargin} />;
     } else {
-      // Render actual recipe card if not loading
       return (
         <RecipeCard
           recipe={item as SpoonacularRecipe}
-          style={{ marginBottom: 24 }}
+          style={styles.recipeCardMargin}
         />
       );
     }
   };
 
-  // Estimated item height - adjust as needed for performance
-  const estimatedItemHeight = 120; // Should be roughly the same for skeleton and real card
+  const estimatedItemHeight = 120;
 
-  // Error state handling
   if (error) {
     return (
       <View
@@ -68,22 +61,20 @@ const RecipeList: React.FC<RecipeListProps> = ({
     );
   }
 
-  // Empty state handling (when not loading and no recipes)
   if (!loading && (!recipes || recipes.length === 0)) {
     return <NoRecipesFound />;
   }
 
-  // Determine data source based on loading state
   const data = loading ? skeletonData : recipes;
 
   return (
     <View
-      style={[styles.listWrapper, { backgroundColor: themeBackgroundColor }]} // Ensure wrapper takes full space
+      style={[styles.listWrapper, { backgroundColor: themeBackgroundColor }]}
     >
       <FlashList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()} // Use recipe ID or skeleton ID as key
+        keyExtractor={(item) => item.id.toString()}
         estimatedItemSize={estimatedItemHeight}
         contentContainerStyle={styles.listContentContainer}
         showsVerticalScrollIndicator={false}
@@ -110,11 +101,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   listContentContainer: {
-    paddingVertical: 10, // Add vertical padding for the list
+    paddingVertical: 10,
   },
   listWrapper: {
-    flex: 1, // Make sure the wrapper fills available space
+    flex: 1,
     width: "100%",
+  },
+  recipeCardMargin: {
+    marginBottom: 24,
   },
 });
 

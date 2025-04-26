@@ -6,34 +6,25 @@ import Button from "@/components/atoms/Button";
 import Text from "@/components/atoms/Text";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-// Get screen width
 const screenWidth = Dimensions.get("window").width;
-// Calculate image size (e.g., 50% of screen width)
-const imageSize = screenWidth * 0.5;
+const imageSize = screenWidth * 0.4;
 
-/**
- * NoRecipesFound Component
- *
- * Displays a message and image indicating no recipes were found for the given ingredients.
- */
-const NoRecipesFound: React.FC = () => {
+type NoRecipesFoundProps = {};
+
+const NoRecipesFound = ({}: NoRecipesFoundProps) => {
   const router = useRouter();
-  const themeBackgroundColor = useThemeColor({}, "background");
-  const themeTextColor = useThemeColor({}, "text");
+  const { background: themeBackgroundColor, text: themeTextColor } =
+    useThemeColor({}, ["background", "text"]);
 
   const handleTryAgain = () => {
     if (router.canGoBack()) {
       router.back();
     }
-    // Optional: Add fallback if router.canGoBack() is false, e.g., navigate to home
   };
 
   return (
     <View style={[styles.container, { backgroundColor: themeBackgroundColor }]}>
-      <Image
-        source={require("@/assets/images/sad.png")} // Use the correct image
-        style={styles.image}
-      />
+      <Image source={require("@/assets/images/sad.png")} style={styles.image} />
       <Text style={[styles.title, { color: themeTextColor }]}>
         No Recipes Found
       </Text>
@@ -62,8 +53,7 @@ const styles = StyleSheet.create({
     width: imageSize,
     height: imageSize,
     resizeMode: "contain",
-    marginBottom: 30,
-    opacity: 0.85, // Slightly adjusted opacity
+    marginBottom: 10,
   },
   title: {
     fontSize: 22,
@@ -74,12 +64,11 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     textAlign: "center",
-    marginBottom: 30,
+    marginBottom: 20,
     lineHeight: 22,
   },
   button: {
     minWidth: "50%",
-    marginTop: 15,
   },
 });
 

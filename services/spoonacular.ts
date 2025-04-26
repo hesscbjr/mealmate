@@ -98,6 +98,8 @@ export async function fetchRecipesByIngredients(
     .filter((i) => i) // Remove empty strings after trimming
     .join(",");
 
+  // const query = "jellybeans";
+
   if (!query) {
     return []; // Return empty if no valid ingredients are passed
   }

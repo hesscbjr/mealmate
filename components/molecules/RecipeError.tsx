@@ -6,21 +6,13 @@ import Button from "@/components/atoms/Button";
 import Text from "@/components/atoms/Text";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-// Get screen width
 const screenWidth = Dimensions.get("window").width;
-// Calculate image size (e.g., 60% of screen width for this context)
 const imageSize = screenWidth * 0.6;
 
-/**
- * RecipeError Component
- *
- * Displays a message indicating something went wrong loading the recipe
- * and a button to navigate back.
- */
-const RecipeError: React.FC = () => {
+const RecipeError = () => {
   const router = useRouter();
-  const themeBackgroundColor = useThemeColor({}, "background");
-  const themeTextColor = useThemeColor({}, "text");
+  const { background: themeBackgroundColor, text: themeTextColor } =
+    useThemeColor({}, ["background", "text"]);
 
   const handleGoBack = () => {
     if (router.canGoBack()) {

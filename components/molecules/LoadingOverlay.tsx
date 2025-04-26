@@ -1,6 +1,6 @@
-import TypewriterText from "@/components/atoms/TypewriterText";
+import TypewriterText from "@/components/molecules/TypewriterText";
 import React from "react";
-import { TextStyle } from "react-native";
+import { StyleSheet, TextStyle } from "react-native";
 import Animated, {
   Extrapolation,
   SharedValue,
@@ -8,48 +8,46 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-// Pass constants from PreviewScreen or define locally if preferred
 const TYPEWRITER_SPEED_MS = 30;
 const TYPEWRITER_PAUSE_MS = 1500;
 
-interface LoadingOverlayProps {
+type LoadingOverlayProps = {
   messages: string[];
   progress: SharedValue<number>;
   loadingTextInitialY: number;
-  // Pass the specific style object for the TypewriterText
   loadingIngredientHeaderStyle: TextStyle;
-}
+};
 
-const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
+const LoadingOverlay = ({
   messages,
   progress,
   loadingTextInitialY,
   loadingIngredientHeaderStyle,
-}) => {
+}: LoadingOverlayProps) => {
   const animatedLoadingTextStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      progress.value,
+      [0, 0.5],
+      [1, 0],
+      Extrapolation.CLAMP
+    );
+    const display = progress.value >= 0.5 ? "none" : "flex";
+
     return {
-      position: "absolute",
+      opacity,
+      display,
       top: loadingTextInitialY,
-      left: 0,
-      right: 0,
-      alignItems: "center",
-      opacity: interpolate(
-        progress.value,
-        [0, 0.5], // Fade out relatively quickly
-        [1, 0],
-        Extrapolation.CLAMP
-      ),
-      // Ensure the view is removed from layout when invisible to prevent interactions
-      display: progress.value >= 0.5 ? "none" : "flex",
     };
   });
 
+  const finalContainerStyle = [styles.container, animatedLoadingTextStyle];
+
   return (
-    <Animated.View style={animatedLoadingTextStyle}>
+    <Animated.View style={finalContainerStyle}>
       {messages.length > 0 && (
         <TypewriterText
           messages={messages}
-          style={loadingIngredientHeaderStyle} // Apply the passed style
+          style={loadingIngredientHeaderStyle}
           typingSpeed={TYPEWRITER_SPEED_MS}
           pauseDuration={TYPEWRITER_PAUSE_MS}
         />
@@ -59,3 +57,12 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
 };
 
 export default LoadingOverlay;
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+});

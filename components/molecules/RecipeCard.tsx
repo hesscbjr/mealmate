@@ -5,7 +5,7 @@ import { SpoonacularRecipe } from "@/services/spoonacular"; // Assuming the type
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import React from "react";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import { Dimensions, Image, StyleSheet, View, ViewStyle } from "react-native";
 
 // Helper function to strip basic HTML tags
 function stripHtml(html: string): string {
@@ -15,34 +15,49 @@ function stripHtml(html: string): string {
 
 interface RecipeCardProps {
   recipe?: SpoonacularRecipe; // Make recipe optional
-  style?: any; // Add style prop for custom styling
+  style?: ViewStyle | ViewStyle[]; // More specific type
   loading?: boolean; // Add loading prop
   // Add onPress or other interaction props if needed later
+}
+
+interface RecipeCardSkeletonProps {
+  style?: ViewStyle | ViewStyle[]; // More specific type
 }
 
 // Get screen width for layout calculations
 const { width } = Dimensions.get("window");
 
 // Skeleton Component for loading state
-const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
-  // Define gradient colors using const assertion for correct type
-  const gradientColors = ["#EAEAEA", "#CDCDCD"] as const;
+const RecipeCardSkeleton = ({ style }: RecipeCardSkeletonProps) => {
+  const { text: skeletonColor, background: skeletonBackground } = useThemeColor(
+    {},
+    ["text", "background"]
+  );
+  // Create slightly different shades for the gradient
+  const gradientColor1 = skeletonBackground; // Use background as the base
+  const gradientColor2 = skeletonColor + "1A"; // Use text color with low alpha for the shimmer
+
+  const gradientColors = [
+    gradientColor1,
+    gradientColor2,
+    gradientColor1,
+  ] as const;
+
+  const finalOuterContainerStyle = [
+    styles.outerContainer,
+    { borderBottomColor: "transparent" }, // Skeleton doesn't need a bottom border from theme
+    style, // Apply external styles last
+  ];
 
   return (
-    <View
-      style={[
-        styles.outerContainer,
-        style,
-        { borderBottomColor: "transparent" },
-      ]}
-    >
+    <View style={finalOuterContainerStyle}>
       <View style={styles.horizontalContainer}>
         {/* Left side - Image Placeholder */}
         <View style={styles.skeletonImageWrapper}>
           <LinearGradient
             colors={gradientColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0.5 }} // Horizontal gradient
+            end={{ x: 1, y: 0.5 }}
             style={styles.skeletonImage}
           />
         </View>
@@ -51,26 +66,26 @@ const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
         <View style={styles.textContainer}>
           <LinearGradient
             colors={gradientColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
             style={[styles.skeletonText, { width: "80%", height: 16 }]}
           />
           <LinearGradient
             colors={gradientColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
             style={[styles.skeletonText, { width: "100%", height: 14 }]}
           />
           <LinearGradient
             colors={gradientColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
             style={[styles.skeletonText, { width: "90%", height: 14 }]}
           />
           <LinearGradient
             colors={gradientColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
             style={[
               styles.skeletonText,
               {
@@ -86,47 +101,40 @@ const RecipeCardSkeleton: React.FC<{ style?: any }> = ({ style }) => {
   );
 };
 
-const RecipeCard: React.FC<RecipeCardProps> = ({
-  recipe,
-  style,
-  loading = false,
-}) => {
-  const themeBorderColor = useThemeColor({}, "icon"); // Use icon color for subtle border
-  // const themePlaceholderColor = useThemeColor({}, "icon"); // Placeholder color handled in Skeleton component now
+const RecipeCard = ({ recipe, style, loading = false }: RecipeCardProps) => {
+  const { icon: themeBorderColor, text: themeTextColor } = useThemeColor({}, [
+    "icon",
+    "text",
+  ]);
 
-  // Render Skeleton if loading
   if (loading) {
     return <RecipeCardSkeleton style={style} />;
   }
 
-  // If not loading, but no recipe, return null (or some error/empty state)
   if (!recipe) {
-    return null; // Or handle appropriately
+    return null;
   }
 
-  // Construct the href object with typed pathname and params
   const hrefObject = {
-    pathname: "/recipe/[id]" as const, // Use the typed route string
+    pathname: "/recipe/[id]" as const,
     params: {
-      id: recipe.id.toString(), // Ensure id is always present
+      id: recipe.id.toString(),
       ...(recipe.missedIngredientCount && recipe.missedIngredientCount > 0
         ? { missedCount: recipe.missedIngredientCount.toString() }
         : {}),
     },
   };
 
-  // Render actual card content if not loading and recipe exists
+  const finalOuterContainerStyle = [
+    styles.outerContainer,
+    { borderBottomColor: themeBorderColor },
+    style,
+  ];
+
   return (
     <Link href={hrefObject} asChild>
-      <TouchableOpacityHaptic
-        style={[
-          styles.outerContainer,
-          style,
-          { borderBottomColor: themeBorderColor },
-        ]}
-      >
+      <TouchableOpacityHaptic style={finalOuterContainerStyle}>
         <View style={styles.horizontalContainer}>
-          {/* Left side - Image */}
           <View style={styles.imageWrapper}>
             <Image
               source={{ uri: recipe.image }}
@@ -135,21 +143,20 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             />
           </View>
 
-          {/* Right side - Text content */}
           <View style={styles.textContainer}>
             <Text
-              style={styles.title} // Removed direct color styling
+              style={[styles.title, { color: themeTextColor }]}
               numberOfLines={1}
             >
               {recipe.title}
             </Text>
             <Text
-              style={styles.summary} // Removed direct color styling
+              style={[styles.summary, { color: themeTextColor }]}
               numberOfLines={2}
             >
               {stripHtml(recipe.summary)}
             </Text>
-            <Text style={styles.details}>
+            <Text style={[styles.details, { color: themeTextColor }]}>
               ⏱️ {recipe.readyInMinutes} mins • 🍽️ Serves {recipe.servings}
               {recipe.missedIngredientCount && recipe.missedIngredientCount > 0
                 ? ` • 🛒 ${recipe.missedIngredientCount} missing`
@@ -180,16 +187,18 @@ const styles = StyleSheet.create({
     marginRight: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.15,
+    shadowRadius: 2.5,
+    elevation: 3,
     borderRadius: 8,
+    backgroundColor: "#eee",
   },
   skeletonImageWrapper: {
     width: 100,
     height: 100,
     marginRight: 15,
     borderRadius: 8,
+    overflow: "hidden",
   },
   image: {
     width: "100%",
@@ -197,8 +206,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   textContainer: {
-    width: width - 145, // Screen width minus image width, margins and padding
-    flex: 0, // Don't let it flex
+    width: width - 145,
+    flex: 0,
   },
   title: {
     fontWeight: "bold",
@@ -208,21 +217,20 @@ const styles = StyleSheet.create({
   summary: {
     fontSize: 14,
     marginBottom: 8,
-    lineHeight: 18, // Improve readability
+    lineHeight: 18,
   },
   details: {
     fontSize: 12,
-    // color: '#555', // Use theme color
   },
-  // --- Skeleton Styles ---
   skeletonImage: {
     width: "100%",
     height: "100%",
-    borderRadius: 8,
   },
   skeletonText: {
-    borderRadius: 4, // Slight rounding for text placeholders
-    marginBottom: 8, // Spacing between skeleton lines
+    borderRadius: 4,
+    marginBottom: 8,
+    height: 14,
+    overflow: "hidden",
   },
 });
 

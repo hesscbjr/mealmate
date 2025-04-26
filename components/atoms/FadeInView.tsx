@@ -1,19 +1,19 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, ViewStyle } from "react-native";
+import { Animated, StyleSheet, ViewStyle } from "react-native";
 
-interface FadeInViewProps {
+type FadeInViewProps = {
   children: React.ReactNode;
   delay?: number;
   duration?: number;
   style?: ViewStyle;
-}
+};
 
-const FadeInView: React.FC<FadeInViewProps> = ({
+const FadeInView = ({
   children,
   delay = 0,
   duration = 500,
   style,
-}) => {
+}: FadeInViewProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -26,16 +26,17 @@ const FadeInView: React.FC<FadeInViewProps> = ({
   }, [fadeAnim, delay, duration]);
 
   return (
-    <Animated.View
-      style={[
-        { width: "100%", alignItems: "center" },
-        style,
-        { opacity: fadeAnim },
-      ]}
-    >
+    <Animated.View style={[styles.container, { opacity: fadeAnim }, style]}>
       {children}
     </Animated.View>
   );
 };
 
 export default FadeInView;
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    alignItems: "center",
+  },
+});

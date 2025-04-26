@@ -3,31 +3,34 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-interface ExpandableTextProps {
+type ExpandableTextProps = {
   text: string;
   initialLines?: number;
   characterThreshold?: number;
-}
+};
 
-const ExpandableText: React.FC<ExpandableTextProps> = ({
+const ExpandableText = ({
   text,
   initialLines = 2,
   characterThreshold = 80,
-}) => {
+}: ExpandableTextProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { text: themeTextColor } = useThemeColor({}, ["text"]);
+  const { text: themeTextColor, link: linkColor } = useThemeColor({}, [
+    "text",
+    "link",
+  ]);
   const canPotentiallyTruncate = text.length > characterThreshold;
 
   const toggleExpand = useCallback(() => {
-    setIsExpanded(!isExpanded);
-  }, [isExpanded]);
+    setIsExpanded((prev) => !prev);
+  }, []);
 
   if (!text) {
     return null;
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text
         style={[styles.text, { color: themeTextColor }]}
         numberOfLines={isExpanded ? undefined : initialLines}
@@ -36,7 +39,7 @@ const ExpandableText: React.FC<ExpandableTextProps> = ({
       </Text>
       {canPotentiallyTruncate && (
         <Pressable onPress={toggleExpand} style={styles.button}>
-          <Text style={[styles.buttonText]}>
+          <Text style={[styles.buttonText, { color: linkColor }]}>
             {isExpanded ? "Show less" : "View full description"}
           </Text>
         </Pressable>
@@ -46,6 +49,10 @@ const ExpandableText: React.FC<ExpandableTextProps> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+  },
   text: {
     fontSize: 14,
     lineHeight: 20,

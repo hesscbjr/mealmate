@@ -41,7 +41,6 @@ const Button = forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
       tint: themeTint,
     } = useThemeColor({}, ["background", "buttonText", "tint"]);
 
-    // Simplified logic for background and text colors
     const buttonBackgroundColor =
       variant === "primary" ? themeTint : themeBackground;
     const buttonTextColor = variant === "secondary" ? themeTint : themeText;

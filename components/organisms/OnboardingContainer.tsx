@@ -2,7 +2,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import Stagger from "../atoms/Stagger";
+import Stagger from "../molecules/Stagger";
 
 type OnboardingContainerProps = {
   children: React.ReactNode;
@@ -11,12 +11,12 @@ type OnboardingContainerProps = {
   parentDelay?: number;
 };
 
-const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
+const OnboardingContainer = ({
   children,
   style,
   staggerDelay = 150,
   parentDelay = 50,
-}) => {
+}: OnboardingContainerProps) => {
   const backgroundGradientStart = useThemeColor({}, "backgroundGradientStart");
   const backgroundGradientEnd = useThemeColor({}, "backgroundGradientEnd");
 

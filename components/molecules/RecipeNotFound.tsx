@@ -6,20 +6,17 @@ import Button from "@/components/atoms/Button";
 import Text from "@/components/atoms/Text";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-// Get screen width
 const screenWidth = Dimensions.get("window").width;
-// Calculate image size (e.g., 60% of screen width for this context)
 const imageSize = screenWidth * 0.6;
 
-/**
- * RecipeNotFound Component
- *
- * Displays a message indicating a recipe was not found and a button to navigate back.
- */
-const RecipeNotFound: React.FC = () => {
+type RecipeNotFoundProps = {};
+
+const RecipeNotFound = ({}: RecipeNotFoundProps) => {
   const router = useRouter();
-  const themeBackgroundColor = useThemeColor({}, "background");
-  const themeTextColor = useThemeColor({}, "text");
+  const { background: themeBackground, text: themeText } = useThemeColor({}, [
+    "background",
+    "text",
+  ]);
 
   const handleGoBack = () => {
     if (router.canGoBack()) {
@@ -28,15 +25,13 @@ const RecipeNotFound: React.FC = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: themeBackgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: themeBackground }]}>
       <Image
         source={require("@/assets/images/not-found.png")}
         style={styles.notFoundImage}
       />
-      <Text style={[styles.title, { color: themeTextColor }]}>
-        Recipe Not Found
-      </Text>
-      <Text style={[styles.message, { color: themeTextColor }]}>
+      <Text style={[styles.title, { color: themeText }]}>Recipe Not Found</Text>
+      <Text style={[styles.message, { color: themeText }]}>
         Sorry, we couldn't find the recipe you were looking for. It might have
         been removed or the link might be incorrect.
       </Text>

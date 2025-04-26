@@ -1,16 +1,10 @@
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useLayoutEffect, useMemo } from "react";
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 import Button from "@/components/atoms/Button";
+import HorizontalDivider from "@/components/atoms/HorizontalDivider";
 import Icon from "@/components/atoms/Icon";
 import ExpandableText from "@/components/molecules/ExpandableText";
 import IconButton from "@/components/molecules/IconButton";
@@ -18,11 +12,11 @@ import IngredientsList from "@/components/molecules/IngredientsList";
 import InstructionsList from "@/components/molecules/InstructionsList";
 import RecipeError from "@/components/molecules/RecipeError";
 import RecipeNotFound from "@/components/molecules/RecipeNotFound";
-import RelatedRecipesList from "@/components/molecules/RelatedRecipesList/RelatedRecipesList";
+import RecipeTitle from "@/components/molecules/RecipeTitle";
+import RelatedRecipesList from "@/components/molecules/RelatedRecipesList";
 import RecipeDetailSkeleton from "@/components/organisms/RecipeDetailSkeleton";
 import { useRecipeDetails } from "@/hooks/useRecipeDetails";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { SpoonacularRecipe } from "@/services/spoonacular";
 import { useRecipeStore } from "@/store/recipes";
 import { parseAndLinkSummary } from "@/utils/textUtils";
 
@@ -34,12 +28,13 @@ export default function RecipeDetailScreen() {
   const navigation = useNavigation();
   const router = useRouter();
 
-  const themeBackgroundColor = useThemeColor({}, "background");
-  const themeTextColor = useThemeColor({}, "text");
-  const themeSubtleTextColor = useThemeColor({}, "icon");
-  const themeTintColor = useThemeColor({}, "tint");
-  const themeBorderColor = useThemeColor({}, "icon");
-  const buttonTextColor = useThemeColor({}, "buttonText");
+  const {
+    background: themeBackgroundColor,
+    text: themeTextColor,
+    tint: themeTintColor,
+    icon: themeBorderColor,
+  } = useThemeColor({}, ["background", "text", "tint", "icon"]);
+
   const { recipeDetails, loading, error, notFound } = useRecipeDetails(id);
 
   const summaryData = useMemo(() => {
@@ -67,7 +62,7 @@ export default function RecipeDetailScreen() {
         <IconButton
           onPress={() => {
             if (recipeDetails) {
-              toggleStar(recipeDetails as SpoonacularRecipe);
+              toggleStar(recipeDetails);
             }
           }}
           name={currentlyStarred ? "star" : "staro"}
@@ -123,39 +118,22 @@ export default function RecipeDetailScreen() {
     >
       <Image source={{ uri: recipeDetails.image }} style={styles.image} />
 
-      <View style={styles.section}>
-        <Text style={[styles.title, { color: themeTextColor }]}>
-          {recipeDetails.title}
-        </Text>
-        <View style={styles.metaInfoContainer}>
-          <Text
-            style={[
-              styles.infoText,
-              { color: themeTextColor, marginRight: 15 },
-            ]}
-          >
-            ⏱️ {recipeDetails.readyInMinutes} mins
-          </Text>
-          <Text
-            style={[
-              styles.infoText,
-              { color: themeTextColor, marginRight: 15 },
-            ]}
-          >
-            🍽️ Serves {recipeDetails.servings}
-          </Text>
-          {missedCount && parseInt(missedCount, 10) > 0 && (
-            <Text style={[styles.infoText, { color: themeTextColor }]}>
-              🛒 {missedCount} missing
-            </Text>
-          )}
-        </View>
-        {summaryData?.fullSummary && (
-          <View style={styles.summaryContentContainer}>
-            <ExpandableText text={summaryData.fullSummary} initialLines={2} />
-          </View>
+      <RecipeTitle
+        title={recipeDetails.title}
+        readyInMinutes={recipeDetails.readyInMinutes}
+        servings={recipeDetails.servings}
+        missedCount={missedCount}
+      />
+
+      {summaryData?.fullSummary && (
+        <ExpandableText text={summaryData.fullSummary} initialLines={2} />
+      )}
+
+      {summaryData?.fullSummary &&
+        recipeDetails.extendedIngredients &&
+        recipeDetails.extendedIngredients.length > 0 && (
+          <HorizontalDivider style={styles.divider} />
         )}
-      </View>
 
       {recipeDetails.extendedIngredients &&
         recipeDetails.extendedIngredients.length > 0 && (
@@ -165,6 +143,13 @@ export default function RecipeDetailScreen() {
             itemColor={themeTextColor}
             borderColor={themeBorderColor}
           />
+        )}
+
+      {recipeDetails.extendedIngredients &&
+        recipeDetails.extendedIngredients.length > 0 &&
+        (recipeDetails.analyzedInstructions?.length > 0 ||
+          recipeDetails.instructions) && (
+          <HorizontalDivider style={styles.divider} />
         )}
 
       <InstructionsList
@@ -211,36 +196,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 250,
   },
-  section: {
-    padding: 15,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  summaryContentContainer: {
-    marginBottom: 5,
-  },
-  metaInfoContainer: {
-    flexDirection: "row",
-    marginTop: 5,
-    marginBottom: 15,
-  },
-  infoText: {
-    fontSize: 14,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+  divider: {
+    marginVertical: 10,
+    marginHorizontal: 10,
+    width: "auto",
   },
   sourceButtonContainer: {
     margin: 20,
-  },
-  viewMoreText: {
-    fontSize: 13,
-    fontWeight: "bold",
   },
 });

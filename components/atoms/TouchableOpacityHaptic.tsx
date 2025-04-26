@@ -9,12 +9,11 @@ import {
   ViewStyle,
 } from "react-native";
 
-interface TouchableOpacityHapticProps extends PressableProps {
+type TouchableOpacityHapticProps = PressableProps & {
   children: ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
-  // activeOpacity is simulated via style prop in Pressable
   style?: StyleProp<ViewStyle>;
-}
+};
 
 const TouchableOpacityHaptic = forwardRef<
   React.ElementRef<typeof Pressable>,
@@ -23,12 +22,12 @@ const TouchableOpacityHaptic = forwardRef<
   (
     {
       children,
-      onPress: onPressProp, // Rename to avoid conflict
+      onPress: onPressProp,
       hitSlop = { top: 8, bottom: 8, left: 8, right: 8 },
       style,
       disabled,
-      accessibilityRole = "button", // Default accessibility role
-      ...rest // Spread other props like testID, accessibilityLabel
+      accessibilityRole = "button",
+      ...rest
     },
     ref
   ) => {
@@ -40,7 +39,6 @@ const TouchableOpacityHaptic = forwardRef<
 
         InteractionManager.runAfterInteractions(() => {
           Haptics.selectionAsync().catch((error) => {
-            // Log haptic errors
             console.warn("Haptic feedback failed:", error);
           });
         });
@@ -50,20 +48,20 @@ const TouchableOpacityHaptic = forwardRef<
         }
       },
       [onPressProp, disabled]
-    ); // Memoize the handler
+    );
 
     const computeStyle = useCallback(
       ({ pressed }: { pressed: boolean }): StyleProp<ViewStyle> => [
         style,
-        pressed && { opacity: 0.7 }, // Applying default opacity directly
-        disabled && { opacity: 0.5 }, // Standard disabled opacity
+        pressed && { opacity: 0.7 },
+        disabled && { opacity: 0.5 },
       ],
-      [style, disabled] // Removed activeOpacity from dependencies
-    ); // Memoize the style computation
+      [style, disabled]
+    );
 
     return (
       <Pressable
-        {...rest} // Spread remaining props first
+        {...rest}
         ref={ref}
         onPress={handlePress}
         hitSlop={hitSlop}

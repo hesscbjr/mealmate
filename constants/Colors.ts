@@ -26,6 +26,7 @@ export const Colors = {
     imagePlaceholder: '#E0E0E0', // Light grey placeholder
     loadingText: '#4D2C0A', // Use main text color
     infoText: '#6B4226', // Medium brown for info text
+    divider: '#D3D3D3', // Light grey for dividers
   },
   dark: {
     text: "#FFFFFF", // Pure white for high contrast
@@ -46,5 +47,7 @@ export const Colors = {
     imagePlaceholder: '#383838', // Slightly different dark grey
     loadingText: '#FFFFFF', // White text
     infoText: '#B0B0B0', // Lighter grey for info text
+    divider: '#555555', // Darker grey for dividers in dark mode
+    link: tintColorDark, // Added link color using tint
   },
 };

@@ -1,42 +1,34 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRouter } from "expo-router";
 import React from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  type ColorValue,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-// Assuming RelatedRecipe type is available, if not, define it here or import it
-// If it's defined in textUtils, ensure it's exported from there.
 export interface RelatedRecipe {
   id: string;
   title: string;
 }
 
-interface RelatedRecipesListProps {
+type RelatedRecipesListProps = {
   relatedRecipes: RelatedRecipe[];
-  titleColor: ColorValue;
-  linkColor: ColorValue;
-}
+};
 
-const RelatedRecipesList: React.FC<RelatedRecipesListProps> = ({
-  relatedRecipes,
-  titleColor,
-  linkColor,
-}) => {
+const RelatedRecipesList = ({ relatedRecipes }: RelatedRecipesListProps) => {
   const router = useRouter();
+  const { text: titleColor, link: linkColor } = useThemeColor({}, [
+    "text",
+    "link",
+  ]);
 
   if (!relatedRecipes || relatedRecipes.length === 0) {
-    return null; // Don't render anything if there are no related recipes
+    return null;
   }
+
+  const sectionTitleStyle = [styles.sectionTitle, { color: titleColor }];
+  const linkTextStyle = [styles.relatedRecipeLinkText, { color: linkColor }];
 
   return (
     <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: titleColor }]}>
-        Related Recipes
-      </Text>
+      <Text style={sectionTitleStyle}>Related Recipes</Text>
       {relatedRecipes.map((relatedRecipe) => (
         <Pressable
           key={relatedRecipe.id}
@@ -48,14 +40,7 @@ const RelatedRecipesList: React.FC<RelatedRecipesListProps> = ({
           }}
           style={styles.relatedRecipeLinkContainer}
         >
-          <Text
-            style={[
-              styles.relatedRecipeLinkText,
-              { color: linkColor }, // Apply link color prop
-            ]}
-          >
-            • {relatedRecipe.title}
-          </Text>
+          <Text style={linkTextStyle}>• {relatedRecipe.title}</Text>
         </Pressable>
       ))}
     </View>
@@ -65,8 +50,6 @@ const RelatedRecipesList: React.FC<RelatedRecipesListProps> = ({
 const styles = StyleSheet.create({
   section: {
     padding: 15,
-    // Removed borderTopWidth as it might belong to the parent section
-    // If needed specifically for this component, add it back or pass via style prop
   },
   sectionTitle: {
     fontSize: 20,

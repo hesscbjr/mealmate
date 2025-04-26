@@ -10,66 +10,59 @@ import {
 } from "react-native";
 import TouchableOpacityHaptic from "./TouchableOpacityHaptic";
 
-// Reuse constants or define specific ones if needed
 const CAPTURE_BUTTON_SIZE = 70;
 const CAPTURE_BUTTON_BORDER_WIDTH = 4;
 
-// Base the props on PressableProps
-interface CaptureButtonProps extends PressableProps {
+type CaptureButtonProps = PressableProps & {
   style?: StyleProp<ViewStyle>;
-}
+};
 
 const CaptureButton = forwardRef<
   React.ElementRef<typeof Pressable>,
   CaptureButtonProps
 >(({ style, onPress, accessibilityLabel, disabled, ...rest }, ref) => {
-  // Ensure onPress passed to TouchableOpacityHaptic is either the function or undefined
   const handlePress = onPress
     ? (event: GestureResponderEvent) => onPress(event)
     : undefined;
 
-  // Get theme colors
   const { captureButtonBackground, captureButtonBorder } = useThemeColor({}, [
     "captureButtonBackground",
     "captureButtonBorder",
   ]);
 
-  // Generate dynamic styles
-  const dynamicStyles = getDynamicStyles(
-    captureButtonBackground,
-    captureButtonBorder
-  );
+  const finalStyle = [
+    styles.captureButton,
+    {
+      backgroundColor: captureButtonBackground,
+      borderColor: captureButtonBorder,
+    },
+    style,
+  ];
 
   return (
     <TouchableOpacityHaptic
       {...rest}
       ref={ref}
-      style={[dynamicStyles.captureButton, style]}
+      style={finalStyle}
       onPress={handlePress}
       disabled={disabled}
       accessibilityLabel={accessibilityLabel ?? "Capture Photo"}
     >
-      <>
-        {/* Empty fragment satisfies children prop for TouchableOpacityHaptic */}
-      </>
+      <></>
     </TouchableOpacityHaptic>
   );
 });
 
-// Moved styles into a function
-const getDynamicStyles = (backgroundColor: string, borderColor: string) =>
-  StyleSheet.create({
-    captureButton: {
-      width: CAPTURE_BUTTON_SIZE,
-      height: CAPTURE_BUTTON_SIZE,
-      borderRadius: CAPTURE_BUTTON_SIZE / 2,
-      backgroundColor: backgroundColor,
-      borderWidth: CAPTURE_BUTTON_BORDER_WIDTH,
-      borderColor: borderColor,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  });
+const styles = StyleSheet.create({
+  captureButton: {
+    width: CAPTURE_BUTTON_SIZE,
+    height: CAPTURE_BUTTON_SIZE,
+    borderRadius: CAPTURE_BUTTON_SIZE / 2,
+    borderWidth: CAPTURE_BUTTON_BORDER_WIDTH,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 CaptureButton.displayName = "CaptureButton";
 

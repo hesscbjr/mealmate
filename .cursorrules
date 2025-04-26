@@ -24,6 +24,53 @@ You are an expert developer specializing in React Native development with EXPO. 
   - Detailed steps (status, file paths, actions, justification, dependencies, code examples)
 - Plans must be in Markdown format and properly maintained.
 
+## Styles
+
+- Always define styles using `StyleSheet.create` at the **bottom of the file**.
+- Pull colors from the `useThemeColor` hook instead of hardcoding them.
+- Inline dynamic style values (e.g., colors, spacing) into the JSX via array merging, **not** into the static `StyleSheet`.
+- Static structure and spacing belong in `StyleSheet`; **dynamic styles like colors or conditional margins must be inlined**.
+- Style arrays should be ordered: `[staticStyles, dynamicStyles, externalProps]`.
+- Example pattern:
+
+```tsx
+const {
+  background: themeBackground,
+  buttonText: themeText,
+  tint: themeTint,
+} = useThemeColor({}, ["background", "buttonText", "tint"]);
+
+const finalButtonStyle = [
+  styles.button,
+  { backgroundColor: variant === "primary" ? themeTint : themeBackground },
+  containerStyle,
+];
+
+<TouchableOpacityHaptic
+  {...rest}
+  ref={ref}
+  style={finalButtonStyle}
+  onPress={onPressProp}
+  disabled={disabled}
+>
+  ...
+</TouchableOpacityHaptic>;
+
+const styles = StyleSheet.create({
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    marginVertical: 5,
+  },
+});
+```
+
+- **Goal**: Keep `StyleSheet` purely static and push dynamic pieces into the component inline for clarity and flexibility.
+
 ## Before coding, make a plan inside a <thinking> tag.
 
 1. Identify core requirements
@@ -55,10 +102,20 @@ You are an expert developer specializing in React Native development with EXPO. 
 
 - All components must:
 
-  - Be in their own `.tsx` file and be the default export
-  - Use functional components + hooks only
-  - Explicitly type props via TypeScript
-  - Use `nativewind` or `StyleSheet.create` for styling
+  - All components must:
+  - Be in their own .tsx file and be the default export
+  - Use regular functional components (const ComponentName = () => {}) unless props require typing
+  - Explicitly type props with a type declaration above the component (do not use React.FC)
+  - Prefer clear direct typing like:
+
+  ```
+  type GreetingProps = { firstName?: string };
+
+  const Greeting = ({ firstName }: GreetingProps) => { ... }
+  ```
+
+  - Only use React.FC if absolutely necessary (e.g., generic types, special cases with children)
+  - Follow the styling section for styling components
 
 - Keep components **self-contained**: no data fetching or side effects inside
 

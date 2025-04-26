@@ -20,26 +20,23 @@ const Icon = ({
   const { icon: themeIconColor } = useThemeColor({}, ["icon"]);
   const finalColor = color ?? themeIconColor;
 
-  try {
-    if (iconSet === "fa5") {
-      return (
-        <FontAwesome5
-          name={name}
-          size={size}
-          color={finalColor}
-          style={style}
-        />
-      );
-    } else if (iconSet === "antdesign") {
-      return (
-        <AntDesign name={name} size={size} color={finalColor} style={style} />
-      );
-    }
-    return null;
-  } catch (error) {
-    console.error("Error rendering icon:", error);
-    return null;
+  if (iconSet === "fa5") {
+    return (
+      <FontAwesome5 name={name} size={size} color={finalColor} style={style} />
+    );
+  } else if (iconSet === "antdesign") {
+    return (
+      <AntDesign
+        name={name as React.ComponentProps<typeof AntDesign>["name"]}
+        size={size}
+        color={finalColor}
+        style={style}
+      />
+    );
   }
+
+  console.warn(`Invalid iconSet "${iconSet}" provided to Icon component.`);
+  return null;
 };
 
 export default Icon;

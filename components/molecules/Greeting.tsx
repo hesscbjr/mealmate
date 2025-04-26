@@ -1,15 +1,24 @@
 import Text from "@/components/atoms/Text";
+import { useUserStore } from "@/store/user";
 import React from "react";
-import { StyleSheet, TextStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
 const DEFAULT_GREETING_NAME = "buddy";
 
-interface GreetingProps {
-  name?: string | null;
-  style?: TextStyle; // Allow passing custom styles
-}
+type GreetingProps = {};
 
-// Define styles within the component file
+const Greeting = ({}: GreetingProps) => {
+  const firstName = useUserStore((state) => state.firstName);
+
+  return (
+    <Text style={styles.greetingText}>
+      {`What's in the pantry today, ${firstName || DEFAULT_GREETING_NAME}?`}
+    </Text>
+  );
+};
+
+export default Greeting;
+
 const styles = StyleSheet.create({
   greetingText: {
     fontSize: 24,
@@ -19,13 +28,3 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 });
-
-const Greeting: React.FC<GreetingProps> = ({ name, style }) => {
-  return (
-    <Text style={[styles.greetingText, style]}>
-      {`What's in the pantry today, ${name || DEFAULT_GREETING_NAME}?`}
-    </Text>
-  );
-};
-
-export default Greeting;
