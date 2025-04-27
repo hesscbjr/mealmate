@@ -31,14 +31,14 @@ Below are the steps to clone and run this project. At the bottom of this README,
     npx expo install
     ```
 3.  **Set up environment variables:**
-    Create a `.env` file in the root directory and add the neccessary environment variables for OpenAI and Spoonacular. A link to these keys is in my original submission email sent via a secure note.
+    Create a `.env` file in the root directory and add the necessary environment variables for OpenAI and Spoonacular. A link to these keys is in my original submission email sent via a secure note.
     ```dotenv
     # .env
     EXPO_PUBLIC_OPENAI_API_KEY=<OPENAI_API_KEY>
     EXPO_PUBLIC_SPOONACULAR_API_KEY=<SPOONACULAR_API_KEY>
     ```
 4.  **Run the app:**
-    To run the app, run one of the commands below to install and run the app on either an android or ios simulator
+    To run the app, use one of the commands below depending on your simulator setup.
 
     ```bash
     # Run on iOS simulator (requires Xcode)
