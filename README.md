@@ -66,11 +66,27 @@ Get a new batch of 5 recipes if you don't like the current suggestions.
 
 - **How it works:** Each time the user refreshes, I increment the Spoonacular API offset by 5 to ensure new, non-repeating recipes are fetched.
 
-### User Personalization
+### Starred Recipes
 
-Onboarding captures your first and last name and greets you personally on the homepage.
+Save your favorite recipes for quick access later.
 
-- **How it works:** I use Zustand for state management and AsyncStorage to persist user info locally on the device.
+- **How it works:** Users can "star" any recipe they like. Starred recipes are managed through a Zustand store and saved locally with AsyncStorage.
+
+<p align="center">
+  <img src="assets/images/no-stars.png" width="24%"/>
+  <img src="assets/images/star.png" width="24%"/>
+  <img src="assets/images/stars.png" width="24%"/>
+</p>
+
+### Related Recipes
+
+Discover additional recipes based on the one you're viewing.
+
+- **How it works:** Spoonacular API provides related recipes with links. I parse the recipe IDs and create internal links so users can easily navigate to new recipe pages within the app.
+
+<p align="center">
+  <img src="assets/images/related.png" width="24%"/>
+</p>
 
 ### Light and Dark Mode
 
@@ -78,17 +94,10 @@ The app supports both light and dark themes, selectable from the profile page.
 
 - **How it works:** I implemented a theme selector that lets users pick light, dark, or system mode, with persistent storage using Zustand and AsyncStorage.
 
-### Starred Recipes
-
-Save your favorite recipes for quick access later.
-
-- **How it works:** Users can "star" any recipe they like. Starred recipes are managed through a Zustand store and saved locally with AsyncStorage.
-
-### Related Recipes
-
-Discover additional recipes based on the one you're viewing.
-
-- **How it works:** Spoonacular API provides related recipes with links. I parse the recipe IDs and create internal links so users can easily navigate to new recipe pages within the app.
+<p align="center">
+  <img src="assets/images/light-mode.png" width="24%"/>
+  <img src="assets/images/dark-mode.png" width="24%"/>
+</p>
 
 ## Limitations
 
