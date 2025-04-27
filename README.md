@@ -115,14 +115,14 @@ With `min-missing-ingredients` you won't necessarily use all the ingredients in 
 
 With `max-used-ingredients` you often end up with recipes that require many more ingredients than you supplied.
 
-- **Current Handling** Users can select if they want to have the minimal missing ingredients or the maximal used ingredients in their search from the profile page.
+- **Current Handling:** Users can select if they want to have the minimal missing ingredients or the maximal used ingredients in their search from the profile page.
 
 <p align="center">
   <img src="assets/images/light-mode.png" width="24%"/>
   <img src="assets/images/min-missing.png" width="24%"/>
 </p>
 
-- **Future Improvement** Use a different API or pull all results and process the data to optimize for the recipes with the maximal used ingredients **and** the minimal missing ingredients.
+- **Future Improvement:** Use a different API or pull all results and process the data to optimize for the recipes with the maximal used ingredients **and** the minimal missing ingredients.
 
 ### Bad Instructions
 
