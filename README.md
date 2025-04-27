@@ -13,6 +13,8 @@ Meal Mate is a smart recipe planner built with React Native and Expo. It allows 
 
 Hi Arman and Alex! Thank you for the opportunity to interview for Tenex. This project was quite fun, and I hope you enjoy the result as much as I do.
 
+For the strategy question, I put my answer [here.](./strategyQuestion.md)
+
 For the engineering project, I chose the smart recipe planner and built an app called Meal Mate. Meal Mate uses GPT-4o vision to detect ingredients in the photos uploaded by the user and then uses the [Spoonacular API](https://spoonacular.com/food-api) to search for matching recipes.
 
 Below are the steps to clone and run this project. At the bottom of this README, I include more information about how this was built and my approach.
