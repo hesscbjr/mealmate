@@ -107,6 +107,23 @@ GPT-4o performs well when recognizing up to around 15 ingredients in an image. B
 
 - **Future Improvement:** Add a "Confirm Ingredients" step where users can review, edit, or add ingredients before recipe generation.
 
+### Recipe Results
+
+Spoonacular only allows for a single `sort` param with values `min-missing-ingredients` or `max-used-ingredients`.
+
+With `min-missing-ingredients` you won't necessarily use all the ingredients in your photo. This often results in recipes with 3-5 ingredients that are simple and don't use all the ingredients you supplied.
+
+With `max-used-ingredients` you often end up with recipes that require many more ingredients than you supplied.
+
+- **Current Handling** Users can select if they want to have the minimal missing ingredients or the maximal used ingredients in their search from the profile page.
+
+<p align="center">
+  <img src="assets/images/light-mode.png" width="24%"/>
+  <img src="assets/images/min-missing.png" width="24%"/>
+</p>
+
+- **Future Handling** Use a different API or pull all results and process the data to optimize for the recipes with the maximal used ingredients **and** the minimal missing ingredients.
+
 ### Bad Instructions
 
 Some recipes returned by the Spoonacular API have poorly formatted or grammatically incorrect instructions. As you can see below, I think you need the oven to be a bit hotter than 35 degrees...
