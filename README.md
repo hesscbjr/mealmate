@@ -1,4 +1,4 @@
-# MealMate 🍳📸
+# Meal Mate 🍳📸
 
 <p align="center">
   <img src="assets/images/welcome-img.png" width="24%"/>
@@ -7,7 +7,7 @@
   <img src="assets/images/recipe.png" width="24%"/>
 </p>
 
-MealMate is a smart recipe planner built with React Native and Expo. It allows users to take a photo of ingredients and receive recipe suggestions.
+Meal Mate is a smart recipe planner built with React Native and Expo. It allows users to take a photo of ingredients and receive recipe suggestions.
 
 ## Overview
 
@@ -148,6 +148,6 @@ Occasionally, Spoonacular returns related recipe links that are broken or invali
 
 Thank you so much for taking the time to review this project and for considering me for the team.
 
-I had a lot of fun building MealMate and thinking through both the technical and product sides of the challenge.
+I had a lot of fun building Meal Mate and thinking through both the technical and product sides of the challenge.
 
 I'm really excited about what you're building at Tenex and would love the chance to be a part of it!
