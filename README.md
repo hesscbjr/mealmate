@@ -92,7 +92,7 @@ Discover additional recipes based on the one you're viewing.
 
 The app supports both light and dark themes, selectable from the profile page.
 
-- **How it works:** I implemented a theme selector that lets users pick light, dark, or system mode, with persistent storage using Zustand and AsyncStorage.
+- **How it works:** I implemented a theme selector that lets users pick light, dark, or system mode with persistent storage using Zustand and AsyncStorage.
 
 <p align="center">
   <img src="assets/images/light-mode.png" width="24%"/>
