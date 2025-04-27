@@ -122,7 +122,7 @@ With `max-used-ingredients` you often end up with recipes that require many more
   <img src="assets/images/min-missing.png" width="24%"/>
 </p>
 
-- **Future Handling** Use a different API or pull all results and process the data to optimize for the recipes with the maximal used ingredients **and** the minimal missing ingredients.
+- **Future Improvement** Use a different API or pull all results and process the data to optimize for the recipes with the maximal used ingredients **and** the minimal missing ingredients.
 
 ### Bad Instructions
 
