@@ -14,9 +14,9 @@ import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 
 // Constant for final image style
-const IMAGE_BORDER_RADIUS_FINAL = 10;
-const SHADOW_OFFSET_Y_FINAL = 1;
-const SHADOW_RADIUS_FINAL = 3.84;
+const IMAGE_BORDER_RADIUS_FINAL = 15;
+const SHADOW_OFFSET_Y_FINAL = 5;
+const SHADOW_RADIUS_FINAL = 10;
 const ELEVATION_FINAL = 5;
 
 const staticStyles = StyleSheet.create({
@@ -42,10 +42,6 @@ const staticStyles = StyleSheet.create({
   imageContainerBase: {
     aspectRatio: 1,
     borderRadius: IMAGE_BORDER_RADIUS_FINAL,
-    shadowOffset: { width: 0, height: SHADOW_OFFSET_Y_FINAL },
-    shadowOpacity: 0.2,
-    shadowRadius: SHADOW_RADIUS_FINAL,
-    elevation: ELEVATION_FINAL,
   },
   centeredContent: {
     flex: 1,
@@ -223,6 +219,14 @@ export default function PreviewScreen() {
                 backgroundColor: themeImagePlaceholderColor,
                 shadowColor: themeShadowColor,
                 height: finalImageHeight,
+                ...(Platform.OS === "ios" && {
+                  shadowOffset: { width: 0, height: SHADOW_OFFSET_Y_FINAL },
+                  shadowOpacity: 0.2,
+                  shadowRadius: SHADOW_RADIUS_FINAL,
+                }),
+                ...(Platform.OS === "android" && {
+                  elevation: ELEVATION_FINAL,
+                }),
               },
               finalImageStyle,
             ]}

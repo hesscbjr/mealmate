@@ -24,7 +24,6 @@ const TypewriterText = ({
   const [messageIndex, setMessageIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [charIndex, setCharIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -42,13 +41,12 @@ const TypewriterText = ({
       setDisplayText("");
       setCharIndex(0);
       setMessageIndex(0);
-      setIsPaused(false);
       return;
     }
 
     const currentMessage = messages[messageIndex];
 
-    if (!isPaused && charIndex < currentMessage.length) {
+    if (charIndex < currentMessage.length) {
       clearAllTimeouts();
 
       typingTimeoutRef.current = setTimeout(() => {
@@ -57,25 +55,23 @@ const TypewriterText = ({
         setCharIndex((prev) => prev + 1);
         typingTimeoutRef.current = null;
       }, typingSpeed);
-    } else if (!isPaused && charIndex >= currentMessage.length) {
-      setIsPaused(true);
+    } else if (charIndex >= currentMessage.length) {
       clearAllTimeouts();
 
       pauseTimeoutRef.current = setTimeout(() => {
         setMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
         setCharIndex(0);
         setDisplayText("");
-        setIsPaused(false);
         pauseTimeoutRef.current = null;
       }, pauseDuration);
     }
 
     return clearAllTimeouts;
-  }, [messages, messageIndex, charIndex, typingSpeed, pauseDuration, isPaused]);
+  }, [messages, messageIndex, charIndex, typingSpeed, pauseDuration]);
 
   return (
     <Text style={style} {...rest}>
-      {displayText || " "}
+      {displayText || "\u00A0"}
     </Text>
   );
 };

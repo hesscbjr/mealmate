@@ -39,12 +39,6 @@ const Text = ({ style, ...otherProps }: TextProps) => {
   const finalStyle: StyleProp<TextStyle> = [
     { color: themeTextColor },
     style,
-    shadowColor ? { shadowColor } : undefined,
-    shadowOffset ? { shadowOffset } : undefined,
-    shadowOpacity ? { shadowOpacity } : undefined,
-    shadowRadius ? { shadowRadius } : undefined,
-    elevation ? { elevation } : undefined,
-    transform ? { transform } : undefined,
   ].filter(Boolean) as StyleProp<TextStyle>;
 
   return <DefaultText style={finalStyle} {...validOtherProps} />;

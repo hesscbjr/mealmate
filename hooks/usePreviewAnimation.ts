@@ -1,7 +1,7 @@
 import { ExtractionResult } from "@/hooks/useIngredientExtraction";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 import {
   Easing,
   Extrapolation,
@@ -131,29 +131,33 @@ export function usePreviewAnimation({
         [IMAGE_BORDER_RADIUS_LOADING, IMAGE_BORDER_RADIUS_FINAL]
       ),
       shadowColor: themeShadowColor,
-      shadowOffset: {
-        width: 0,
-        height: interpolate(
+      ...(Platform.OS === 'ios' && {
+        shadowOffset: {
+          width: 0,
+          height: interpolate(
+            animationProgress.value,
+            [0, 1],
+            [SHADOW_OFFSET_Y_LOADING, SHADOW_OFFSET_Y_FINAL]
+          ),
+        },
+        shadowOpacity: interpolate(
+          animationProgress.value,
+          [0, OPACITY_TRANSITION_POINT, 1],
+          [SHADOW_OPACITY_LOADING, SHADOW_OPACITY_LOADING, 0]
+        ),
+        shadowRadius: interpolate(
           animationProgress.value,
           [0, 1],
-          [SHADOW_OFFSET_Y_LOADING, SHADOW_OFFSET_Y_FINAL]
+          [SHADOW_RADIUS_LOADING, SHADOW_RADIUS_FINAL]
         ),
-      },
-      shadowOpacity: interpolate(
-        animationProgress.value,
-        [0, OPACITY_TRANSITION_POINT, 1],
-        [SHADOW_OPACITY_LOADING, SHADOW_OPACITY_LOADING, 0]
-      ),
-      shadowRadius: interpolate(
-        animationProgress.value,
-        [0, 1],
-        [SHADOW_RADIUS_LOADING, SHADOW_RADIUS_FINAL]
-      ),
-      elevation: interpolate(
-        animationProgress.value,
-        [0, 1],
-        [ELEVATION_LOADING, ELEVATION_FINAL]
-      ),
+      }),
+      ...(Platform.OS === 'android' && {
+        elevation: interpolate(
+          animationProgress.value,
+          [0, 1],
+          [ELEVATION_LOADING, ELEVATION_FINAL]
+        ),
+      }),
       backgroundColor: themeImagePlaceholderColor,
       opacity: interpolate(
         animationProgress.value,
