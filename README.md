@@ -80,6 +80,12 @@ Save your favorite recipes for quick access later.
   <img src="assets/images/stars.png" width="24%"/>
 </p>
 
+### Share Recipes
+
+Easily share your favorite meals with friends. Links open directly in the app.
+
+- **How it works:** On the recipe detail screen, use the share button to send a deep link like `myapp://recipe/123`. When another user taps it, Meal Mate navigates straight to that recipe.
+
 ### Related Recipes
 
 Discover additional recipes based on the one you're viewing.

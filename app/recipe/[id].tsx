@@ -1,7 +1,14 @@
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useLayoutEffect, useMemo } from "react";
-import { Image, Platform, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+  Share,
+} from "react-native";
 
 import Button from "@/components/atoms/Button";
 import HorizontalDivider from "@/components/atoms/HorizontalDivider";
@@ -19,6 +26,7 @@ import { useRecipeDetails } from "@/hooks/useRecipeDetails";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRecipeStore } from "@/store/recipes";
 import { parseAndLinkSummary } from "@/utils/textUtils";
+import { createRecipeLink } from "@/utils/linking";
 
 export default function RecipeDetailScreen() {
   const { id, missedCount } = useLocalSearchParams<{
@@ -52,25 +60,40 @@ export default function RecipeDetailScreen() {
 
   const { toggleStar } = useRecipeStore();
   const currentlyStarred = useRecipeStore((state) =>
-    state.isStarred(recipeDetails?.id ?? -1)
+    state.isStarred(recipeDetails?.id ?? -1),
   );
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "",
       headerRight: () => (
-        <IconButton
-          onPress={() => {
-            if (recipeDetails) {
-              toggleStar(recipeDetails);
-            }
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 15,
+            marginRight: Platform.OS === "ios" ? 10 : 0,
           }}
-          name={currentlyStarred ? "star" : "staro"}
-          size={24}
-          color={themeTintColor}
-          iconSet="antdesign"
-          style={{ marginRight: Platform.OS === "ios" ? 10 : 0 }}
-        />
+        >
+          <IconButton
+            onPress={handleShare}
+            name="share-alt"
+            size={24}
+            color={themeTintColor}
+            iconSet="fa5"
+            style={{ marginRight: 10 }}
+          />
+          <IconButton
+            onPress={() => {
+              if (recipeDetails) {
+                toggleStar(recipeDetails);
+              }
+            }}
+            name={currentlyStarred ? "star" : "staro"}
+            size={24}
+            color={themeTintColor}
+            iconSet="antdesign"
+          />
+        </View>
       ),
       headerLeft: () => (
         <IconButton
@@ -91,6 +114,18 @@ export default function RecipeDetailScreen() {
     themeTintColor,
     router,
   ]);
+
+  const handleShare = async () => {
+    if (!recipeDetails) return;
+    try {
+      const url = createRecipeLink(recipeDetails.id);
+      await Share.share({
+        message: `Check out this recipe on Meal Mate: ${recipeDetails.title}\n${url}`,
+      });
+    } catch (err) {
+      console.error("Failed to share recipe", err);
+    }
+  };
 
   const handleOpenSourceUrl = () => {
     if (recipeDetails?.sourceUrl) {
