@@ -40,6 +40,13 @@ Utilities encapsulate reusable, often pure, logic that doesn't belong to a speci
   - `parseAndLinkSummary(summaryHtml: string | null): ParsedSummary`: Takes an HTML summary string (likely from Spoonacular), extracts the main summary text (stripping HTML), identifies embedded related recipe links (`<a href="...ID">TEXT</a>`), and returns an object `{ summaryText: string, relatedRecipes: RelatedRecipeLink[] }` where `RelatedRecipeLink` is `{ id: string, title: string }`.
 - **Usage**: Used in the recipe detail screen (`app/recipe/[id].tsx`) to process the summary from Spoonacular.
 
+### `linking.ts`
+
+- **Purpose**: Generates app-specific deep links.
+- **Exports**:
+  - `createRecipeLink(recipeId: string | number): string`: Returns a URL (using the configured scheme) that navigates directly to the given recipe ID.
+- **Usage**: Utilized when sharing recipes so that the link will open the recipe inside the app.
+
 ## Development Guidelines
 
 - Functions should be pure (predictable output for the same input, no side effects) whenever possible.
